@@ -80,7 +80,7 @@ resource "aws_security_group" "vpc-CCSDEV-internal-app" {
   }
 
   tags {
-    "Name" = "CSDEV-external-app"
+    "Name" = "CCSDEV-internal-app"
   }
 }
 
@@ -104,7 +104,7 @@ resource "aws_security_group" "vpc-CCSDEV-external-app" {
   }
 
   tags {
-    "Name" = "CSDEV-external-app"
+    "Name" = "CCSDEV-external-app"
   }
 }
 
@@ -128,7 +128,7 @@ resource "aws_security_group" "vpc-CCSDEV-external-app-alb" {
   }
 
   tags {
-    "Name" = "CSDEV-external-app-alb"
+    "Name" = "CCSDEV-external-app-alb"
   }
 }
 
@@ -156,7 +156,7 @@ resource "aws_security_group" "vpc-CCSDEV-internal-api" {
   }
 
   tags {
-    "Name" = "CSDEV-external-api"
+    "Name" = "CCSDEV-internal-api"
   }
 }
 
@@ -180,6 +180,6 @@ resource "aws_security_group" "vpc-CCSDEV-internal-api-alb" {
   }
 
   tags {
-    "Name" = "CSDEV-internal-api-alb"
+    "Name" = "CCSDEV-internal-api-alb"
   }
 }
