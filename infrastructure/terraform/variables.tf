@@ -1,15 +1,11 @@
 ##############################################################
 #
-# AWS Access Keys
+# AWS Access Details
 #
-##############################################################
-variable "access_key" {
-  default = "??????"
-}
-
-variable "secret_key" {
-  default = "??????"
-}
+# NOTE: Access Key and Secret Key will be pulled from the local
+# credentials 
+#
+# ##############################################################
 
 variable "region" {
   default = "eu-west-2"
@@ -28,7 +24,7 @@ variable "bastion_instance_class" {
 }
 
 variable "bastion_key_name" {
-  default = "linux-test-1"
+  default = "ccs_bastion"
 }
 
 variable "bastion_storage" {
@@ -52,7 +48,7 @@ variable "app_cluster_instance_count" {
 }
 
 variable "app_cluster_key_name" {
-  default = "linux-test-1"
+  default = "ccs_cluster"
 }
 
 ##############################################################
@@ -71,7 +67,7 @@ variable "api_cluster_instance_count" {
 }
 
 variable "api_cluster_key_name" {
-  default = "linux-test-1"
+  default = "ccs_cluster"
 }
 
 ##############################################################
