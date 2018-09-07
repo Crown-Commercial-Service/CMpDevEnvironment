@@ -6,9 +6,10 @@ provider "aws" {
 #
 # CCSDEV IAM Configuration
 #
-# This script defines user related IAM assets
+# This script defines user/group related IAM assets
 #
 #   Polices
+#     CCSDEV_policy_limited_user
 #   Roles
 #   Groups
 #     CCS_System_Administration
@@ -123,9 +124,11 @@ resource "aws_iam_group_policy_attachment" "infra_admin_rds_full" {
 # applications deployed into the App cluster. They have no
 # direct access to RDS resources.
 #
-#   AmazonEC2FullAccess
-#   AmazonEC2ContainerRegistryFullAccess
+#   AmazonEC2ReadOnlyAccess
+#   AmazonEC2ContainerRegistryPowerUser
 #   AmazonECS_FullAccess
+#
+# TODO At present access NOT restricted to the app cluster
 #
 ##############################################################
 
@@ -133,14 +136,14 @@ resource "aws_iam_group" "CCSDEV_iam_app_dev" {
   name = "CCS_Application_Developer"
 }
 
-resource "aws_iam_group_policy_attachment" "app_dev_ec2_full" {
+resource "aws_iam_group_policy_attachment" "app_dev_ec2_readonly" {
   group      = "${aws_iam_group.CCSDEV_iam_app_dev.name}"
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess"
 }
 
-resource "aws_iam_group_policy_attachment" "app_dev_ecr_full" {
+resource "aws_iam_group_policy_attachment" "app_dev_ecr_power" {
   group      = "${aws_iam_group.CCSDEV_iam_app_dev.name}"
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser"
 }
 
 resource "aws_iam_group_policy_attachment" "app_dev_ecs_full" {
@@ -157,10 +160,12 @@ resource "aws_iam_group_policy_attachment" "app_dev_ecs_full" {
 # deployed into the Api cluster. They have will also
 # have direct access to RDS resources.
 #
-#   AmazonEC2FullAccess
-#   AmazonEC2ContainerRegistryFullAccess
+#   AmazonEC2ReadOnlyAccess
+#   AmazonEC2ContainerRegistryPowerUser
 #   AmazonECS_FullAccess
 #   AmazonRDSFullAccess
+#
+# TODO At present access NOT restricted to the api cluster
 #
 ##############################################################
 
@@ -168,14 +173,14 @@ resource "aws_iam_group" "CCSDEV_iam_api_dev" {
   name = "CCS_API_Developer"
 }
 
-resource "aws_iam_group_policy_attachment" "api_dev_ec2_full" {
+resource "aws_iam_group_policy_attachment" "api_dev_ec2_readonly" {
   group      = "${aws_iam_group.CCSDEV_iam_api_dev.name}"
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess"
 }
 
-resource "aws_iam_group_policy_attachment" "api_dev_ecr_full" {
+resource "aws_iam_group_policy_attachment" "api_dev_ecr_power" {
   group      = "${aws_iam_group.CCSDEV_iam_api_dev.name}"
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser"
 }
 
 resource "aws_iam_group_policy_attachment" "api_dev_ecs_full" {
@@ -193,6 +198,9 @@ resource "aws_iam_group_policy_attachment" "api_dev_rds_full" {
 #
 # Users in this group are able to define new users and add
 # Then to the the correct groups.
+# 
+# This group includes a custom policy definition that
+# restricts the user to accessing certain groups.
 #
 # Note:
 # They will NOT be able to add users to the system
