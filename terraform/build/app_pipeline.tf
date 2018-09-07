@@ -152,7 +152,7 @@ data "template_file" "task_definition" {
 }
 
 resource "aws_ecs_task_definition" "app" {
-  family                = "service"
+  family                = "app"
   container_definitions = "${data.template_file.task_definition.rendered}"
 }
 
