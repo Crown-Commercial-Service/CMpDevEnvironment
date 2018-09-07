@@ -6,8 +6,6 @@
 #   Application requirements
 #
 ##############################################################
-
-##############################################################
 # Container Repository
 ##############################################################
 resource "aws_ecr_repository" "app" {
@@ -71,6 +69,21 @@ data "aws_iam_policy_document" "codebuild_app_service_policy" {
       values = ["codebuild.amazonaws.com"]
     }
   }
+
+  statement {
+    actions = [
+      "s3:GetObject",
+      "s3:GetObjectVersion",
+      "s3:GetBucketVersioning",
+      "s3:PutObject"
+   ]
+
+    resources = [
+        "${data.aws_s3_bucket.build-artifacts.arn}",
+        "${data.aws_s3_bucket.build-artifacts.arn}/*",
+        "arn:aws:s3:::codepipeline*"
+        ]
+  }
 }
 
 resource "aws_iam_role_policy" "codebuild_app_service_role_policy" {
@@ -117,14 +130,14 @@ resource "aws_codebuild_project" "app" {
   }
 
   vpc_config {
-    vpc_id = "${aws_vpc.CCSDEV-Services.id}"
+    vpc_id = "${data.aws_vpc.CCSDEV-Services.id}"
 
     subnets = [
-      "${aws_subnet.CCSDEV-AZ-a-Private-1.id}",
+      "${data.aws_subnet.CCSDEV-AZ-a-Private-1.id}",
     ]
 
     security_group_ids = [
-      "${aws_security_group.vpc-CCSDEV-internal-app.id}",
+      "${data.aws_security_group.vpc-CCSDEV-internal-app.id}",
     ]
   }
 }
