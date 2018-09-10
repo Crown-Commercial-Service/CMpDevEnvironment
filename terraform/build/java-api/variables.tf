@@ -17,18 +17,18 @@ data "aws_subnet" "CCSDEV-AZ-a-Private-1" {
   }
 }
 
-data "aws_security_group" "vpc-CCSDEV-internal-app" {
+data "aws_security_group" "vpc-CCSDEV-internal-api" {
   tags {
-    "Name" = "CCSDEV-internal-app"
+    "Name" = "CCSDEV-internal-api"
   }
 }
 
-data "aws_alb" "CCSDEV_app_cluster_alb" {
-  name = "CCSDEV-app-cluster-alb"
+data "aws_alb" "CCSDEV_api_cluster_alb" {
+  name = "CCSDEV-api-cluster-alb"
 }
 
 data "aws_alb_listener" "http_listener" {
-  load_balancer_arn = "${data.aws_alb.CCSDEV_app_cluster_alb.arn}"
+  load_balancer_arn = "${data.aws_alb.CCSDEV_api_cluster_alb.arn}"
   port = "${var.http_port}"
 }
 

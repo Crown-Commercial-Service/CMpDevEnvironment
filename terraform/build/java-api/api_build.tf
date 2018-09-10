@@ -1,21 +1,21 @@
 ##############################################################
 #
-# Application Configuration and Support
+# apilication Configuration and Support
 #
 # Defines:
-#   Application requirements
+#   apilication requirements
 #
 ##############################################################
 # Container Repository
 ##############################################################
-resource "aws_ecr_repository" "app" {
-  name = "ccs/app"
+resource "aws_ecr_repository" "api" {
+  name = "ccs/api"
 }
 
 ##############################################################
 # Policies
 ##############################################################
-data "aws_iam_policy_document" "codebuild_app_service_role_assume_policy" {
+data "aws_iam_policy_document" "codebuild_api_service_role_assume_policy" {
   statement {
     principals = {
       type = "Service"
@@ -28,13 +28,13 @@ data "aws_iam_policy_document" "codebuild_app_service_role_assume_policy" {
   }
 }
 
-resource "aws_iam_role" "codebuild_app_service_role" {
-  name                = "codebuild-app-service-role"
+resource "aws_iam_role" "codebuild_api_service_role" {
+  name                = "codebuild-api-service-role"
   path                = "/"
-  assume_role_policy  = "${data.aws_iam_policy_document.codebuild_app_service_role_assume_policy.json}"
+  assume_role_policy  = "${data.aws_iam_policy_document.codebuild_api_service_role_assume_policy.json}"
 }
 
-data "aws_iam_policy_document" "codebuild_app_service_policy" {
+data "aws_iam_policy_document" "codebuild_api_service_policy" {
   statement {
     actions = [
       "logs:CreateLogGroup",
@@ -86,25 +86,25 @@ data "aws_iam_policy_document" "codebuild_app_service_policy" {
   }
 }
 
-resource "aws_iam_role_policy" "codebuild_app_service_role_policy" {
-  role = "${aws_iam_role.codebuild_app_service_role.name}"
-  name = "codebuild_app_service_role_policy"
-  policy = "${data.aws_iam_policy_document.codebuild_app_service_policy.json}"
+resource "aws_iam_role_policy" "codebuild_api_service_role_policy" {
+  role = "${aws_iam_role.codebuild_api_service_role.name}"
+  name = "codebuild_api_service_role_policy"
+  policy = "${data.aws_iam_policy_document.codebuild_api_service_policy.json}"
 }
 
 resource "aws_iam_role_policy_attachment" "codebuild_container_registry_permissions" {
-  role = "${aws_iam_role.codebuild_app_service_role.name}"
+  role = "${aws_iam_role.codebuild_api_service_role.name}"
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser"
 }
 
 ##############################################################
 # Codebuild Project
 ##############################################################
-resource "aws_codebuild_project" "app" {
-  name          = "app-build-project"
-  description   = "app_codebuild_project"
+resource "aws_codebuild_project" "api" {
+  name          = "api-build-project"
+  description   = "api_codebuild_project"
   build_timeout = "60" # Default 60 minutes
-  service_role  = "${aws_iam_role.codebuild_app_service_role.arn}"
+  service_role  = "${aws_iam_role.codebuild_api_service_role.arn}"
 
   artifacts {
     type = "NO_ARTIFACTS"
@@ -118,13 +118,13 @@ resource "aws_codebuild_project" "app" {
 
     environment_variable {
       "name"  = "IMAGE_URI"
-      "value" = "${aws_ecr_repository.app.repository_url}:latest"
+      "value" = "${aws_ecr_repository.api.repository_url}:latest"
     }
   }
 
   source {
     type            = "GITHUB"
-    location        = "https://github.com/roweit/CCSExampleApp1.git"
+    location        = "https://github.com/roweit/CCSExampleapi1.git"
     git_clone_depth = 1
     buildspec       = "${file("${path.module}/docker_buildspec.yml")}"
   }
@@ -137,7 +137,7 @@ resource "aws_codebuild_project" "app" {
     ]
 
     security_group_ids = [
-      "${data.aws_security_group.vpc-CCSDEV-internal-app.id}",
+      "${data.aws_security_group.vpc-CCSDEV-internal-api.id}",
     ]
   }
 }

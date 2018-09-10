@@ -1,14 +1,14 @@
 ##############################################################
 #
-# Application Configuration and Support
+# apilication Configuration and Support
 #
 # Defines:
-#   Application requirements
+#   apilication requirements
 #
 ##############################################################
 # Policies
 ##############################################################
-data "aws_iam_policy_document" "codepipeline_app_service_role_assume_policy" {
+data "aws_iam_policy_document" "codepipeline_api_service_role_assume_policy" {
   statement {
     principals = {
       type = "Service"
@@ -19,13 +19,13 @@ data "aws_iam_policy_document" "codepipeline_app_service_role_assume_policy" {
   }
 }
 
-resource "aws_iam_role" "codepipeline_app_service_role" {
-  name                = "codepipeline-app-service-role"
+resource "aws_iam_role" "codepipeline_api_service_role" {
+  name                = "codepipeline-api-service-role"
   path                = "/"
-  assume_role_policy  = "${data.aws_iam_policy_document.codepipeline_app_service_role_assume_policy.json}"
+  assume_role_policy  = "${data.aws_iam_policy_document.codepipeline_api_service_role_assume_policy.json}"
 }
 
-data "aws_iam_policy_document" "codepipeline_app_service_policy" {
+data "aws_iam_policy_document" "codepipeline_api_service_policy" {
   statement {
     actions = [
       "codebuild:BatchGetBuilds",
@@ -64,14 +64,14 @@ data "aws_iam_policy_document" "codepipeline_app_service_policy" {
   }
 }
 
-resource "aws_iam_role_policy" "codepipeline_app_service_role_policy" {
-  role = "${aws_iam_role.codepipeline_app_service_role.name}"
-  name = "codepipeline_app_service_role_policy"
-  policy = "${data.aws_iam_policy_document.codepipeline_app_service_policy.json}"
+resource "aws_iam_role_policy" "codepipeline_api_service_role_policy" {
+  role = "${aws_iam_role.codepipeline_api_service_role.name}"
+  name = "codepipeline_api_service_role_policy"
+  policy = "${data.aws_iam_policy_document.codepipeline_api_service_policy.json}"
 }
 
 resource "aws_iam_role_policy_attachment" "codepipeline_container_registry_permissions" {
-  role = "${aws_iam_role.codepipeline_app_service_role.name}"
+  role = "${aws_iam_role.codepipeline_api_service_role.name}"
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser"
 }
 
@@ -85,8 +85,8 @@ data "aws_s3_bucket" "build-artifacts" {
 ##############################################################
 # Load Balancer configuration
 ##############################################################
-resource "aws_alb_target_group" "CCSDEV_app_cluster_alb_app_tg" {
-  name     = "CCSDEV-app-cluster-alb-app-tg"
+resource "aws_alb_target_group" "CCSDEV_api_cluster_alb_api_tg" {
+  name     = "CCSDEV-api-cluster-alb-api-tg"
   port     = "${var.http_port}"
   protocol = "HTTP"
   vpc_id   = "${data.aws_vpc.CCSDEV-Services.id}"
@@ -103,7 +103,7 @@ resource "aws_alb_target_group" "CCSDEV_app_cluster_alb_app_tg" {
   }
 
   tags {
-    "Name" = "CCSDEV_app_cluster_alb_def-tg"
+    "Name" = "CCSDEV_api_cluster_alb_def-tg"
   }
 }
 
@@ -112,26 +112,26 @@ resource "aws_alb_listener_rule" "subdomain_rule" {
 
   action {
     type             = "forward"
-    target_group_arn = "${aws_alb_target_group.CCSDEV_app_cluster_alb_app_tg.arn}"
+    target_group_arn = "${aws_alb_target_group.CCSDEV_api_cluster_alb_api_tg.arn}"
   }
 
   condition {
     field  = "host-header"
-    values = ["app.${var.domain}"]
+    values = ["api.${var.domain}"]
   }
 }
 
 ##############################################################
 # DNS configuration
 ##############################################################
-resource "aws_route53_record" "app" {
+resource "aws_route53_record" "api" {
   zone_id = "${data.aws_route53_zone.base_domain.zone_id}"
-  name    = "app.${var.domain}"
+  name    = "api.${var.domain}"
   type    = "A"
 
   alias {
-    name                   = "${data.aws_alb.CCSDEV_app_cluster_alb.dns_name}"
-    zone_id                = "${data.aws_alb.CCSDEV_app_cluster_alb.zone_id}"
+    name                   = "${data.aws_alb.CCSDEV_api_cluster_alb.dns_name}"
+    zone_id                = "${data.aws_alb.CCSDEV_api_cluster_alb.zone_id}"
     evaluate_target_health = true
   }
 }
@@ -139,34 +139,34 @@ resource "aws_route53_record" "app" {
 ##############################################################
 # ECS configuration
 ##############################################################
-data "aws_ecs_cluster" "app_cluster" {
-  cluster_name = "CCSDEV_app_cluster"
+data "aws_ecs_cluster" "api_cluster" {
+  cluster_name = "CCSDEV_api_cluster"
 }
 
 data "template_file" "task_definition" {
   template = "${file("${"${path.module}/task_definition.json"}")}"
 
   vars {
-    image = "${aws_ecr_repository.app.repository_url}:latest"
+    image = "${aws_ecr_repository.api.repository_url}:latest"
   }
 }
 
-resource "aws_ecs_task_definition" "app" {
-  family                = "app"
+resource "aws_ecs_task_definition" "api" {
+  family                = "api"
   container_definitions = "${data.template_file.task_definition.rendered}"
 }
 
-resource "aws_ecs_service" "app" {
-  name            = "app"
-  cluster         = "${data.aws_ecs_cluster.app_cluster.id}"
-  task_definition = "${aws_ecs_task_definition.app.arn}"
+resource "aws_ecs_service" "api" {
+  name            = "api"
+  cluster         = "${data.aws_ecs_cluster.api_cluster.id}"
+  task_definition = "${aws_ecs_task_definition.api.arn}"
   desired_count   = 1
 #  iam_role        = "${aws_iam_role.foo.arn}"
 #  depends_on      = ["aws_iam_role_policy.foo"]
 
   load_balancer {
-    target_group_arn = "${aws_alb_target_group.CCSDEV_app_cluster_alb_app_tg.arn}"
-    container_name   = "app"
+    target_group_arn = "${aws_alb_target_group.CCSDEV_api_cluster_alb_api_tg.arn}"
+    container_name   = "api"
     container_port   = 8080
   }
 }
@@ -174,9 +174,9 @@ resource "aws_ecs_service" "app" {
 ##############################################################
 # Pipeline
 ##############################################################
-resource "aws_codepipeline" "app_pipeline" {
-  name     = "app-pipeline"
-  role_arn = "${aws_iam_role.codepipeline_app_service_role.arn}"
+resource "aws_codepipeline" "api_pipeline" {
+  name     = "api-pipeline"
+  role_arn = "${aws_iam_role.codepipeline_api_service_role.arn}"
 
   artifact_store {
     location = "${data.aws_s3_bucket.build-artifacts.bucket}"
@@ -192,11 +192,11 @@ resource "aws_codepipeline" "app_pipeline" {
       owner            = "ThirdParty"
       provider         = "GitHub"
       version          = "1"
-      output_artifacts = ["app_source"]
+      output_artifacts = ["api_source"]
 
       configuration {
         Owner      = "RoweIT"
-        Repo       = "CCSExampleApp1"
+        Repo       = "CCSExampleapi1"
         Branch     = "master"
         PollForSourceChanges = false
       }
@@ -211,12 +211,12 @@ resource "aws_codepipeline" "app_pipeline" {
       category         = "Build"
       owner            = "AWS"
       provider         = "CodeBuild"
-      input_artifacts  = ["app_source"]
-      output_artifacts = ["app_build"]
+      input_artifacts  = ["api_source"]
+      output_artifacts = ["api_build"]
       version          = "1"
 
       configuration {
-        ProjectName = "${aws_codebuild_project.app.name}"
+        ProjectName = "${aws_codebuild_project.api.name}"
       }
     }
   }
@@ -229,12 +229,12 @@ resource "aws_codepipeline" "app_pipeline" {
       category        = "Deploy"
       owner           = "AWS"
       provider        = "ECS"
-      input_artifacts = ["app_build"]
+      input_artifacts = ["api_build"]
       version         = "1"
 
       configuration {
-        ClusterName = "${data.aws_ecs_cluster.app_cluster.cluster_name}"
-        ServiceName = "${aws_ecs_service.app.name}"
+        ClusterName = "${data.aws_ecs_cluster.api_cluster.cluster_name}"
+        ServiceName = "${aws_ecs_service.api.name}"
         FileName    = "images.json"
       }
     }
