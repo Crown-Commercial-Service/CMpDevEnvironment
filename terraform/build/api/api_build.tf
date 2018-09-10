@@ -9,7 +9,7 @@
 # Container Repository
 ##############################################################
 resource "aws_ecr_repository" "api" {
-  name = "ccs/api"
+  name = "${var.container_prefix}/${var.api_name}"
 }
 
 ##############################################################
@@ -100,6 +100,16 @@ resource "aws_iam_role_policy_attachment" "codebuild_container_registry_permissi
 ##############################################################
 # Codebuild Project
 ##############################################################
+data "template_file" "buildspec" {
+  template = "${file("${"${path.module}/docker_buildspec.yml"}")}"
+
+  vars {
+    container_prefix = "${var.container_prefix}"
+    container_name = "${var.api_name}"
+  }
+}
+
+
 resource "aws_codebuild_project" "api" {
   name          = "api-build-project"
   description   = "api_codebuild_project"
@@ -112,7 +122,7 @@ resource "aws_codebuild_project" "api" {
 
   environment {
     compute_type    = "BUILD_GENERAL1_SMALL"
-    image           = "aws/codebuild/docker:17.09.0"
+    image           = "aws/codebuild/java:openjdk-8"
     type            = "LINUX_CONTAINER"
     privileged_mode = true
 
@@ -124,9 +134,9 @@ resource "aws_codebuild_project" "api" {
 
   source {
     type            = "GITHUB"
-    location        = "https://github.com/roweit/CCSExampleapi1.git"
+    location        = "https://github.com/roweit/CCSExampleApi1.git"
     git_clone_depth = 1
-    buildspec       = "${file("${path.module}/docker_buildspec.yml")}"
+    buildspec       = "${data.template_file.buildspec.rendered}"
   }
 
   vpc_config {

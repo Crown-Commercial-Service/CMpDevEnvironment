@@ -1,6 +1,6 @@
 [
     {
-      "name": "api",
+      "name": "${api_name}",
       "image": "${image}",
       "cpu": 10,
       "memory": 512,

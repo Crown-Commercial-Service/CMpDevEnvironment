@@ -1,0 +1,16 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - $(aws ecr get-login --no-include-email)
+  build:
+    commands:
+      - mvn -Ddocker.image.prefix=${container_prefix} -Ddocker.image.name=${container_name} install dockerfile:build
+      - docker tag "${container_prefix}/${container_name}" "$IMAGE_URI"
+  post_build:
+    commands:
+      - docker push "$IMAGE_URI"
+      - printf '[{"name":"${container_name}","imageUri":"%s"}]' "$IMAGE_URI" > images.json
+artifacts:
+    files: images.json

@@ -96,7 +96,7 @@ resource "aws_alb_target_group" "CCSDEV_api_cluster_alb_api_tg" {
     unhealthy_threshold = "2"
     interval            = "30"
     matcher             = "200"
-    path                = "/"
+    path                = "/greeting"
     port                = "traffic-port"
     protocol            = "HTTP"
     timeout             = "5"
@@ -117,7 +117,7 @@ resource "aws_alb_listener_rule" "subdomain_rule" {
 
   condition {
     field  = "host-header"
-    values = ["api.${var.domain}"]
+    values = ["${var.api_name}.${var.domain}"]
   }
 }
 
@@ -126,7 +126,7 @@ resource "aws_alb_listener_rule" "subdomain_rule" {
 ##############################################################
 resource "aws_route53_record" "api" {
   zone_id = "${data.aws_route53_zone.base_domain.zone_id}"
-  name    = "api.${var.domain}"
+  name    = "${var.api_name}.${var.domain}"
   type    = "A"
 
   alias {
@@ -147,26 +147,25 @@ data "template_file" "task_definition" {
   template = "${file("${"${path.module}/task_definition.json"}")}"
 
   vars {
+    api_name = "${var.api_name}"
     image = "${aws_ecr_repository.api.repository_url}:latest"
   }
 }
 
 resource "aws_ecs_task_definition" "api" {
-  family                = "api"
+  family                = "${var.api_name}"
   container_definitions = "${data.template_file.task_definition.rendered}"
 }
 
 resource "aws_ecs_service" "api" {
-  name            = "api"
+  name            = "${var.api_name}"
   cluster         = "${data.aws_ecs_cluster.api_cluster.id}"
   task_definition = "${aws_ecs_task_definition.api.arn}"
   desired_count   = 1
-#  iam_role        = "${aws_iam_role.foo.arn}"
-#  depends_on      = ["aws_iam_role_policy.foo"]
 
   load_balancer {
     target_group_arn = "${aws_alb_target_group.CCSDEV_api_cluster_alb_api_tg.arn}"
-    container_name   = "api"
+    container_name   = "${var.api_name}"
     container_port   = 8080
   }
 }
@@ -192,11 +191,11 @@ resource "aws_codepipeline" "api_pipeline" {
       owner            = "ThirdParty"
       provider         = "GitHub"
       version          = "1"
-      output_artifacts = ["api_source"]
+      output_artifacts = ["${var.api_name}_source"]
 
       configuration {
         Owner      = "RoweIT"
-        Repo       = "CCSExampleapi1"
+        Repo       = "CCSExampleApi1"
         Branch     = "master"
         PollForSourceChanges = false
       }
@@ -211,8 +210,8 @@ resource "aws_codepipeline" "api_pipeline" {
       category         = "Build"
       owner            = "AWS"
       provider         = "CodeBuild"
-      input_artifacts  = ["api_source"]
-      output_artifacts = ["api_build"]
+      input_artifacts  = ["${var.api_name}_source"]
+      output_artifacts = ["${var.api_name}_build"]
       version          = "1"
 
       configuration {
@@ -229,7 +228,7 @@ resource "aws_codepipeline" "api_pipeline" {
       category        = "Deploy"
       owner           = "AWS"
       provider        = "ECS"
-      input_artifacts = ["api_build"]
+      input_artifacts = ["${var.api_name}_build"]
       version         = "1"
 
       configuration {

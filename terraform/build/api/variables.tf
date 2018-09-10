@@ -34,13 +34,21 @@ data "aws_alb_listener" "http_listener" {
 
 data "aws_route53_zone" "base_domain" {
   name         = "${var.domain}."
-  private_zone = false
+  private_zone = true
 }
 
 variable "domain" {
-    default = "roweitdev.co.uk"
+    default = "ccsdev-internal.org"
 }
 
 variable "http_port" {
   default = 80
+}
+
+variable api_name {
+  default = "api1"
+}
+
+variable "container_prefix" {
+  default = "ccs"
 }
