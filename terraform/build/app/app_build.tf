@@ -9,7 +9,7 @@
 # Container Repository
 ##############################################################
 resource "aws_ecr_repository" "app" {
-  name = "ccs/app"
+  name = "${var.app_prefix}/${var.app_name}"
 }
 
 ##############################################################
@@ -100,9 +100,19 @@ resource "aws_iam_role_policy_attachment" "codebuild_container_registry_permissi
 ##############################################################
 # Codebuild Project
 ##############################################################
+data "template_file" "buildspec" {
+  template = "${file("${"${path.module}/docker_buildspec.yml"}")}"
+
+  vars {
+    container_prefix = "${var.api_prefix}"
+    container_name = "${var.api_name}"
+    image_name = "${aws_ecr_repository.app.repository_url}:latest"
+  }
+}
+
 resource "aws_codebuild_project" "app" {
-  name          = "app-build-project"
-  description   = "app_codebuild_project"
+  name          = "${var.app_name}-build-project"
+  description   = "${var.app_name}_codebuild_project"
   build_timeout = "60" # Default 60 minutes
   service_role  = "${aws_iam_role.codebuild_app_service_role.arn}"
 
@@ -115,18 +125,13 @@ resource "aws_codebuild_project" "app" {
     image           = "aws/codebuild/docker:17.09.0"
     type            = "LINUX_CONTAINER"
     privileged_mode = true
-
-    environment_variable {
-      "name"  = "IMAGE_URI"
-      "value" = "${aws_ecr_repository.app.repository_url}:latest"
-    }
   }
 
   source {
     type            = "GITHUB"
     location        = "https://github.com/roweit/CCSExampleApp1.git"
     git_clone_depth = 1
-    buildspec       = "${file("${path.module}/docker_buildspec.yml")}"
+    buildspec       = "${data.template_file.buildspec.rendered}"
   }
 
   vpc_config {

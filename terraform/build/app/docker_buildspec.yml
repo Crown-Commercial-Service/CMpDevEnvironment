@@ -6,10 +6,10 @@ phases:
       - $(aws ecr get-login --no-include-email)
   build:
     commands:
-      - docker build --tag "$IMAGE_URI" .
+      - docker build --tag "${image_name}" .
   post_build:
     commands:
-      - docker push "$IMAGE_URI"
-      - printf '[{"name":"app","imageUri":"%s"}]' "$IMAGE_URI" > images.json
+      - docker push "${image_name}"
+      - printf '[{"name":"${container_name}","imageUri":"%s"}]' "${image_name}" > images.json
 artifacts:
     files: images.json

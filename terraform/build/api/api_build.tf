@@ -9,7 +9,7 @@
 # Container Repository
 ##############################################################
 resource "aws_ecr_repository" "api" {
-  name = "${var.container_prefix}/${var.api_name}"
+  name = "${var.api_prefix}/${var.api_name}"
 }
 
 ##############################################################
@@ -104,11 +104,11 @@ data "template_file" "buildspec" {
   template = "${file("${"${path.module}/docker_buildspec.yml"}")}"
 
   vars {
-    container_prefix = "${var.container_prefix}"
+    container_prefix = "${var.api_prefix}"
     container_name = "${var.api_name}"
+    image_name = "${aws_ecr_repository.app.repository_url}:latest"
   }
 }
-
 
 resource "aws_codebuild_project" "api" {
   name          = "api-build-project"
@@ -125,11 +125,6 @@ resource "aws_codebuild_project" "api" {
     image           = "aws/codebuild/java:openjdk-8"
     type            = "LINUX_CONTAINER"
     privileged_mode = true
-
-    environment_variable {
-      "name"  = "IMAGE_URI"
-      "value" = "${aws_ecr_repository.api.repository_url}:latest"
-    }
   }
 
   source {

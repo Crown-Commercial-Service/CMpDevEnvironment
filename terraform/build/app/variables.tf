@@ -44,3 +44,11 @@ variable "domain" {
 variable "http_port" {
   default = 80
 }
+
+variable "app_prefix" {
+  default = "ccs"
+}
+
+variable "app_name" {
+  default = "app1"
+}

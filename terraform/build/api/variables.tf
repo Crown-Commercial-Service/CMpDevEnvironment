@@ -45,10 +45,10 @@ variable "http_port" {
   default = 80
 }
 
-variable api_name {
-  default = "api1"
+variable "api_prefix" {
+  default = "ccs"
 }
 
-variable "container_prefix" {
-  default = "ccs"
+variable "api_name" {
+  default = "api1"
 }
