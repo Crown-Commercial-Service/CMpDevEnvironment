@@ -147,6 +147,7 @@ data "template_file" "task_definition" {
   template = "${file("${"${path.module}/task_definition.json"}")}"
 
   vars {
+    app_name = "${var.app_name}"
     image = "${aws_ecr_repository.app.repository_url}:latest"
   }
 }
