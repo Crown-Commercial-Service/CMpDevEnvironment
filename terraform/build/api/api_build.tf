@@ -106,7 +106,7 @@ data "template_file" "buildspec" {
   vars {
     container_prefix = "${var.api_prefix}"
     container_name = "${var.api_name}"
-    image_name = "${aws_ecr_repository.app.repository_url}:latest"
+    image_name = "${aws_ecr_repository.api.repository_url}:latest"
   }
 }
 
