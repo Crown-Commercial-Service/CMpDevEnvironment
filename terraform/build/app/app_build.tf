@@ -104,8 +104,8 @@ data "template_file" "buildspec" {
   template = "${file("${"${path.module}/docker_buildspec.yml"}")}"
 
   vars {
-    container_prefix = "${var.api_prefix}"
-    container_name = "${var.api_name}"
+    container_prefix = "${var.app_prefix}"
+    container_name = "${var.app_name}"
     image_name = "${aws_ecr_repository.app.repository_url}:latest"
   }
 }
