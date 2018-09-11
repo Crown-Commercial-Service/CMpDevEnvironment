@@ -52,3 +52,15 @@ variable "api_prefix" {
 variable "api_name" {
   default = "api1"
 }
+
+variable github_owner {
+  default = "RoweIT"
+}
+
+variable github_repo {
+  default = "CCSExampleApi1"
+}
+
+variable github_branch {
+  default = "master"
+}

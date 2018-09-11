@@ -196,10 +196,10 @@ resource "aws_codepipeline" "app_pipeline" {
       output_artifacts = ["${var.app_name}_source"]
 
       configuration {
-        Owner      = "RoweIT"
-        Repo       = "CCSExampleApp1"
-        Branch     = "master"
-        PollForSourceChanges = false
+        Owner      = "${var.github_owner}"
+        Repo       = "${var.github_repo}"
+        Branch     = "${var.github_branch}"
+        PollForSourceChanges = true
       }
     }
   }

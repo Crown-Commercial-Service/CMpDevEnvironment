@@ -117,7 +117,7 @@ resource "aws_codebuild_project" "app" {
   service_role  = "${aws_iam_role.codebuild_app_service_role.arn}"
 
   artifacts {
-    type = "NO_ARTIFACTS"
+    type = "CODEPIPELINE"
   }
 
   environment {
@@ -128,9 +128,7 @@ resource "aws_codebuild_project" "app" {
   }
 
   source {
-    type            = "GITHUB"
-    location        = "https://github.com/roweit/CCSExampleApp1.git"
-    git_clone_depth = 1
+    type            = "CODEPIPELINE"
     buildspec       = "${data.template_file.buildspec.rendered}"
   }
 

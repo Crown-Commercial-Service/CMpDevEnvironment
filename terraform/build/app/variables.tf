@@ -52,3 +52,15 @@ variable "app_prefix" {
 variable "app_name" {
   default = "app1"
 }
+
+variable github_owner {
+  default = "RoweIT"
+}
+
+variable github_repo {
+  default = "CCSExampleApp1"
+}
+
+variable github_branch {
+  default = "master"
+}
