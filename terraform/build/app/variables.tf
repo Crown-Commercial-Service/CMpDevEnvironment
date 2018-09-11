@@ -44,3 +44,23 @@ variable "domain" {
 variable "http_port" {
   default = 80
 }
+
+variable "app_prefix" {
+  default = "ccs"
+}
+
+variable "app_name" {
+  default = "app1"
+}
+
+variable github_owner {
+  default = "RoweIT"
+}
+
+variable github_repo {
+  default = "CCSExampleApp1"
+}
+
+variable github_branch {
+  default = "master"
+}

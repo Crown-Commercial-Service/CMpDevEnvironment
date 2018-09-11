@@ -17,30 +17,50 @@ data "aws_subnet" "CCSDEV-AZ-a-Private-1" {
   }
 }
 
-data "aws_security_group" "vpc-CCSDEV-internal-app" {
+data "aws_security_group" "vpc-CCSDEV-internal-api" {
   tags {
-    "Name" = "CCSDEV-internal-app"
+    "Name" = "CCSDEV-internal-api"
   }
 }
 
-data "aws_alb" "CCSDEV_app_cluster_alb" {
-  name = "CCSDEV-app-cluster-alb"
+data "aws_alb" "CCSDEV_api_cluster_alb" {
+  name = "CCSDEV-api-cluster-alb"
 }
 
 data "aws_alb_listener" "http_listener" {
-  load_balancer_arn = "${data.aws_alb.CCSDEV_app_cluster_alb.arn}"
+  load_balancer_arn = "${data.aws_alb.CCSDEV_api_cluster_alb.arn}"
   port = "${var.http_port}"
 }
 
 data "aws_route53_zone" "base_domain" {
   name         = "${var.domain}."
-  private_zone = false
+  private_zone = true
 }
 
 variable "domain" {
-    default = "roweitdev.co.uk"
+    default = "ccsdev-internal.org"
 }
 
 variable "http_port" {
   default = 80
+}
+
+variable "api_prefix" {
+  default = "ccs"
+}
+
+variable "api_name" {
+  default = "api1"
+}
+
+variable github_owner {
+  default = "RoweIT"
+}
+
+variable github_repo {
+  default = "CCSExampleApi1"
+}
+
+variable github_branch {
+  default = "master"
 }

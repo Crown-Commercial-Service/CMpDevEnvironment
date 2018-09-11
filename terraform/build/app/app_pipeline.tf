@@ -117,7 +117,7 @@ resource "aws_alb_listener_rule" "subdomain_rule" {
 
   condition {
     field  = "host-header"
-    values = ["app.${var.domain}"]
+    values = ["${var.app_name}.${var.domain}"]
   }
 }
 
@@ -126,7 +126,7 @@ resource "aws_alb_listener_rule" "subdomain_rule" {
 ##############################################################
 resource "aws_route53_record" "app" {
   zone_id = "${data.aws_route53_zone.base_domain.zone_id}"
-  name    = "app.${var.domain}"
+  name    = "${var.app_name}.${var.domain}"
   type    = "A"
 
   alias {
@@ -147,17 +147,18 @@ data "template_file" "task_definition" {
   template = "${file("${"${path.module}/task_definition.json"}")}"
 
   vars {
+    app_name = "${var.app_name}"
     image = "${aws_ecr_repository.app.repository_url}:latest"
   }
 }
 
 resource "aws_ecs_task_definition" "app" {
-  family                = "app"
+  family                = "${var.app_name}"
   container_definitions = "${data.template_file.task_definition.rendered}"
 }
 
 resource "aws_ecs_service" "app" {
-  name            = "app"
+  name            = "${var.app_name}"
   cluster         = "${data.aws_ecs_cluster.app_cluster.id}"
   task_definition = "${aws_ecs_task_definition.app.arn}"
   desired_count   = 1
@@ -166,7 +167,7 @@ resource "aws_ecs_service" "app" {
 
   load_balancer {
     target_group_arn = "${aws_alb_target_group.CCSDEV_app_cluster_alb_app_tg.arn}"
-    container_name   = "app"
+    container_name   = "${var.app_name}"
     container_port   = 8080
   }
 }
@@ -175,7 +176,7 @@ resource "aws_ecs_service" "app" {
 # Pipeline
 ##############################################################
 resource "aws_codepipeline" "app_pipeline" {
-  name     = "app-pipeline"
+  name     = "${var.app_name}-pipeline"
   role_arn = "${aws_iam_role.codepipeline_app_service_role.arn}"
 
   artifact_store {
@@ -192,13 +193,13 @@ resource "aws_codepipeline" "app_pipeline" {
       owner            = "ThirdParty"
       provider         = "GitHub"
       version          = "1"
-      output_artifacts = ["app_source"]
+      output_artifacts = ["${var.app_name}_source"]
 
       configuration {
-        Owner      = "RoweIT"
-        Repo       = "CCSExampleApp1"
-        Branch     = "master"
-        PollForSourceChanges = false
+        Owner      = "${var.github_owner}"
+        Repo       = "${var.github_repo}"
+        Branch     = "${var.github_branch}"
+        PollForSourceChanges = true
       }
     }
   }
@@ -211,8 +212,8 @@ resource "aws_codepipeline" "app_pipeline" {
       category         = "Build"
       owner            = "AWS"
       provider         = "CodeBuild"
-      input_artifacts  = ["app_source"]
-      output_artifacts = ["app_build"]
+      input_artifacts  = ["${var.app_name}_source"]
+      output_artifacts = ["${var.app_name}_build"]
       version          = "1"
 
       configuration {
@@ -229,7 +230,7 @@ resource "aws_codepipeline" "app_pipeline" {
       category        = "Deploy"
       owner           = "AWS"
       provider        = "ECS"
-      input_artifacts = ["app_build"]
+      input_artifacts = ["${var.app_name}_build"]
       version         = "1"
 
       configuration {
