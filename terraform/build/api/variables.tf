@@ -5,6 +5,14 @@ provider "aws" {
   region     = "eu-west-2"
 }
 
+data "aws_iam_role" "codebuild_api_service_role" {
+  name = "codebuild-api-service-role"
+}
+
+data "aws_iam_role" "codepipeline_api_service_role" {
+  name = "codepipeline-api-service-role"
+}
+
 data "aws_vpc" "CCSDEV-Services" {
   tags {
     "Name" = "CCSDEV Services"

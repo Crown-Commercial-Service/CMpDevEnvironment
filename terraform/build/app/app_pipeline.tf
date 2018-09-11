@@ -6,76 +6,6 @@
 #   Application requirements
 #
 ##############################################################
-# Policies
-##############################################################
-data "aws_iam_policy_document" "codepipeline_app_service_role_assume_policy" {
-  statement {
-    principals = {
-      type = "Service"
-      identifiers = ["codepipeline.amazonaws.com"]
-    }
-
-    actions = ["sts:AssumeRole"]
-  }
-}
-
-resource "aws_iam_role" "codepipeline_app_service_role" {
-  name                = "codepipeline-app-service-role"
-  path                = "/"
-  assume_role_policy  = "${data.aws_iam_policy_document.codepipeline_app_service_role_assume_policy.json}"
-}
-
-data "aws_iam_policy_document" "codepipeline_app_service_policy" {
-  statement {
-    actions = [
-      "codebuild:BatchGetBuilds",
-      "codebuild:StartBuild"
-    ]
-
-    resources = ["*"]
-  }
-
-  statement {
-    actions = [
-        "ecs:DescribeServices",
-        "ecs:DescribeTaskDefinition",
-        "ecs:DescribeTasks",
-        "ecs:ListTasks",
-        "ecs:RegisterTaskDefinition",
-        "ecs:UpdateService"
-    ]
-
-    resources = ["*"]
-  }
-
-  statement {
-    actions = [
-      "s3:GetObject",
-      "s3:GetObjectVersion",
-      "s3:GetBucketVersioning",
-      "s3:PutObject"
-   ]
-
-    resources = [
-        "${data.aws_s3_bucket.build-artifacts.arn}",
-        "${data.aws_s3_bucket.build-artifacts.arn}/*",
-        "arn:aws:s3:::codepipeline*"
-        ]
-  }
-}
-
-resource "aws_iam_role_policy" "codepipeline_app_service_role_policy" {
-  role = "${aws_iam_role.codepipeline_app_service_role.name}"
-  name = "codepipeline_app_service_role_policy"
-  policy = "${data.aws_iam_policy_document.codepipeline_app_service_policy.json}"
-}
-
-resource "aws_iam_role_policy_attachment" "codepipeline_container_registry_permissions" {
-  role = "${aws_iam_role.codepipeline_app_service_role.name}"
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser"
-}
-
-##############################################################
 # Build Artifact Storage
 ##############################################################
 data "aws_s3_bucket" "build-artifacts" {
@@ -86,7 +16,7 @@ data "aws_s3_bucket" "build-artifacts" {
 # Load Balancer configuration
 ##############################################################
 resource "aws_alb_target_group" "CCSDEV_app_cluster_alb_app_tg" {
-  name     = "CCSDEV-app-cluster-alb-app-tg"
+  name     = "CCSDEV-app-cluster-alb-${var.app_name}-tg"
   port     = "${var.app_port}"
   protocol = "${upper(var.app_protocol)}"
   vpc_id   = "${data.aws_vpc.CCSDEV-Services.id}"
@@ -103,7 +33,7 @@ resource "aws_alb_target_group" "CCSDEV_app_cluster_alb_app_tg" {
   }
 
   tags {
-    "Name" = "CCSDEV_app_cluster_alb_def-tg"
+    "Name" = "CCSDEV_app_cluster_alb_${var.app_name}-tg"
   }
 }
 
@@ -164,8 +94,6 @@ resource "aws_ecs_service" "app" {
   cluster         = "${data.aws_ecs_cluster.app_cluster.id}"
   task_definition = "${aws_ecs_task_definition.app.arn}"
   desired_count   = 1
-#  iam_role        = "${aws_iam_role.foo.arn}"
-#  depends_on      = ["aws_iam_role_policy.foo"]
 
   load_balancer {
     target_group_arn = "${aws_alb_target_group.CCSDEV_app_cluster_alb_app_tg.arn}"
@@ -179,7 +107,7 @@ resource "aws_ecs_service" "app" {
 ##############################################################
 resource "aws_codepipeline" "app_pipeline" {
   name     = "${var.app_name}-pipeline"
-  role_arn = "${aws_iam_role.codepipeline_app_service_role.arn}"
+  role_arn = "${data.aws_iam_role.codepipeline_app_service_role.arn}"
 
   artifact_store {
     location = "${data.aws_s3_bucket.build-artifacts.bucket}"

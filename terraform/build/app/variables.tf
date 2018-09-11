@@ -2,7 +2,15 @@
 # VPC References
 ##############################################################
 provider "aws" {
-  region     = "eu-west-2"
+  region = "eu-west-2"
+}
+
+data "aws_iam_role" "codebuild_app_service_role" {
+  name = "codebuild-app-service-role"
+}
+
+data "aws_iam_role" "codepipeline_app_service_role" {
+  name = "codepipeline-app-service-role"
 }
 
 data "aws_vpc" "CCSDEV-Services" {
