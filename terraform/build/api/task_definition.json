@@ -24,6 +24,14 @@
         "name": "CCS_FEATURE_EG1",
         "value": "on"
       } 
-    ]
+    ],
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+          "awslogs-group": "${api_log_group}",
+          "awslogs-region": "eu-west-2",
+          "awslogs-stream-prefix": "${api_name}"
+      }
+    }
   }
 ]  

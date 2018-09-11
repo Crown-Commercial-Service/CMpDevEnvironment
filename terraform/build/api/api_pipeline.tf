@@ -13,6 +13,14 @@ data "aws_s3_bucket" "build-artifacts" {
 }
 
 ##############################################################
+# Cloudwatch Logs
+##############################################################
+resource "aws_cloudwatch_log_group" "api" {
+  name = "/ccs/${var.api_name}"
+  retention_in_days = 3
+}
+
+##############################################################
 # Load Balancer configuration
 ##############################################################
 resource "aws_alb_target_group" "CCSDEV_api_cluster_alb_api_tg" {
@@ -80,6 +88,7 @@ data "template_file" "task_definition" {
     api_name = "${var.api_name}"
     api_base_url = "${var.domain}"
     api_protocol = "${var.api_protocol}"
+    api_log_group = "${aws_cloudwatch_log_group.api.name}"
     image = "${aws_ecr_repository.api.repository_url}:latest"
   }
 }
