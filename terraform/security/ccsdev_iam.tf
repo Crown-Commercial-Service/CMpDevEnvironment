@@ -17,6 +17,7 @@ provider "aws" {
 #     CCS_Application_Developer
 #     CCS_API_Developer
 #     CCS_User_Administration
+#     CCS_Code_Build_Pipeline
 #
 #   Users?
 #
@@ -74,6 +75,7 @@ resource "aws_iam_group_policy_attachment" "sys_admin_s3_full" {
 #   AmazonECS_FullAccess
 #   service-role/AWSConfigRole
 #   AmazonRDSFullAccess
+#   CloudWatchLogsFullAccess
 #
 ##############################################################
 
@@ -116,6 +118,11 @@ resource "aws_iam_group_policy_attachment" "infra_admin_rds_full" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonRDSFullAccess"
 }
 
+resource "aws_iam_group_policy_attachment" "infra_admin_logs_full" {
+  group      = "${aws_iam_group.CCSDEV_iam_infra_admin.name}"
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
+}
+
 ##############################################################
 # Application Developer Group
 #
@@ -127,6 +134,7 @@ resource "aws_iam_group_policy_attachment" "infra_admin_rds_full" {
 #   AmazonEC2ReadOnlyAccess
 #   AmazonEC2ContainerRegistryPowerUser
 #   AmazonECS_FullAccess
+#   CloudWatchLogsFullAccess
 #
 # TODO At present access NOT restricted to the app cluster
 #
@@ -151,6 +159,10 @@ resource "aws_iam_group_policy_attachment" "app_dev_ecs_full" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonECS_FullAccess"
 }
 
+resource "aws_iam_group_policy_attachment" "app_dev_logs_full" {
+  group      = "${aws_iam_group.CCSDEV_iam_app_dev.name}"
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
+}
 
 ##############################################################
 # API Developer Group
@@ -164,6 +176,7 @@ resource "aws_iam_group_policy_attachment" "app_dev_ecs_full" {
 #   AmazonEC2ContainerRegistryPowerUser
 #   AmazonECS_FullAccess
 #   AmazonRDSFullAccess
+#   CloudWatchLogsFullAccess
 #
 # TODO At present access NOT restricted to the api cluster
 #
@@ -191,6 +204,35 @@ resource "aws_iam_group_policy_attachment" "api_dev_ecs_full" {
 resource "aws_iam_group_policy_attachment" "api_dev_rds_full" {
   group      = "${aws_iam_group.CCSDEV_iam_api_dev.name}"
   policy_arn = "arn:aws:iam::aws:policy/AmazonRDSFullAccess"
+}
+
+resource "aws_iam_group_policy_attachment" "api_dev_logs_full" {
+  group      = "${aws_iam_group.CCSDEV_iam_api_dev.name}"
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
+}
+
+##############################################################
+# CCS Code Build Pipeline Group
+#
+# Users in this group are able to define and adminstrate
+# AWS CodeBuild and AWS CodePipeline Projects.
+#
+#   CodeBuildAdminAccess
+#   CodePipelineFullAccess
+##############################################################
+
+resource "aws_iam_group" "CCSDEV_iam_code_build_pipeline" {
+  name = "CCS_Code_Build_Pipeline"
+}
+
+resource "aws_iam_group_policy_attachment" "code_build_admin" {
+  group      = "${aws_iam_group.CCSDEV_iam_code_build_pipeline.name}"
+  policy_arn = "arn:aws:iam::aws:policy/AWSCodeBuildAdminAccess"
+}
+
+resource "aws_iam_group_policy_attachment" "code_pipeline_full" {
+  group      = "${aws_iam_group.CCSDEV_iam_code_build_pipeline.name}"
+  policy_arn = "arn:aws:iam::aws:policy/AWSCodePipelineFullAccess"
 }
 
 ##############################################################
