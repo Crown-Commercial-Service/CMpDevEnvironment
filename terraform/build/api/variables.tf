@@ -27,9 +27,9 @@ data "aws_alb" "CCSDEV_api_cluster_alb" {
   name = "CCSDEV-api-cluster-alb"
 }
 
-data "aws_alb_listener" "http_listener" {
+data "aws_alb_listener" "api_listener" {
   load_balancer_arn = "${data.aws_alb.CCSDEV_api_cluster_alb.arn}"
-  port = "${var.http_port}"
+  port = "${var.api_port}"
 }
 
 data "aws_route53_zone" "base_domain" {
@@ -41,7 +41,10 @@ variable "domain" {
     default = "ccsdev-internal.org"
 }
 
-variable "http_port" {
+variable "api_protocol" {
+  default = "http"
+}
+variable "api_port" {
   default = 80
 }
 
@@ -52,6 +55,7 @@ variable "api_prefix" {
 variable "api_name" {
   default = "api1"
 }
+
 
 variable github_owner {
   default = "RoweIT"

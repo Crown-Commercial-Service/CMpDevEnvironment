@@ -27,9 +27,9 @@ data "aws_alb" "CCSDEV_app_cluster_alb" {
   name = "CCSDEV-app-cluster-alb"
 }
 
-data "aws_alb_listener" "http_listener" {
+data "aws_alb_listener" "app_listener" {
   load_balancer_arn = "${data.aws_alb.CCSDEV_app_cluster_alb.arn}"
-  port = "${var.http_port}"
+  port = "${var.app_port}"
 }
 
 data "aws_route53_zone" "base_domain" {
@@ -41,7 +41,11 @@ variable "domain" {
     default = "roweitdev.co.uk"
 }
 
-variable "http_port" {
+variable "app_protocol" {
+  default = "http"
+}
+
+variable "app_port" {
   default = 80
 }
 

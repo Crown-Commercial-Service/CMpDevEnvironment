@@ -87,8 +87,8 @@ data "aws_s3_bucket" "build-artifacts" {
 ##############################################################
 resource "aws_alb_target_group" "CCSDEV_api_cluster_alb_api_tg" {
   name     = "CCSDEV-api-cluster-alb-api-tg"
-  port     = "${var.http_port}"
-  protocol = "HTTP"
+  port     = "${var.api_port}"
+  protocol = "${upper(var.api_protocol)}"
   vpc_id   = "${data.aws_vpc.CCSDEV-Services.id}"
 
   health_check {
@@ -98,7 +98,7 @@ resource "aws_alb_target_group" "CCSDEV_api_cluster_alb_api_tg" {
     matcher             = "200"
     path                = "/greeting"
     port                = "traffic-port"
-    protocol            = "HTTP"
+    protocol            = "${upper(var.api_protocol)}"
     timeout             = "5"
   }
 
@@ -108,7 +108,7 @@ resource "aws_alb_target_group" "CCSDEV_api_cluster_alb_api_tg" {
 }
 
 resource "aws_alb_listener_rule" "subdomain_rule" {
-  listener_arn = "${data.aws_alb_listener.http_listener.arn}"
+  listener_arn = "${data.aws_alb_listener.api_listener.arn}"
 
   action {
     type             = "forward"
@@ -148,6 +148,8 @@ data "template_file" "task_definition" {
 
   vars {
     api_name = "${var.api_name}"
+    api_base_url = "${var.domain}"
+    api_protocol = "${var.api_protocol}"
     image = "${aws_ecr_repository.api.repository_url}:latest"
   }
 }
