@@ -114,69 +114,15 @@ resource "aws_ecs_service" "api" {
 ##############################################################
 # Pipeline
 ##############################################################
-resource "aws_codepipeline" "api_pipeline" {
-  name     = "${var.api_name}-pipeline"
-  role_arn = "${data.aws_iam_role.codepipeline_api_service_role.arn}"
+module "pipeline" {
+  source = "../../modules/pipeline"
 
-  artifact_store {
-    location = "${data.aws_s3_bucket.build-artifacts.bucket}"
-    type     = "S3"
-  }
-
-  stage {
-    name = "Source"
-
-    action {
-      name             = "Source"
-      category         = "Source"
-      owner            = "ThirdParty"
-      provider         = "GitHub"
-      version          = "1"
-      output_artifacts = ["${var.api_name}_source"]
-
-      configuration {
-        Owner      = "${var.github_owner}"
-        Repo       = "${var.github_repo}"
-        Branch     = "${var.github_branch}"
-        PollForSourceChanges = true
-      }
-    }
-  }
-
-  stage {
-    name = "Build"
-
-    action {
-      name             = "Build"
-      category         = "Build"
-      owner            = "AWS"
-      provider         = "CodeBuild"
-      input_artifacts  = ["${var.api_name}_source"]
-      output_artifacts = ["${var.api_name}_build"]
-      version          = "1"
-
-      configuration {
-        ProjectName = "${module.build.project_name}"
-      }
-    }
-  }
-
-  stage {
-    name = "Deploy"
-
-    action {
-      name            = "Deploy"
-      category        = "Deploy"
-      owner           = "AWS"
-      provider        = "ECS"
-      input_artifacts = ["${var.api_name}_build"]
-      version         = "1"
-
-      configuration {
-        ClusterName = "${data.aws_ecs_cluster.api_cluster.cluster_name}"
-        ServiceName = "${aws_ecs_service.api.name}"
-        FileName    = "images.json"
-      }
-    }
-  }
+  artifact_name = "${var.api_name}"
+  service_role_arn = "${data.aws_iam_role.codepipeline_api_service_role.arn}"
+  artifact_bucket = "${data.aws_s3_bucket.build-artifacts.bucket}"
+  github_owner = "${var.github_owner}"
+  github_repo = "${var.github_repo}"
+  build_project_name = "${module.build.project_name}"
+  deploy_cluster_name = "${data.aws_ecs_cluster.api_cluster.cluster_name}"
+  deploy_service_name = "${aws_ecs_service.api.name}"
 }

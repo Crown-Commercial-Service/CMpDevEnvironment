@@ -3,8 +3,6 @@
 # CodeBuild module
 #
 ##############################################################
-# Codebuild Project
-##############################################################
 
 resource "aws_codebuild_project" "project" {
   name          = "${var.artifact_name}-build-project"
