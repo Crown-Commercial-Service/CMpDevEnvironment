@@ -9,7 +9,7 @@
 # Build Artifact Storage
 ##############################################################
 data "aws_s3_bucket" "build-artifacts" {
-  bucket = "ccsdev-build-artifacts"
+  bucket = "${local.artifact_bucket_name}"
 }
 
 ##############################################################
