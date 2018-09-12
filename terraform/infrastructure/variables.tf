@@ -1,6 +1,6 @@
 ##############################################################
 #
-# AWS Access Details
+# AWS Details
 #
 # NOTE: Access Key and Secret Key will be pulled from the local
 # credentials 
@@ -9,6 +9,9 @@
 
 variable "region" {
   default = "eu-west-2"
+}
+
+data "aws_caller_identity" "current" {
 }
 
 ##############################################################
@@ -119,6 +122,6 @@ variable "https_port" {
 # S3 Bucket name
 ##############################################################
 
-variable "s3_build_artifact_bucket" {
-  default = "ccsdev-build-artifacts"
+locals {
+   artifact_bucket_name = "ccs.${data.aws_caller_identity.current.account_id}.build-artifacts"
 }

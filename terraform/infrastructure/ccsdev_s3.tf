@@ -2,7 +2,7 @@
 # Artifact Storage
 ##############################################################
 resource "aws_s3_bucket" "build-artifacts" {
-  bucket = "${var.s3_build_artifact_bucket}"
+  bucket = "${local.artifact_bucket_name}"
   acl    = "private"
 
   lifecycle_rule {

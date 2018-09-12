@@ -6,6 +6,9 @@ provider "aws" {
   region = "eu-west-2"
 }
 
+data "aws_caller_identity" "current" {
+}
+
 ##############################################################
 # IAM references
 ##############################################################
@@ -101,6 +104,6 @@ variable github_branch {
 # S3 Bucket name
 ##############################################################
 
-variable "s3_build_artifact_bucket" {
-  default = "ccsdev-build-artifacts"
+locals {
+   artifact_bucket_name = "ccs.${data.aws_caller_identity.current.account_id}.build-artifacts"
 }
