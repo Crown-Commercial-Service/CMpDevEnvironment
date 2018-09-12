@@ -156,7 +156,7 @@ resource "aws_codepipeline" "app_pipeline" {
       version          = "1"
 
       configuration {
-        ProjectName = "${aws_codebuild_project.app.name}"
+        ProjectName = "${module.build.project_name}"
       }
     }
   }
