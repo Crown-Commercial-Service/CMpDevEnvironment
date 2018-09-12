@@ -6,13 +6,6 @@
 #   Application requirements
 #
 ##############################################################
-# Build Artifact Storage
-##############################################################
-data "aws_s3_bucket" "build-artifacts" {
-  bucket = "${local.artifact_bucket_name}"
-}
-
-##############################################################
 # Cloudwatch Logs
 ##############################################################
 resource "aws_cloudwatch_log_group" "app" {
@@ -110,7 +103,7 @@ module "pipeline" {
 
   artifact_name = "${var.app_name}"
   service_role_arn = "${data.aws_iam_role.codepipeline_app_service_role.arn}"
-  artifact_bucket_name = "${data.aws_s3_bucket.build-artifacts.bucket}"
+  artifact_bucket_name = "${local.artifact_bucket_name}"
   github_owner = "${var.github_owner}"
   github_repo = "${var.github_repo}"
   build_project_name = "${module.build.project_name}"

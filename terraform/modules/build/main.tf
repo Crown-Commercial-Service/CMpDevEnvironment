@@ -3,6 +3,15 @@
 # CodeBuild module
 #
 ##############################################################
+data "template_file" "buildspec" {
+  template = "${file("${"${path.module}/${var.build_type}_buildspec.yml"}")}"
+
+  vars {
+    container_prefix = "${var.artifact_prefix}"
+    container_name = "${var.artifact_name}"
+    image_name = "${var.artifact_image_name}"
+  }
+}
 
 resource "aws_codebuild_project" "project" {
   name          = "${var.artifact_name}-build-project"
@@ -23,7 +32,7 @@ resource "aws_codebuild_project" "project" {
 
   source {
     type            = "CODEPIPELINE"
-    buildspec       = "${var.spec}"
+    buildspec       = "${data.template_file.buildspec.rendered}"
   }
 
   vpc_config {

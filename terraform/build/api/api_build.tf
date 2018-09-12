@@ -15,23 +15,13 @@ resource "aws_ecr_repository" "api" {
 ##############################################################
 # Build
 ##############################################################
-
-data "template_file" "buildspec" {
-  template = "${file("${"${path.module}/docker_buildspec.yml"}")}"
-
-  vars {
-    container_prefix = "${var.api_prefix}"
-    container_name = "${var.api_name}"
-    image_name = "${aws_ecr_repository.api.repository_url}:latest"
-  }
-}
-
 module "build" {
   source = "../../modules/build"
 
   artifact_prefix = "${var.api_prefix}"
   artifact_name = "${var.api_name}"
-  spec = "${data.template_file.buildspec.rendered}"
+  artifact_image_name = "${aws_ecr_repository.api.repository_url}:latest"
+  build_type = "java"
   service_role_arn = "${data.aws_iam_role.codebuild_api_service_role.arn}"
   host_image = "aws/codebuild/java:openjdk-8"
   vpc_id = "${data.aws_vpc.CCSDEV-Services.id}"
