@@ -323,7 +323,7 @@ resource "aws_route_table" "CCSDEV-NAT-a-Route-Table" {
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = "${aws_nat_gateway.CCSDEV-NAT-a-Gateway.id}"
+    nat_gateway_id = "${aws_nat_gateway.CCSDEV-NAT-a-Gateway.id}"
   }
 
   tags {
