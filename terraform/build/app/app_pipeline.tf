@@ -93,22 +93,13 @@ data "template_file" "task_definition" {
   }
 }
 
-resource "aws_ecs_task_definition" "app" {
-  family                = "${var.app_name}"
-  container_definitions = "${data.template_file.task_definition.rendered}"
-}
+module "ecs_service" {
+  source = "../../modules/ecs_service"
 
-resource "aws_ecs_service" "app" {
-  name            = "${var.app_name}"
-  cluster         = "${data.aws_ecs_cluster.app_cluster.id}"
-  task_definition = "${aws_ecs_task_definition.app.arn}"
-  desired_count   = 1
-
-  load_balancer {
-    target_group_arn = "${aws_alb_target_group.CCSDEV_app_cluster_alb_app_tg.arn}"
-    container_name   = "${var.app_name}"
-    container_port   = 8080
-  }
+  task_name = "${var.app_name}"
+  task_definition = "${data.template_file.task_definition.rendered}"
+  cluster_id = "${data.aws_ecs_cluster.app_cluster.id}"
+  target_group_arn = "${aws_alb_target_group.CCSDEV_app_cluster_alb_app_tg.arn}"
 }
 
 ##############################################################
@@ -119,10 +110,10 @@ module "pipeline" {
 
   artifact_name = "${var.app_name}"
   service_role_arn = "${data.aws_iam_role.codepipeline_app_service_role.arn}"
-  artifact_bucket = "${data.aws_s3_bucket.build-artifacts.bucket}"
+  artifact_bucket_name = "${data.aws_s3_bucket.build-artifacts.bucket}"
   github_owner = "${var.github_owner}"
   github_repo = "${var.github_repo}"
   build_project_name = "${module.build.project_name}"
   deploy_cluster_name = "${data.aws_ecs_cluster.app_cluster.cluster_name}"
-  deploy_service_name = "${aws_ecs_service.app.name}"
+  deploy_service_name = "${module.ecs_service.name}"
 }
