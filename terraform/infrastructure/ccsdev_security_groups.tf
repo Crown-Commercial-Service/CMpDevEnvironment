@@ -225,3 +225,31 @@ resource "aws_security_group" "vpc-CCSDEV-internal-api-alb" {
     "Name" = "CCSDEV-internal-api-alb"
   }
 }
+
+##############################################################
+# Database access security groups
+##############################################################
+
+resource "aws_security_group" "vpc-CCSDEV-internal-PG-DB" {
+  name        = "CCSDEV-internal-PG-DB"
+  description = "PostgreSQL from within VPC"
+  vpc_id      = "${aws_vpc.CCSDEV-Services.id}"
+
+  ingress {
+    from_port   = "${var.postgres_port}"
+    to_port     = "${var.postgres_port}"
+    protocol    = "tcp"
+    cidr_blocks = ["${aws_subnet.CCSDEV-AZ-a-Private-1.cidr_block}", "${aws_subnet.CCSDEV-AZ-b-Private-1.cidr_block}", "${aws_subnet.CCSDEV-AZ-c-Private-1.cidr_block}", "${aws_subnet.CCSDEV-AZ-a-Management.cidr_block}", "${aws_subnet.CCSDEV-AZ-b-Management.cidr_block}", "${aws_subnet.CCSDEV-AZ-c-Management.cidr_block}"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags {
+    "Name" = "CCSDEV-internal-PG-DB"
+  }
+}
