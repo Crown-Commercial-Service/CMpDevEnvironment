@@ -54,6 +54,7 @@ variable "app_cluster_key_name" {
 ##############################################################
 # cluster settings - APIs
 ##############################################################
+
 variable "api_cluster_ami" {
   default = "ami-a44db8c3"
 }
@@ -112,4 +113,12 @@ variable "http_port" {
 
 variable "https_port" {
   default = 443
+}
+
+##############################################################
+# S3 Bucket name
+##############################################################
+
+variable "s3_build_artifact_bucket" {
+  default = "ccsdev-build-artifacts"
 }
