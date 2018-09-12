@@ -25,37 +25,15 @@ data "template_file" "buildspec" {
   }
 }
 
-resource "aws_codebuild_project" "app" {
-  name          = "${var.app_name}-build-project"
-  description   = "${var.app_name}_codebuild_project"
-  build_timeout = "60" # Default 60 minutes
-  service_role  = "${data.aws_iam_role.codebuild_app_service_role.arn}"
+module "build" {
+  source = "../../modules/build"
 
-  artifacts {
-    type = "CODEPIPELINE"
-  }
-
-  environment {
-    compute_type    = "BUILD_GENERAL1_SMALL"
-    image           = "aws/codebuild/docker:17.09.0"
-    type            = "LINUX_CONTAINER"
-    privileged_mode = true
-  }
-
-  source {
-    type            = "CODEPIPELINE"
-    buildspec       = "${data.template_file.buildspec.rendered}"
-  }
-
-  vpc_config {
-    vpc_id = "${data.aws_vpc.CCSDEV-Services.id}"
-
-    subnets = [
-      "${data.aws_subnet.CCSDEV-AZ-a-Private-1.id}",
-    ]
-
-    security_group_ids = [
-      "${data.aws_security_group.vpc-CCSDEV-internal-app.id}",
-    ]
-  }
+  artifact_prefix = "${var.app_prefix}"
+  artifact_name = "${var.app_name}"
+  spec = "${data.template_file.buildspec.rendered}"
+  service_role_arn = "${data.aws_iam_role.codebuild_app_service_role.arn}"
+  host_image = "aws/codebuild/docker:17.09.0"
+  vpc_id = "${data.aws_vpc.CCSDEV-Services.id}"
+  subnet_ids = ["${data.aws_subnet.CCSDEV-AZ-a-Private-1.id}"]
+  security_group_ids = ["${data.aws_security_group.vpc-CCSDEV-internal-app.id}"]
 }
