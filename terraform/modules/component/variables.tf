@@ -7,51 +7,87 @@ variable type {
     type = "string"
 }
 
+##############################################################
+# Component Prefix  
+##############################################################
 variable prefix {
     type = "string"
+    default = "ccs"
 }
 
+##############################################################
+# Component Name
+##############################################################
 variable name {
     type = "string"
 }
 
+##############################################################
+# Build Type (docker, java, etc.) see build module for options
+##############################################################
 variable build_type {
     type = "string"
 }
 
-variable build_image {
-    type = "string"
-}
-
+##############################################################
+# Component source Github user/org
+##############################################################
 variable github_owner {
     type = "string"
 }
 
+##############################################################
+# Component source Github repo
+##############################################################
 variable github_repo {
     type = "string"
 }
 
+##############################################################
+# Component source Github branch
+##############################################################
 variable github_branch {
     type = "string"
     default = "master"
 }
 
+##############################################################
+# ECS Cluster name
+##############################################################
 variable cluster_name {
     type = "string"
 }
 
+##############################################################
+# Any environment variables to run within the container
+#  when deployed within ECS, e.g.
+#
+# [
+#   { name = "ENV_VAR_1", value = "123"},
+#   { name = "ENV_VAR_2", value = "abc"} 
+# ]
+##############################################################
 variable environment {
     type = "list"
 }
 
+##############################################################
+# Domain that component will be hosted within,e.g. example.com
+##############################################################
 variable domain {
     type = "string"
 }
 
+##############################################################
+# Port that the component will be accessible through
+##############################################################
 variable port {
     type = "string"
 }
 
+##############################################################
+# Protocol that the component will be accessible through
+##############################################################
 variable protocol {
     type = "string"
 }
@@ -59,7 +95,6 @@ variable protocol {
 ##############################################################
 # AWS Provider
 ##############################################################
-
 provider "aws" {
   region = "eu-west-2"
 }

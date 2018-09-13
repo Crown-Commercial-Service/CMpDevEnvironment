@@ -10,7 +10,6 @@ module "component" {
     prefix = "ccs"
     name = "api1"
     build_type = "java"
-    build_image = "aws/codebuild/java:openjdk-8"
     github_owner = "RoweIT"
     github_repo = "CCSExampleApi1"
     cluster_name = "CCSDEV_api_cluster"

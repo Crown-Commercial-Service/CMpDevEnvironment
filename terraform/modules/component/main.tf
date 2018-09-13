@@ -35,7 +35,6 @@ module "build" {
   artifact_name = "${var.name}"
   build_type = "${var.build_type}"
   service_role_arn = "${data.aws_iam_role.codebuild_service_role.arn}"
-  host_image = "${var.build_image}"
   vpc_id = "${data.aws_vpc.CCSDEV-Services.id}"
   subnet_ids = ["${data.aws_subnet.CCSDEV-AZ-a-Private-1.id}"]
   security_group_ids = ["${data.aws_security_group.vpc-CCSDEV-internal.id}"]
@@ -63,7 +62,7 @@ resource "aws_alb_target_group" "component" {
     unhealthy_threshold = "2"
     interval            = "30"
     matcher             = "200"
-    path                = "/greeting"
+    path                = "/"
     port                = "traffic-port"
     protocol            = "${upper(var.protocol)}"
     timeout             = "5"
