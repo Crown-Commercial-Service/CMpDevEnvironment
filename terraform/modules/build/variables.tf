@@ -7,10 +7,6 @@ variable artifact_name {
         type = "string"
 }
 
-variable artifact_image_name {
-    type = "string"
-}
-
 variable build_type {
         type = "string"
 }

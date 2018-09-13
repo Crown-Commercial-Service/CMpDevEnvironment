@@ -94,7 +94,7 @@ module "ecs_service" {
   task_environment = "${local.environment}"
   log_group = "${aws_cloudwatch_log_group.app.name}"
   cluster_name = "CCSDEV_app_cluster"
-  image = "${aws_ecr_repository.app.repository_url}:latest"
+  image = "${module.build.image_name}"
   target_group_arn = "${aws_alb_target_group.CCSDEV_app_cluster_alb_app_tg.arn}"
 }
 

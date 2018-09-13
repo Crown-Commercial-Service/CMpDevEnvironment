@@ -3,14 +3,22 @@
 # CodeBuild module
 #
 ##############################################################
+locals {
+  image_name = "${aws_ecr_repository.build.repository_url}:latest"
+}
+
 data "template_file" "buildspec" {
   template = "${file("${"${path.module}/${var.build_type}_buildspec.yml"}")}"
 
   vars {
     container_prefix = "${var.artifact_prefix}"
     container_name = "${var.artifact_name}"
-    image_name = "${var.artifact_image_name}"
+    image_name = "${local.image_name}"
   }
+}
+
+resource "aws_ecr_repository" "build" {
+  name = "${var.artifact_prefix}/${var.artifact_name}"
 }
 
 resource "aws_codebuild_project" "project" {

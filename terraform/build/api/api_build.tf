@@ -6,13 +6,6 @@
 #   API requirements
 #
 ##############################################################
-# Container Repository
-##############################################################
-resource "aws_ecr_repository" "api" {
-  name = "${var.api_prefix}/${var.api_name}"
-}
-
-##############################################################
 # Build
 ##############################################################
 module "build" {
@@ -20,7 +13,6 @@ module "build" {
 
   artifact_prefix = "${var.api_prefix}"
   artifact_name = "${var.api_name}"
-  artifact_image_name = "${aws_ecr_repository.api.repository_url}:latest"
   build_type = "java"
   service_role_arn = "${data.aws_iam_role.codebuild_api_service_role.arn}"
   host_image = "aws/codebuild/java:openjdk-8"
