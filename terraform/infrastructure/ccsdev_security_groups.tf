@@ -89,41 +89,6 @@ resource "aws_security_group" "vpc-CCSDEV-external-app" {
   description = "App access external hosts"
   vpc_id      = "${aws_vpc.CCSDEV-Services.id}"
 
-  ingress {
-    from_port   = "${var.http_port}"
-    to_port     = "${var.http_port}"
-    protocol    = "tcp"
-    cidr_blocks = ["${var.roweit_office_ip}"]
-  }
-
-  ingress {
-    from_port   = "${var.http_port}"
-    to_port     = "${var.http_port}"
-    protocol    = "tcp"
-    cidr_blocks = ["${var.ccs_a_ip}"]
-  }
-
-  ingress {
-    from_port   = "${var.http_port}"
-    to_port     = "${var.http_port}"
-    protocol    = "tcp"
-    cidr_blocks = ["${var.ccs_b_ip}"]
-  }
-
-  ingress {
-    from_port   = "${var.http_port}"
-    to_port     = "${var.http_port}"
-    protocol    = "tcp"
-    cidr_blocks = ["${var.ccs_c_ip}"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
   tags {
     "Name" = "CCSDEV-external-app"
   }
