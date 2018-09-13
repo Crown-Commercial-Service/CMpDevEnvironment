@@ -135,21 +135,3 @@ data "aws_security_group" "vpc-CCSDEV-internal" {
     "Name" = "CCSDEV-internal-${var.type}"
   }
 }
-
-##############################################################
-# Load Balancer references
-##############################################################
-
-data "aws_alb" "CCSDEV_cluster_alb" {
-  name = "CCSDEV-${var.type}-cluster-alb"
-}
-
-data "aws_alb_listener" "listener" {
-  load_balancer_arn = "${data.aws_alb.CCSDEV_cluster_alb.arn}"
-  port = "${var.port}"
-}
-
-data "aws_route53_zone" "base_domain" {
-  name         = "${var.domain}."
-  private_zone = "${var.type == "api"}"
-}
