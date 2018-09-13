@@ -70,28 +70,32 @@ resource "aws_route53_record" "api" {
 ##############################################################
 # ECS configuration
 ##############################################################
-data "aws_ecs_cluster" "api_cluster" {
-  cluster_name = "CCSDEV_api_cluster"
-}
 
-data "template_file" "task_definition" {
-  template = "${file("${"${path.module}/task_definition.json"}")}"
-
-  vars {
-    api_name = "${var.api_name}"
-    api_base_url = "${var.domain}"
-    api_protocol = "${var.api_protocol}"
-    api_log_group = "${aws_cloudwatch_log_group.api.name}"
-    image = "${aws_ecr_repository.api.repository_url}:latest"
-  }
+locals {
+    environment = [
+      {
+        name = "CCS_API_BASE_URL",
+        value = "${var.domain}"
+      },
+      {
+        name = "CCS_API_PROTOCOL",
+        value = "${var.api_protocol}"
+      }, 
+      {
+        name = "CCS_FEATURE_EG1",
+        value = "on"
+      } 
+    ]
 }
 
 module "ecs_service" {
   source = "../../modules/ecs_service"
 
   task_name = "${var.api_name}"
-  task_definition = "${data.template_file.task_definition.rendered}"
-  cluster_id = "${data.aws_ecs_cluster.api_cluster.id}"
+  task_environment = "${local.environment}"
+  log_group = "${aws_cloudwatch_log_group.api.name}"
+  cluster_name = "CCSDEV_api_cluster"
+  image = "${aws_ecr_repository.api.repository_url}:latest"
   target_group_arn = "${aws_alb_target_group.CCSDEV_api_cluster_alb_api_tg.arn}"
 }
 
@@ -107,6 +111,6 @@ module "pipeline" {
   github_owner = "${var.github_owner}"
   github_repo = "${var.github_repo}"
   build_project_name = "${module.build.project_name}"
-  deploy_cluster_name = "${data.aws_ecs_cluster.api_cluster.cluster_name}"
+  deploy_cluster_name = "CCSDEV_api_cluster"
   deploy_service_name = "${module.ecs_service.name}"
 }
