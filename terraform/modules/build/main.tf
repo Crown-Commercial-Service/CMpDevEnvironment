@@ -5,6 +5,16 @@
 ##############################################################
 locals {
   image_name = "${aws_ecr_repository.build.repository_url}:latest"
+  build_images = {
+    java = "aws/codebuild/java:openjdk-8"
+    docker = "aws/codebuild/docker:17.09.0"
+  }
+  __valid_build_types__ = "${keys(local.build_images)}"
+}
+
+resource "null_resource" "is_build_type_valid" {
+  count = "${contains(local.__valid_build_types__, var.build_type) == true ? 0 : 1}"
+  "${format("Build <type> must be one of %s", join(", ", local.__valid_build_types__))}" = true
 }
 
 data "template_file" "buildspec" {
@@ -33,7 +43,7 @@ resource "aws_codebuild_project" "project" {
 
   environment {
     compute_type    = "${var.host_compute_type}"
-    image           = "${var.host_image}"
+    image           = "${lookup(local.build_images, var.build_type)}"
     type            = "${var.host_type}"
     privileged_mode = "${var.host_is_privileged}"
   }

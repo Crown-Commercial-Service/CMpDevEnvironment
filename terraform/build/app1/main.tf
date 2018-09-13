@@ -10,7 +10,6 @@ module "component" {
     prefix = "ccs"
     name = "app1"
     build_type = "docker"
-    build_image = "aws/codebuild/docker:17.09.0"
     github_owner = "RoweIT"
     github_repo = "CCSExampleApp1"
     cluster_name = "CCSDEV_app_cluster"
