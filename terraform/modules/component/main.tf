@@ -67,7 +67,7 @@ module "ecs_service" {
 # Pipeline
 ##############################################################
 module "pipeline" {
-  source = "../pipeline"
+  source = "../deploy_pipeline"
 
   artifact_name = "${var.name}"
   service_role_arn = "${data.aws_iam_role.codepipeline_service_role.arn}"

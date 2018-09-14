@@ -83,6 +83,14 @@ data "aws_iam_policy_document" "codebuild_service_policy" {
 
     resources = ["*"]
   }
+
+  statement {
+    actions = [
+      "ssm:GetParameters",
+   ]
+
+    resources = ["*"]
+  }
 }
 
 resource "aws_iam_role_policy" "codebuild_api_service_role_policy" {

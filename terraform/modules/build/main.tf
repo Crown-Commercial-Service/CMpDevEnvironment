@@ -8,6 +8,7 @@ locals {
   build_images = {
     java = "aws/codebuild/java:openjdk-8"
     docker = "aws/codebuild/docker:17.09.0"
+    npm-publish = "aws/codebuild/nodejs:8.11.0"
   }
   __valid_build_types__ = "${keys(local.build_images)}"
 }

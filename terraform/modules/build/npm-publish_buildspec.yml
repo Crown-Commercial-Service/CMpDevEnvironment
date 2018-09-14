@@ -1,0 +1,15 @@
+version: 0.2
+env:
+  parameter-store:
+    NPM_TOKEN: "ccs-build_npm_token"
+phases:
+  pre_build:
+    commands:
+      - echo "//registry.npmjs.org/:_authToken=$${NPM_TOKEN}" > .npmrc
+  build:
+    commands:
+      - npm install
+      - npm test
+  post_build:
+    commands:
+      - npm publish
