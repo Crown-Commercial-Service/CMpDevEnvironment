@@ -1,6 +1,8 @@
 locals {
-    domain = "ccsdev-internal.org"
-    protocol = "http"
+    api_domain = "ccsdev-internal.org"
+    app_domain = "roweitdev.co.uk"
+    api_protocol = "http"
+    app_protocol = "http"
 }
 
 module "component" {
@@ -15,19 +17,27 @@ module "component" {
     cluster_name = "CCSDEV_api_cluster"
     environment = [
       {
+        name = "CCS_APP_BASE_URL",
+        value = "${local.app_domain}"
+      },
+      {
+        name = "CCS_APP_PROTOCOL",
+        value = "${local.app_protocol}"
+      }, 
+      {
         name = "CCS_API_BASE_URL",
-        value = "${local.domain}"
+        value = "${local.api_domain}"
       },
       {
         name = "CCS_API_PROTOCOL",
-        value = "${local.protocol}"
+        value = "${local.api_protocol}"
       }, 
       {
         name = "CCS_FEATURE_EG1",
         value = "on"
       } 
     ]
-    domain = "${local.domain}"
+    domain = "${local.api_domain}"
     port = "80"
-    protocol = "${local.protocol}"   
+    protocol = "${local.api_protocol}"   
 }
