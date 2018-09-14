@@ -1,6 +1,6 @@
 # Crown Commercial Environment (Development)
 
-This project contains [Terraform](https://www.terraform.io/) scripts that are used to generate a container hosting environment in AWS. This environment in the eu-wst-2 region.
+This project contains [Terraform](https://www.terraform.io/) scripts that are used to generate a container hosting environment in AWS. This environment in the eu-west-2 region.
 
 This environment allows the deployment of externally accessible *application* containers and private *api* containers. Example build pipe lines for an application, api and NPM module are also provided.
 
