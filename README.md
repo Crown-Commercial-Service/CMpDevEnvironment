@@ -58,7 +58,7 @@ Thee are examples the create AWS CodePipeline and CodeBuild configurations for a
 
 Each of these examples will generate AWS CodeBuild and CodePipeline configurations. The content of these will vary with the type of build. For example, an NPM module build will not create or update any ECS task definitions.
 
-All of these builds require an environment variable, `GITHUB_TOKEN`, that must contain a valid access token for Github.
+All of these builds require an environment variable, `GITHUB_TOKEN`, that must contain a valid access token for Github. They each use pre-defined buildspec files that are [located within the terraform build module](https://github.com/RoweIT/CCSDevEnvironment/tree/master/terraform/modules/build) as &lt;prefix&gt;_buildspec.yml.
 
 ### Application Example ###
 `/terraform/build/app1`
@@ -84,7 +84,7 @@ When executed the scripts will define the build pipeline and this will trigger t
 
 This uses the contents of the `CCSExampleNPMModule` repository. It contains a minimal JavaScript module that can be built and published as an NPM module.
 
-The file `main.tf` defines the attributes of the build and identifies the location of the source code in Github. An environment variable, `NPM_TOKEN` must be defined that is able to publish to the NPM registry on [https://www.npmjs.com](https://www.npmjs.com).
+The file `main.tf` defines the attributes of the build and identifies the location of the source code in Github. The example uses a bespoke build type of npm-publish which will install the package, run any tests and then attempt to publish the package to the npmjs registry - In order for this to be successful, there is a predefined npm auth token stored within the AWS parameter store (ccs-build_npm_token).
 
 When executed the scripts will define the build pipeline and this will trigger the process of building and publishing the example NPM module.
 
