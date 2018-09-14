@@ -159,7 +159,7 @@ resource "aws_iam_group_policy_attachment" "app_dev_ecs_full" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonECS_FullAccess"
 }
 
-resource "aws_iam_group_policy_attachment" "app_dev_logs_full" {
+resource "aws_iam_group_policy_attachment" "app_dev_logs_readonly" {
   group      = "${aws_iam_group.CCSDEV_iam_app_dev.name}"
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchReadOnlyAccess"
 }
@@ -206,7 +206,7 @@ resource "aws_iam_group_policy_attachment" "api_dev_rds_full" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonRDSFullAccess"
 }
 
-resource "aws_iam_group_policy_attachment" "api_dev_logs_full" {
+resource "aws_iam_group_policy_attachment" "api_dev_logs_readonly" {
   group      = "${aws_iam_group.CCSDEV_iam_api_dev.name}"
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchReadOnlyAccess"
 }
