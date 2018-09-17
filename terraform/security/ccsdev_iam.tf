@@ -306,6 +306,7 @@ data "aws_iam_policy_document" "CCSDEV_policy_doc_limited_user" {
 		"${aws_iam_group.CCSDEV_iam_infra_admin.arn}",
 		"${aws_iam_group.CCSDEV_iam_app_dev.arn}",
 		"${aws_iam_group.CCSDEV_iam_api_dev.arn}",
+		"${aws_iam_group.CCSDEV_iam_code_build_pipeline.arn}",
 		"${aws_iam_group.CCSDEV_iam_user_admin.arn}"
     ]
   }
