@@ -84,7 +84,7 @@ resource "aws_autoscaling_group" "CCSDEV_app_cluster_scaling" {
   max_size             = "${var.app_cluster_instance_count}"
   min_size             = "${var.app_cluster_instance_count}"
   desired_capacity     = "${var.app_cluster_instance_count}"
-  vpc_zone_identifier  = ["${aws_subnet.CCSDEV-AZ-a-Public-1.id}"]
+  vpc_zone_identifier  = ["${aws_subnet.CCSDEV-AZ-a-Public-1.id}","${aws_subnet.CCSDEV-AZ-b-Public-1.id}","${aws_subnet.CCSDEV-AZ-c-Public-1.id}"]
   launch_configuration = "${aws_launch_configuration.CCSDEV_app_cluster_launch_config.name}"
   health_check_type    = "ELB"
 
