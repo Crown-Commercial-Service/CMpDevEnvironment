@@ -24,9 +24,11 @@ The following groups are created:
 - CCS_API_Developer
 - CCS_Code_Build_Pipeline
 
-Only a very small number of users should be a member of the system administration group.
+Only a very small number of users should be a member of the system administration group. To have complete system administration privileges a user will need to be a member of the system administration, infrastructure administration and code build pipeline groups.
 
 Note that members of the user administration group are not able to add users to the system administration group.
+
+More information is available in the `terraform/security` directory.
 
 ---
 
