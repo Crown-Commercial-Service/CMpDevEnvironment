@@ -218,3 +218,31 @@ resource "aws_security_group" "vpc-CCSDEV-internal-PG-DB" {
     "Name" = "CCSDEV-internal-PG-DB"
   }
 }
+
+##############################################################
+# Elastic Search security groups
+##############################################################
+
+resource "aws_security_group" "vpc-CCSDEV-internal-ES" {
+  name        = "CCSDEV-internal-ES"
+  description = "ElasticSearch from within VPC private and management"
+  vpc_id      = "${aws_vpc.CCSDEV-Services.id}"
+
+  ingress {
+    from_port   = "${var.https_port}"
+    to_port     = "${var.https_port}"
+    protocol    = "tcp"
+    cidr_blocks = ["${aws_subnet.CCSDEV-AZ-a-Private-1.cidr_block}", "${aws_subnet.CCSDEV-AZ-b-Private-1.cidr_block}", "${aws_subnet.CCSDEV-AZ-c-Private-1.cidr_block}", "${aws_subnet.CCSDEV-AZ-a-Management.cidr_block}", "${aws_subnet.CCSDEV-AZ-b-Management.cidr_block}", "${aws_subnet.CCSDEV-AZ-c-Management.cidr_block}"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags {
+    "Name" = "CCSDEV-internal-ES"
+  }
+}
