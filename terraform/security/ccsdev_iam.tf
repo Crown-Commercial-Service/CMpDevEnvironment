@@ -75,6 +75,7 @@ resource "aws_iam_group_policy_attachment" "sys_admin_s3_full" {
 #   AmazonECS_FullAccess
 #   service-role/AWSConfigRole
 #   AmazonRDSFullAccess
+#   AmazonESFullAccess
 #   CloudWatchLogsFullAccess
 #
 ##############################################################
@@ -116,6 +117,11 @@ resource "aws_iam_group_policy_attachment" "infra_admin_aws_config" {
 resource "aws_iam_group_policy_attachment" "infra_admin_rds_full" {
   group      = "${aws_iam_group.CCSDEV_iam_infra_admin.name}"
   policy_arn = "arn:aws:iam::aws:policy/AmazonRDSFullAccess"
+}
+
+resource "aws_iam_group_policy_attachment" "infra_admin_es_full" {
+  group      = "${aws_iam_group.CCSDEV_iam_infra_admin.name}"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonESFullAccess"
 }
 
 resource "aws_iam_group_policy_attachment" "infra_admin_logs_full" {
@@ -176,6 +182,7 @@ resource "aws_iam_group_policy_attachment" "app_dev_logs_readonly" {
 #   AmazonEC2ContainerRegistryPowerUser
 #   AmazonECS_FullAccess
 #   AmazonRDSFullAccess
+#   AmazonESFullAccess
 #   CloudWatchReadOnlyAccess
 #
 # TODO At present access NOT restricted to the api cluster
@@ -204,6 +211,10 @@ resource "aws_iam_group_policy_attachment" "api_dev_ecs_full" {
 resource "aws_iam_group_policy_attachment" "api_dev_rds_full" {
   group      = "${aws_iam_group.CCSDEV_iam_api_dev.name}"
   policy_arn = "arn:aws:iam::aws:policy/AmazonRDSFullAccess"
+}
+resource "aws_iam_group_policy_attachment" "api_dev_es_full" {
+  group      = "${aws_iam_group.CCSDEV_iam_api_dev.name}"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonESFullAccess"
 }
 
 resource "aws_iam_group_policy_attachment" "api_dev_logs_readonly" {
