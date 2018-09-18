@@ -1,6 +1,6 @@
 ##############################################################
 #
-# CCSED Services Database
+# CCSDEV Services Database
 #
 # Defines:
 #   PostgreSQL Database instances
