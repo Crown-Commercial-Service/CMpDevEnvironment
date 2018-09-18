@@ -67,8 +67,9 @@ CONFIG
 # Private VPC DNS zone CNAME to map to elastic search
 #
 # NOTE: This is not currently very useful because AWS
-#       generated an https certificate that includes their
-#       domain. HTTP access may be possiblr
+#       generated an HTTPS certificate that includes their
+#       domain.
+#       HTTP will work is enabled in the security group
 #
 ##############################################################
 
