@@ -13,6 +13,7 @@ phases:
         -Ddocker.git.repo=${github_repo} 
         -Ddocker.git.branch=${github_branch} 
         -Ddocker.git.commit=$CODEBUILD_RESOLVED_SOURCE_VERSION 
+        -Ddocker.codebuild.time=$CODEBUILD_START_TIME
         install dockerfile:build
   post_build:
     commands:
