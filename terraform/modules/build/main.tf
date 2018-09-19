@@ -24,6 +24,9 @@ data "template_file" "buildspec" {
   template = "${file("${"${path.module}/${var.build_type}_buildspec.yml"}")}"
 
   vars {
+    github_owner = "${var.github_owner}"
+    github_repo = "${var.github_repo}"
+    github_branch = "${var.github_branch}"
     container_prefix = "${var.artifact_prefix}"
     container_name = "${var.artifact_name}"
     base_image_name = "${local.base_image_name}"

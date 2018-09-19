@@ -6,7 +6,14 @@ phases:
       - $(aws ecr get-login --no-include-email)
   build:
     commands:
-      - mvn -Ddocker.image.prefix=${container_prefix} -Ddocker.image.name=${container_name} -Ddocker.git.commit=$CODEBUILD_RESOLVED_SOURCE_VERSION install dockerfile:build
+      - mvn 
+        -Ddocker.image.prefix=${container_prefix} 
+        -Ddocker.image.name=${container_name} 
+        -Ddocker.git.owner==${github_owner} 
+        -Ddocker.git.repo==${github_repo} 
+        -Ddocker.git.branch==${github_branch} 
+        -Ddocker.git.commit=$CODEBUILD_RESOLVED_SOURCE_VERSION 
+        install dockerfile:build
   post_build:
     commands:
       - docker tag "${container_prefix}/${container_name}" "${base_image_name}:$CODEBUILD_RESOLVED_SOURCE_VERSION"
