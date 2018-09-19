@@ -9,6 +9,21 @@
 ##############################################################
 
 ##############################################################
+# ElasticSearch Encryption key
+##############################################################
+
+resource "aws_kms_key" "ccsdev_es_key" {
+  description             = "CCSDEV ES Key"
+  deletion_window_in_days = 10
+}
+
+resource "aws_kms_alias" "ccsdev_es_key_alias" {
+  name          = "alias/ccsdeves"
+  target_key_id = "${aws_kms_key.ccsdev_es_key.key_id}"
+}
+
+
+##############################################################
 # Default Elastic search domain
 #
 # Many settings are defaults at present.
@@ -17,6 +32,10 @@
 ##############################################################
 
 resource "aws_elasticsearch_domain" "CCSDEV-internal-es" {
+
+  # Only create if create_elasticsearch_domain is true (1) 
+  count = "${var.create_elasticsearch_domain}"
+
   domain_name           = "${var.elasticsearch_domain}"
   elasticsearch_version = "6.3"
 
@@ -27,6 +46,11 @@ resource "aws_elasticsearch_domain" "CCSDEV-internal-es" {
 vpc_options {
   "security_group_ids" = ["${aws_security_group.vpc-CCSDEV-internal-ES.id}"]
   "subnet_ids" = ["${aws_subnet.CCSDEV-AZ-a-Private-1.id}"]
+}
+
+encrypt_at_rest {
+  "enabled" = true,
+  "kms_key_id" = "${aws_kms_key.ccsdev_es_key.arn}"
 }
 
 ebs_options {
@@ -74,6 +98,10 @@ CONFIG
 ##############################################################
 
 resource "aws_route53_record" "CCSDEV-internal-es-CNAME" {
+
+  # Only create if create_elasticsearch_domain is true (1) 
+  count = "${var.create_elasticsearch_domain}"
+
   zone_id = "${aws_route53_zone.ccsdev-internal-org-private.zone_id}"
   name    = "${var.elasticsearch_domain}.${aws_route53_zone.ccsdev-internal-org-private.name}"
   type    = "CNAME"

@@ -44,3 +44,77 @@ resource "aws_db_parameter_group" "ccsdev-db-parameters" {
     apply_method = "pending-reboot"
   }
 }
+
+##############################################################
+# PostgreSQL Database Encryption key
+##############################################################
+
+resource "aws_kms_key" "ccsdev_db_key" {
+  description             = "CCSDEV DB Key"
+  deletion_window_in_days = 10
+}
+
+resource "aws_kms_alias" "ccsdev_db_key_alias" {
+  name          = "alias/ccsdevdb"
+  target_key_id = "${aws_kms_key.ccsdev_db_key.key_id}"
+}
+
+##############################################################
+# PostgreSQL Database instance
+#
+# Note that this is currently an example with limited 
+# performance and no replication or multi-AZ support
+#
+# Note use of timestamp to create unique final snapshot id
+##############################################################
+
+resource "aws_db_instance" "ccsdev_db" {
+
+  # Only create if create_rds_database is true (1) 
+  count = "${var.create_rds_database}"
+
+  lifecycle {
+    ignore_changes = ["final_snapshot_identifier"]
+  }
+
+  identifier                = "ccsdev-db"
+  allocated_storage         = "${var.db_storage}"
+  storage_type              = "gp2"
+  engine                    = "postgres"
+  engine_version            = "9.6.6"
+  instance_class            = "${var.db_instance_class}"
+  name                      = "${var.db_name}"
+  username                  = "${var.db_username}"
+  password                  = "${var.db_password}"
+  port                      = "${var.postgres_port}"
+  publicly_accessible       = false
+  multi_az                  = false
+  availability_zone         = "eu-west-2a"
+  vpc_security_group_ids    = ["${aws_security_group.vpc-CCSDEV-internal-PG-DB.id}"]
+  db_subnet_group_name      = "${aws_db_subnet_group.ccsdev-database-subnets.id}"
+  parameter_group_name      = "${aws_db_parameter_group.ccsdev-db-parameters.id}"
+  backup_retention_period   = 1
+  backup_window             = "22:45-23:15"
+  maintenance_window        = "sat:04:03-sat:04:33"
+  final_snapshot_identifier = "${format("ccsdev-db-final-%s", md5(timestamp()))}"
+  storage_encrypted         = true
+  kms_key_id                = "${aws_kms_key.ccsdev_db_key.arn}"
+}
+
+##############################################################
+# Private VPC DNS zone CNAME to map to database
+#
+##############################################################
+
+resource "aws_route53_record" "CCSDEV-internal-db-CNAME" {
+
+  # Only create if create_rds_database is true (1) 
+  count = "${var.create_rds_database}"
+
+  zone_id = "${aws_route53_zone.ccsdev-internal-org-private.zone_id}"
+  name    = "${var.db_name}.${aws_route53_zone.ccsdev-internal-org-private.name}"
+  type    = "CNAME"
+  records = ["${aws_db_instance.ccsdev_db.address}"]
+  ttl     = "300"
+}
+

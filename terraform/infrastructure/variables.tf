@@ -75,19 +75,47 @@ variable "api_cluster_key_name" {
 }
 
 ##############################################################
-# Database Settings
+# Databases Settings
 ##############################################################
+
+variable "create_rds_database" {
+  default = false
+}
+
+variable "db_instance_class" {
+  default = "db.t2.medium"
+}
+
+variable "db_storage" {
+  default = 20
+}
+
+variable "db_name" {
+  default = "CCSDEV"
+}
+
+variable "db_username" {
+  default = "ccsdev"
+}
+
+variable "db_password" {
+  default = "Adm1nDev"
+}
 
 ##############################################################
 # Elastic Search Settings
 ##############################################################
+
+variable "create_elasticsearch_domain" {
+  default = false
+}
 
 variable "elasticsearch_domain" {
   default = "ccsdev-search"
 }
 
 variable "elasticsearch_instance_class" {
-  default = "t2.small.elasticsearch"
+  default = "c4.large.elasticsearch"
 }
 
 
