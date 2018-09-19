@@ -39,6 +39,7 @@ data "aws_caller_identity" "current" {
 #   IAMFullAccess
 #   AWSCertificateManagerFullAccess
 #   AmazonS3FullAccess
+#   KMS Full access - custom policy
 ##############################################################
 
 resource "aws_iam_group" "CCSDEV_iam_sys_admin" {
@@ -58,6 +59,37 @@ resource "aws_iam_group_policy_attachment" "sys_admin_s3_full" {
   group      = "${aws_iam_group.CCSDEV_iam_sys_admin.name}"
   policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
 }
+
+resource "aws_iam_group_policy_attachment" "sys_admin_kms_full" {
+  group      = "${aws_iam_group.CCSDEV_iam_sys_admin.name}"
+  policy_arn = "${aws_iam_policy.CCSDEV_policy_kms_full.arn}"
+}
+
+resource "aws_iam_policy" "CCSDEV_policy_kms_full" {
+  name   = "CCSDEV_policy_kms_full"
+  path   = "/"
+  policy = "${data.aws_iam_policy_document.CCSDEV_policy_doc_kms_full.json}"
+}
+
+data "aws_iam_policy_document" "CCSDEV_policy_doc_kms_full" {
+
+  statement {
+
+    effect = "Allow",
+    actions = [
+                "kms:*",
+                "iam:ListGroups",
+                "iam:ListRoles",
+                "iam:ListUsers"
+    ]
+
+    resources = [
+		"*"
+    ]
+  }
+
+}
+
 
 ##############################################################
 # Infrastructure Administration Group
