@@ -6,11 +6,13 @@ phases:
       - $(aws ecr get-login --no-include-email)
   build:
     commands:
-      - mvn -Ddocker.image.prefix=${container_prefix} -Ddocker.image.name=${container_name} install dockerfile:build
-      - docker tag "${container_prefix}/${container_name}" "${image_name}"
+      - mvn -Ddocker.image.prefix=${container_prefix} -Ddocker.image.name=${container_name} -Ddocker.git.commit=$CODEBUILD_RESOLVED_SOURCE_VERSION install dockerfile:build
   post_build:
     commands:
-      - docker push "${image_name}"
-      - printf '[{"name":"${container_name}","imageUri":"%s"}]' "${image_name}" > images.json
+      - docker tag "${container_prefix}/${container_name}" "${base_image_name}:$CODEBUILD_RESOLVED_SOURCE_VERSION"
+      - docker push "${base_image_name}:$CODEBUILD_RESOLVED_SOURCE_VERSION"
+      - docker tag "${container_prefix}/${container_name}" "${deploy_image_name}" 
+      - docker push "${deploy_image_name}"
+      - printf '[{"name":"${container_name}","imageUri":"%s"}]' "${deploy_image_name}" > images.json
 artifacts:
     files: images.json

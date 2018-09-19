@@ -4,7 +4,9 @@
 #
 ##############################################################
 locals {
-  image_name = "${aws_ecr_repository.build.repository_url}:latest"
+  base_image_name = "${aws_ecr_repository.build.repository_url}"
+  deploy_image_name = "${local.base_image_name}:latest"
+
   build_images = {
     java = "aws/codebuild/java:openjdk-8"
     docker = "aws/codebuild/docker:17.09.0"
@@ -24,7 +26,8 @@ data "template_file" "buildspec" {
   vars {
     container_prefix = "${var.artifact_prefix}"
     container_name = "${var.artifact_name}"
-    image_name = "${local.image_name}"
+    base_image_name = "${local.base_image_name}"
+    deploy_image_name = "${local.deploy_image_name}"
   }
 }
 
