@@ -22,6 +22,7 @@ The following policies are attached:
 - IAMFullAccess
 - AWSCertificateManagerFullAccess
 - AmazonS3FullAccess
+- KMS Full access using custom policy
 
 ### CCS_User_Administration ###
 This group allows a user to create IAM users and add them to the infrastructure administration, user administration, application developer, api developer and build pipe line groups.
