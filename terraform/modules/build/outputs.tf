@@ -9,5 +9,5 @@ output "project_name" {
 # Fully Qualified ECS Image Repository URL
 ##############################################################
 output "image_name" {
-  value = "${local.image_name}"
+  value = "${local.deploy_image_name}"
 }

@@ -47,7 +47,7 @@ variable "app_cluster_instance_class" {
 }
 
 variable "app_cluster_instance_count" {
-  default = "1"
+  default = "2"
 }
 
 variable "app_cluster_key_name" {
@@ -67,7 +67,7 @@ variable "api_cluster_instance_class" {
 }
 
 variable "api_cluster_instance_count" {
-  default = "1"
+  default = "2"
 }
 
 variable "api_cluster_key_name" {

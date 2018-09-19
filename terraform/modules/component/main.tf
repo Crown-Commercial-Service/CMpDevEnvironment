@@ -33,6 +33,9 @@ module "build" {
 
   artifact_prefix = "${var.prefix}"
   artifact_name = "${var.name}"
+  github_owner = "${var.github_owner}"
+  github_repo = "${var.github_repo}"
+  github_branch = "${var.github_branch}"
   build_type = "${var.build_type}"
   service_role_arn = "${data.aws_iam_role.codebuild_service_role.arn}"
   vpc_id = "${data.aws_vpc.CCSDEV-Services.id}"
