@@ -59,6 +59,7 @@ module "ecs_service" {
   source = "../ecs_service"
 
   task_name = "${var.name}"
+  task_count = "${var.task_count}"
   task_environment = "${var.environment}"
   log_group = "${aws_cloudwatch_log_group.component.name}"
   cluster_name = "${var.cluster_name}"

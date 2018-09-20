@@ -15,6 +15,7 @@ module "component" {
     github_owner = "RoweIT"
     github_repo = "CCSExampleApp2"
     cluster_name = "CCSDEV_app_cluster"
+    task_count = 1
     environment = [
       {
         name = "CCS_APP_BASE_URL",

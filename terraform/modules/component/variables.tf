@@ -59,6 +59,14 @@ variable cluster_name {
 }
 
 ##############################################################
+# Desired task count
+##############################################################
+variable task_count {
+    type = "string"
+    default = 1
+}
+
+##############################################################
 # Any environment variables to run within the container
 #  when deployed within ECS, e.g.
 #
