@@ -58,6 +58,7 @@ locals {
 # Build
 ##############################################################
 module "build" {
+  # source = "git::https://github.com/RoweIT/CCSDevEnvironment.git//terraform/modules/build"
   source = "../../modules/build"
 
   artifact_prefix = "ccs"
@@ -75,6 +76,7 @@ module "build" {
 # Pipeline
 ##############################################################
 module "pipeline" {
+  # source = "git::https://github.com/RoweIT/CCSDevEnvironment.git//terraform/modules/build_pipeline"
   source = "../../modules/build_pipeline"
 
   artifact_name = "npm1"

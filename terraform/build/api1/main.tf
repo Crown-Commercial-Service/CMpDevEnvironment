@@ -6,6 +6,7 @@ locals {
 }
 
 module "component" {
+    # source = "git::https://github.com/RoweIT/CCSDevEnvironment.git//terraform/modules/component"
     source = "../../modules/component"
 
     type = "api"
