@@ -3,6 +3,9 @@
 # CodePipeline module
 #
 ##############################################################
+data "aws_ssm_parameter" "github_token" {
+  name  = "ccs-build_github_token"
+}
 
 resource "aws_codepipeline" "pipeline" {
   name     = "${var.artifact_name}-pipeline"
@@ -29,6 +32,7 @@ resource "aws_codepipeline" "pipeline" {
         Repo       = "${var.github_repo}"
         Branch     = "${var.github_branch}"
         PollForSourceChanges = "true"
+        OAuthToken = "${data.aws_ssm_parameter.github_token.value}"
       }
     }
   }
