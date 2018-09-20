@@ -39,6 +39,7 @@ data "aws_caller_identity" "current" {
 #   IAMFullAccess
 #   AWSCertificateManagerFullAccess
 #   AmazonS3FullAccess
+#   AmazonSSMFullAccess
 #   KMS Full access - custom policy
 ##############################################################
 
@@ -55,9 +56,15 @@ resource "aws_iam_group_policy_attachment" "sys_admin_cert_full" {
   group      = "${aws_iam_group.CCSDEV_iam_sys_admin.name}"
   policy_arn = "arn:aws:iam::aws:policy/AWSCertificateManagerFullAccess"
 }
+
 resource "aws_iam_group_policy_attachment" "sys_admin_s3_full" {
   group      = "${aws_iam_group.CCSDEV_iam_sys_admin.name}"
   policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+}
+
+resource "aws_iam_group_policy_attachment" "sys_ssm_full" {
+  group      = "${aws_iam_group.CCSDEV_iam_sys_admin.name}"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMFullAccess"
 }
 
 resource "aws_iam_group_policy_attachment" "sys_admin_kms_full" {

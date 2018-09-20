@@ -22,6 +22,7 @@ The following policies are attached:
 - IAMFullAccess
 - AWSCertificateManagerFullAccess
 - AmazonS3FullAccess
+- AmazonSSMFullAccess
 - KMS Full access using custom policy
 
 ### CCS_User_Administration ###
