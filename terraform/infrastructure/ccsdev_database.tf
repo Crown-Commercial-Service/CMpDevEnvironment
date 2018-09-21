@@ -15,7 +15,6 @@
 # Note use of timestamp to create unique final snapshot id
 ##############################################################
 
-
 ##############################################################
 # Subnet groups
 ##############################################################
@@ -69,7 +68,6 @@ resource "aws_kms_alias" "ccsdev_db_key_alias" {
 ##############################################################
 
 resource "aws_db_instance" "ccsdev_db" {
-
   # Only create if create_rds_database is true (1) 
   count = "${var.create_rds_database}"
 
@@ -107,7 +105,6 @@ resource "aws_db_instance" "ccsdev_db" {
 ##############################################################
 
 resource "aws_route53_record" "CCSDEV-internal-db-CNAME" {
-
   # Only create if create_rds_database is true (1) 
   count = "${var.create_rds_database}"
 
@@ -117,4 +114,3 @@ resource "aws_route53_record" "CCSDEV-internal-db-CNAME" {
   records = ["${aws_db_instance.ccsdev_db.address}"]
   ttl     = "300"
 }
-

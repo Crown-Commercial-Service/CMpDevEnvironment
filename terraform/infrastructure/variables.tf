@@ -11,8 +11,7 @@ variable "region" {
   default = "eu-west-2"
 }
 
-data "aws_caller_identity" "current" {
-}
+data "aws_caller_identity" "current" {}
 
 ##############################################################
 # Bastion host server settings
@@ -118,37 +117,21 @@ variable "elasticsearch_instance_class" {
   default = "c4.large.elasticsearch"
 }
 
+##############################################################
+# External access
+##############################################################
+variable ssh_access_cidrs {
+  type    = "map"
+  default = {}
+}
 
-##############################################################
-# IP Addresses
-##############################################################
-
-##############################################################
-# Rowe IT Plymouth office IP address
-##############################################################
-variable "roweit_office_ip" {
-  default = "80.194.255.4/32"
+variable app_access_cidrs {
+  type    = "map"
+  default = {}
 }
 
 ##############################################################
-# Crown Commerical IP addresses as supplied 6/9/2018
-##############################################################
-
-variable "ccs_a_ip" {
-  default = "85.133.79.192/26"
-}
-
-variable "ccs_b_ip" {
-  default = "83.217.103.32/28"
-}
-
-variable "ccs_c_ip" {
-  default = "195.59.5.128/29"
-}
-
-
-##############################################################
-# Common port constans
+# Common port constants
 ##############################################################
 
 variable "ssh_port" {
@@ -172,5 +155,5 @@ variable "postgres_port" {
 ##############################################################
 
 locals {
-   artifact_bucket_name = "ccs.${data.aws_caller_identity.current.account_id}.build-artifacts"
+  artifact_bucket_name = "ccs.${data.aws_caller_identity.current.account_id}.build-artifacts"
 }

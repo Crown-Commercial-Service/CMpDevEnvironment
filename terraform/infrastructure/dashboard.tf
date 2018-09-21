@@ -5,8 +5,9 @@
 ##############################################################
 
 resource "aws_cloudwatch_dashboard" "CCSDEV-Dashboard" {
-   dashboard_name = "CCSDEV-Dashboard"
-   dashboard_body = <<EOF
+  dashboard_name = "CCSDEV-Dashboard"
+
+  dashboard_body = <<EOF
  {
      "widgets": [
         {

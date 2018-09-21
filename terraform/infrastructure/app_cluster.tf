@@ -84,7 +84,7 @@ resource "aws_autoscaling_group" "CCSDEV_app_cluster_scaling" {
   max_size             = "${var.app_cluster_instance_count}"
   min_size             = "${var.app_cluster_instance_count}"
   desired_capacity     = "${var.app_cluster_instance_count}"
-  vpc_zone_identifier  = ["${aws_subnet.CCSDEV-AZ-a-Public-1.id}","${aws_subnet.CCSDEV-AZ-b-Public-1.id}","${aws_subnet.CCSDEV-AZ-c-Public-1.id}"]
+  vpc_zone_identifier  = ["${aws_subnet.CCSDEV-AZ-a-Public-1.id}", "${aws_subnet.CCSDEV-AZ-b-Public-1.id}", "${aws_subnet.CCSDEV-AZ-c-Public-1.id}"]
   launch_configuration = "${aws_launch_configuration.CCSDEV_app_cluster_launch_config.name}"
   health_check_type    = "ELB"
 
@@ -129,36 +129,35 @@ data "template_file" "CCSDEV_app_cluster_user_data" {
   }
 }
 
-
 ##############################################################
 # IAM Roles and Polices for App Cluster
 ##############################################################
 
 resource "aws_iam_instance_profile" "CCSDEV_app_cluster_instance_profile" {
-    name = "CCSDEV-app-cluster-instance-profile"
-    path = "/"
-    role = "${aws_iam_role.CCSDEV_app_cluster_instance_role.name}"
+  name = "CCSDEV-app-cluster-instance-profile"
+  path = "/"
+  role = "${aws_iam_role.CCSDEV_app_cluster_instance_role.name}"
 }
 
 resource "aws_iam_role" "CCSDEV_app_cluster_instance_role" {
-    name                = "CCSDEV-app-cluster-instance-role"
-    description         = "Role for ECS instances in the CCSDEV App Cluster"
-    path                = "/"
-    assume_role_policy  = "${data.aws_iam_policy_document.CCSDEV_app_cluster_instance_policy.json}"
+  name               = "CCSDEV-app-cluster-instance-role"
+  description        = "Role for ECS instances in the CCSDEV App Cluster"
+  path               = "/"
+  assume_role_policy = "${data.aws_iam_policy_document.CCSDEV_app_cluster_instance_policy.json}"
 }
 
 data "aws_iam_policy_document" "CCSDEV_app_cluster_instance_policy" {
-    statement {
-        actions = ["sts:AssumeRole"]
+  statement {
+    actions = ["sts:AssumeRole"]
 
-        principals {
-            type        = "Service"
-            identifiers = ["ec2.amazonaws.com"]
-        }
+    principals {
+      type        = "Service"
+      identifiers = ["ec2.amazonaws.com"]
     }
+  }
 }
 
 resource "aws_iam_role_policy_attachment" "CCSDEV_app_cluster_instance_role_attachment" {
-    role       = "${aws_iam_role.CCSDEV_app_cluster_instance_role.name}"
-    policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
+  role       = "${aws_iam_role.CCSDEV_app_cluster_instance_role.name}"
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
 }

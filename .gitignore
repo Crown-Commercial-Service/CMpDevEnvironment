@@ -4,3 +4,6 @@
 # All .tfstate files
 **/*.tfstate
 **/*.tfstate.*
+
+# All *.auto.tfvars files
+**/*.auto.tfvars

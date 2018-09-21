@@ -33,4 +33,3 @@ resource "aws_instance" "CCSDEV_BASTION_a" {
     "Name" = "CCSDEV_BASTION_a"
   }
 }
-

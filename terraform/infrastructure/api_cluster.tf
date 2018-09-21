@@ -84,7 +84,7 @@ resource "aws_autoscaling_group" "CCSDEV_api_cluster_scaling" {
   max_size             = "${var.api_cluster_instance_count}"
   min_size             = "${var.api_cluster_instance_count}"
   desired_capacity     = "${var.api_cluster_instance_count}"
-  vpc_zone_identifier  = ["${aws_subnet.CCSDEV-AZ-a-Private-1.id}","${aws_subnet.CCSDEV-AZ-b-Private-1.id}","${aws_subnet.CCSDEV-AZ-c-Private-1.id}"]
+  vpc_zone_identifier  = ["${aws_subnet.CCSDEV-AZ-a-Private-1.id}", "${aws_subnet.CCSDEV-AZ-b-Private-1.id}", "${aws_subnet.CCSDEV-AZ-c-Private-1.id}"]
   launch_configuration = "${aws_launch_configuration.CCSDEV_api_cluster_launch_config.name}"
   health_check_type    = "ELB"
 
@@ -134,30 +134,30 @@ data "template_file" "CCSDEV_api_cluster_user_data" {
 ##############################################################
 
 resource "aws_iam_instance_profile" "CCSDEV_api_cluster_instance_profile" {
-    name = "CCSDEV-api-cluster-instance-profile"
-    path = "/"
-    role = "${aws_iam_role.CCSDEV_api_cluster_instance_role.name}"
+  name = "CCSDEV-api-cluster-instance-profile"
+  path = "/"
+  role = "${aws_iam_role.CCSDEV_api_cluster_instance_role.name}"
 }
 
 resource "aws_iam_role" "CCSDEV_api_cluster_instance_role" {
-    name                = "CCSDEV-api-cluster-instance-role"
-    description         = "Role for ECS instances in the CCSDEV Api Cluster"
-    path                = "/"
-    assume_role_policy  = "${data.aws_iam_policy_document.CCSDEV_api_cluster_instance_policy.json}"
+  name               = "CCSDEV-api-cluster-instance-role"
+  description        = "Role for ECS instances in the CCSDEV Api Cluster"
+  path               = "/"
+  assume_role_policy = "${data.aws_iam_policy_document.CCSDEV_api_cluster_instance_policy.json}"
 }
 
 data "aws_iam_policy_document" "CCSDEV_api_cluster_instance_policy" {
-    statement {
-        actions = ["sts:AssumeRole"]
+  statement {
+    actions = ["sts:AssumeRole"]
 
-        principals {
-            type        = "Service"
-            identifiers = ["ec2.amazonaws.com"]
-        }
+    principals {
+      type        = "Service"
+      identifiers = ["ec2.amazonaws.com"]
     }
+  }
 }
 
 resource "aws_iam_role_policy_attachment" "CCSDEV_api_cluster_instance_role_attachment" {
-    role       = "${aws_iam_role.CCSDEV_api_cluster_instance_role.name}"
-    policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
+  role       = "${aws_iam_role.CCSDEV_api_cluster_instance_role.name}"
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
 }

@@ -22,7 +22,6 @@ resource "aws_kms_alias" "ccsdev_es_key_alias" {
   target_key_id = "${aws_kms_key.ccsdev_es_key.key_id}"
 }
 
-
 ##############################################################
 # Default Elastic search domain
 #
@@ -32,7 +31,6 @@ resource "aws_kms_alias" "ccsdev_es_key_alias" {
 ##############################################################
 
 resource "aws_elasticsearch_domain" "CCSDEV-internal-es" {
-
   # Only create if create_elasticsearch_domain is true (1) 
   count = "${var.create_elasticsearch_domain}"
 
@@ -43,22 +41,22 @@ resource "aws_elasticsearch_domain" "CCSDEV-internal-es" {
     instance_type = "${var.elasticsearch_instance_class}"
   }
 
-vpc_options {
-  "security_group_ids" = ["${aws_security_group.vpc-CCSDEV-internal-ES.id}"]
-  "subnet_ids" = ["${aws_subnet.CCSDEV-AZ-a-Private-1.id}"]
-}
+  vpc_options {
+    "security_group_ids" = ["${aws_security_group.vpc-CCSDEV-internal-ES.id}"]
+    "subnet_ids"         = ["${aws_subnet.CCSDEV-AZ-a-Private-1.id}"]
+  }
 
-encrypt_at_rest {
-  "enabled" = true,
-  "kms_key_id" = "${aws_kms_key.ccsdev_es_key.arn}"
-}
+  encrypt_at_rest {
+    "enabled"    = true
+    "kms_key_id" = "${aws_kms_key.ccsdev_es_key.arn}"
+  }
 
-ebs_options {
-  "ebs_enabled" = true,
-  "volume_size" = 10
-}
+  ebs_options {
+    "ebs_enabled" = true
+    "volume_size" = 10
+  }
 
-advanced_options {
+  advanced_options {
     "rest.action.multi.allow_explicit_index" = "true"
   }
 
@@ -98,7 +96,6 @@ CONFIG
 ##############################################################
 
 resource "aws_route53_record" "CCSDEV-internal-es-CNAME" {
-
   # Only create if create_elasticsearch_domain is true (1) 
   count = "${var.create_elasticsearch_domain}"
 
@@ -108,4 +105,3 @@ resource "aws_route53_record" "CCSDEV-internal-es-CNAME" {
   records = ["${aws_elasticsearch_domain.CCSDEV-internal-es.endpoint}"]
   ttl     = "300"
 }
-
