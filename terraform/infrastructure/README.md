@@ -3,6 +3,19 @@
 ## Security Groups
 A number of security groups are defined that have specific purposes. Some are used within the VPC, their name will contain `internal`, others control access from the public Internet, their name will contain `external`. At present the `external` groups will be restricted by IP address.
 
+The configuration for external access is via variables, which will need to be overridden locally.
+This should be done by creating a variable file ending with `.auto.tfvars` which will be ignored by git and therefore not committed into source control.
+An example `access_cidrs.auto.tfvars` might look as follows (NOTE These are not valid address ranges):
+```
+"ssh_access_cidrs" = {
+    "office" = "192.0.2.0/24"
+}
+
+"app_access_cidrs" = {
+    "office" = "192.0.2.0/24"
+    "guests" = "198.51.100.0/24"
+}
+```
 ### CCSDEV-internal-ssh ###
 Allows inbound ssh access within the VPC. Used to allow the bastion host to ssh to the actual ECS EC2 instances if needed.
 

@@ -37,23 +37,29 @@ resource "aws_security_group" "vpc-CCSDEV-external-ssh" {
   description = "ssh from external hosts"
   vpc_id      = "${aws_vpc.CCSDEV-Services.id}"
 
-  ingress {
-    from_port   = "${var.ssh_port}"
-    to_port     = "${var.ssh_port}"
-    protocol    = "tcp"
-    cidr_blocks = ["${var.roweit_office_ip}"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
   tags {
     "Name" = "CCSDEV-external-ssh"
   }
+}
+
+resource "aws_security_group_rule" "vpc-CCSDEV-external-ssh-ingress" {
+  count             = "${length(keys(var.ssh_access_cidrs))}"
+  description       = "SSH Access for ${element(keys(var.ssh_access_cidrs), count.index)}"
+  type              = "ingress"
+  from_port         = "${var.ssh_port}"
+  to_port           = "${var.ssh_port}"
+  protocol          = "tcp"
+  cidr_blocks       = ["${element(values(var.ssh_access_cidrs), count.index)}"]
+  security_group_id = "${aws_security_group.vpc-CCSDEV-external-ssh.id}"
+}
+
+resource "aws_security_group_rule" "vpc-CCSDEV-external-ssh-egress" {
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = "${aws_security_group.vpc-CCSDEV-external-ssh.id}"
 }
 
 ##############################################################
@@ -99,44 +105,29 @@ resource "aws_security_group" "vpc-CCSDEV-external-app-alb" {
   description = "Application access external via alb"
   vpc_id      = "${aws_vpc.CCSDEV-Services.id}"
 
-  ingress {
-    from_port   = "${var.http_port}"
-    to_port     = "${var.http_port}"
-    protocol    = "tcp"
-    cidr_blocks = ["${var.roweit_office_ip}"]
-  }
-
-  ingress {
-    from_port   = "${var.http_port}"
-    to_port     = "${var.http_port}"
-    protocol    = "tcp"
-    cidr_blocks = ["${var.ccs_a_ip}"]
-  }
-
-  ingress {
-    from_port   = "${var.http_port}"
-    to_port     = "${var.http_port}"
-    protocol    = "tcp"
-    cidr_blocks = ["${var.ccs_b_ip}"]
-  }
-
-  ingress {
-    from_port   = "${var.http_port}"
-    to_port     = "${var.http_port}"
-    protocol    = "tcp"
-    cidr_blocks = ["${var.ccs_c_ip}"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
   tags {
     "Name" = "CCSDEV-external-app-alb"
   }
+}
+
+resource "aws_security_group_rule" "vpc-CCSDEV-external-app-alb-ingress" {
+  count             = "${length(keys(var.app_access_cidrs))}"
+  description       = "App Access for ${element(keys(var.app_access_cidrs), count.index)}"
+  type              = "ingress"
+  from_port         = "${var.http_port}"
+  to_port           = "${var.http_port}"
+  protocol          = "tcp"
+  cidr_blocks       = ["${element(values(var.app_access_cidrs), count.index)}"]
+  security_group_id = "${aws_security_group.vpc-CCSDEV-external-app-alb.id}"
+}
+
+resource "aws_security_group_rule" "vpc-CCSDEV-external-app-alb-egress" {
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = "${aws_security_group.vpc-CCSDEV-external-app-alb.id}"
 }
 
 ##############################################################
