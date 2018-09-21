@@ -39,7 +39,7 @@ variable "bastion_storage" {
 ##############################################################
 
 variable "app_cluster_ami" {
-  default = "ami-a44db8c3"
+   default = "ami-0209769f0c963e791"
 }
 
 variable "app_cluster_instance_class" {
@@ -59,7 +59,7 @@ variable "app_cluster_key_name" {
 ##############################################################
 
 variable "api_cluster_ami" {
-  default = "ami-a44db8c3"
+  default = "ami-0209769f0c963e791"
 }
 
 variable "api_cluster_instance_class" {
