@@ -88,6 +88,10 @@ resource "aws_autoscaling_group" "CCSDEV_api_cluster_scaling" {
   launch_configuration = "${aws_launch_configuration.CCSDEV_api_cluster_launch_config.name}"
   health_check_type    = "ELB"
 
+  lifecycle {
+    create_before_destroy = true
+  }
+
   tags = [
     {
       key                 = "Name"
@@ -102,7 +106,7 @@ resource "aws_autoscaling_group" "CCSDEV_api_cluster_scaling" {
 ##############################################################
 
 resource "aws_launch_configuration" "CCSDEV_api_cluster_launch_config" {
-  name                        = "CCSDEV_api_cluster_launch_config"
+  name_prefix                 = "CCSDEV_api_cluster_launch_config_"
   image_id                    = "${var.api_cluster_ami}"
   instance_type               = "${var.api_cluster_instance_class}"
   iam_instance_profile        = "${aws_iam_instance_profile.CCSDEV_api_cluster_instance_profile.arn}"
@@ -110,6 +114,11 @@ resource "aws_launch_configuration" "CCSDEV_api_cluster_launch_config" {
   associate_public_ip_address = "false"
   key_name                    = "${var.api_cluster_key_name}"
   user_data                   = "${data.template_file.CCSDEV_api_cluster_user_data.rendered}"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
 }
 
 data "template_file" "CCSDEV_api_cluster_user_data" {
