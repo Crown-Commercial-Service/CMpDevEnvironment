@@ -44,7 +44,47 @@ resource "aws_alb_listener" "CCSDEV_api_cluster_alb_listener_http" {
 ##############################################################
 # Load balancer external HTTPS entry point
 ##############################################################
-# TODO Will need to define a https listener
+
+resource "aws_acm_certificate" "private_cluster_wildcard_certificate" {
+  count             = "${var.enable_https}"
+  domain_name       = "*.${var.domain_internal_prefix}.${var.domain_name}"
+  validation_method = "DNS"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_route53_record" "private_cluster_wildcard_certificate_validation_dns" {
+  count   = "${var.enable_https}"
+  name    = "${aws_acm_certificate.private_cluster_wildcard_certificate.domain_validation_options.0.resource_record_name}"
+  type    = "${aws_acm_certificate.private_cluster_wildcard_certificate.domain_validation_options.0.resource_record_type}"
+  zone_id = "${aws_route53_zone.ccsdev-internal-org-public.id}"
+  records = ["${aws_acm_certificate.private_cluster_wildcard_certificate.domain_validation_options.0.resource_record_value}"]
+  ttl     = 60
+}
+
+resource "aws_acm_certificate_validation" "private_cluster_wildcard_certificate_validation" {
+  count                   = "${var.enable_https}"
+  certificate_arn         = "${aws_acm_certificate.private_cluster_wildcard_certificate.arn}"
+  validation_record_fqdns = [
+    "${aws_route53_record.private_cluster_wildcard_certificate_validation_dns.fqdn}"
+    ]
+}
+
+resource "aws_alb_listener" "CCSDEV_api_cluster_alb_listener_https" {
+  count             = "${var.enable_https}"
+  load_balancer_arn = "${aws_alb.CCSDEV_api_cluster_alb.arn}"
+  port              = "${var.https_port}"
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2015-05"
+  certificate_arn   = "${aws_acm_certificate.private_cluster_wildcard_certificate.arn}"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = "${aws_alb_target_group.CCSDEV_api_cluster_alb_def_tg.arn}"
+  }
+}
 
 ##############################################################
 # Default target group

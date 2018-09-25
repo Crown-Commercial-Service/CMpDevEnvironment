@@ -8,7 +8,7 @@
 resource "aws_alb_target_group" "component" {
   name     = "CCSDEV-${var.type}-cluster-alb-${var.name}-tg"
   port     = "${var.port}"
-  protocol = "${upper(var.protocol)}"
+  protocol = "HTTP"
   vpc_id   = "${data.aws_vpc.CCSDEV-Services.id}"
 
   health_check {
@@ -18,7 +18,7 @@ resource "aws_alb_target_group" "component" {
     matcher             = "200"
     path                = "/"
     port                = "traffic-port"
-    protocol            = "${upper(var.protocol)}"
+    protocol            = "HTTP"
     timeout             = "5"
   }
 
@@ -27,8 +27,8 @@ resource "aws_alb_target_group" "component" {
   }
 }
 
-resource "aws_alb_listener_rule" "subdomain_rule" {
-  listener_arn = "${data.aws_alb_listener.listener.arn}"
+resource "aws_alb_listener_rule" "http_subdomain_rule" {
+  listener_arn = "${data.aws_alb_listener.http_listener.arn}"
 
   action {
     type             = "forward"
@@ -41,6 +41,30 @@ resource "aws_alb_listener_rule" "subdomain_rule" {
   }
 }
 
+locals {
+  provision_https_certificates = "${upper(var.protocol) == "HTTPS" ? 1 : 0}"
+}
+
+data "aws_alb_listener" "https_listener" {
+  count = "${local.provision_https_certificates}"
+  load_balancer_arn = "${data.aws_alb.CCSDEV_cluster_alb.arn}"
+  port = "443"
+}
+
+resource "aws_alb_listener_rule" "https_subdomain_rule" {
+  count = "${local.provision_https_certificates}"
+  listener_arn = "${data.aws_alb_listener.https_listener.arn}"
+
+  action {
+    type             = "forward"
+    target_group_arn = "${aws_alb_target_group.component.arn}"
+  }
+
+  condition {
+    field  = "host-header"
+    values = ["${var.name}.${var.domain}"]
+  }
+}
 ##############################################################
 # DNS configuration
 ##############################################################

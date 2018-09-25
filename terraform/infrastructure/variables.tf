@@ -34,6 +34,24 @@ variable "bastion_storage" {
 }
 
 ##############################################################
+# cluster domain
+##############################################################
+
+variable domain_name {
+  type = "string"
+  default = ""
+}
+
+variable domain_internal_prefix {
+  type = "string"
+  default = "internal"
+}
+
+variable enable_https {
+  type = "string"
+  default = false
+}
+##############################################################
 # cluster settings - Application
 ##############################################################
 

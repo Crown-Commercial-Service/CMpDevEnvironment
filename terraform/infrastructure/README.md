@@ -5,12 +5,25 @@ A number of security groups are defined that have specific purposes. Some are us
 
 The configuration for external access is via variables, which will need to be overridden locally.
 This should be done by creating a variable file ending with `.auto.tfvars` which will be ignored by git and therefore not committed into source control.
-An example `access_cidrs.auto.tfvars` might look as follows (NOTE These are not valid address ranges):
+An example `config.auto.tfvars` (as found in `config.auto.tfvars.example`) might look as follows (NOTE These are not valid address ranges):
 ```
+# The domain name that the components will sit beneath
+domain_name = "example.com"
+
+# The subdomain beneath the main domain name that will be used for
+#  internal (api) components - this defaults to "internal"
+domain_internal_prefix = "internal"
+
+# Whether HTTPS should be available across the load balancers
+#  along with appropriate certificates
+enable_https = false
+
+# A map of external CIDR blocks that should have SSH access
 "ssh_access_cidrs" = {
     "office" = "192.0.2.0/24"
 }
 
+# A map of external CIDR blocks that should have HTTP(S) access
 "app_access_cidrs" = {
     "office" = "192.0.2.0/24"
     "guests" = "198.51.100.0/24"

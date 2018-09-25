@@ -30,6 +30,9 @@ variable port {
 
 ##############################################################
 # Protocol that the component will be accessible through
+# NOTE: This it the protocol between an external source and
+#       the load balancer. The load balancer will still use
+#       HTTP directly to the component.
 ##############################################################
 variable protocol {
     type = "string"
@@ -60,7 +63,7 @@ data "aws_alb" "CCSDEV_cluster_alb" {
   name = "CCSDEV-${var.type}-cluster-alb"
 }
 
-data "aws_alb_listener" "listener" {
+data "aws_alb_listener" "http_listener" {
   load_balancer_arn = "${data.aws_alb.CCSDEV_cluster_alb.arn}"
   port = "${var.port}"
 }

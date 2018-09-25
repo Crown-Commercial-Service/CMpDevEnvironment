@@ -1,5 +1,5 @@
 locals {
-    api_domain = "ccsdev-internal.org"
+    api_domain = "internal.roweitdev.co.uk"
     app_domain = "roweitdev.co.uk"
     api_protocol = "http"
     app_protocol = "http"
