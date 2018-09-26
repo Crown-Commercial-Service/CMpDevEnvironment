@@ -36,8 +36,13 @@ resource "aws_alb_listener" "CCSDEV_app_cluster_alb_listener_http" {
   protocol          = "HTTP"
 
   default_action {
-    type             = "forward"
-    target_group_arn = "${aws_alb_target_group.CCSDEV_app_cluster_alb_def_tg.arn}"
+
+    type = "fixed-response"
+
+    fixed_response {
+      content_type = "text/plain"
+      status_code = "404"
+    }
   }
 }
 

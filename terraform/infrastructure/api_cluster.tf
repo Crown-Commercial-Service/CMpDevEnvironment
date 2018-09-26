@@ -81,8 +81,13 @@ resource "aws_alb_listener" "CCSDEV_api_cluster_alb_listener_https" {
   certificate_arn   = "${aws_acm_certificate.private_cluster_wildcard_certificate.arn}"
 
   default_action {
-    type             = "forward"
-    target_group_arn = "${aws_alb_target_group.CCSDEV_api_cluster_alb_def_tg.arn}"
+
+    type = "fixed-response"
+
+    fixed_response {
+      content_type = "text/plain"
+      status_code = "404"
+    }
   }
 }
 
