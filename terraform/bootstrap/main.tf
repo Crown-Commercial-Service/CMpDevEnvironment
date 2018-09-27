@@ -60,6 +60,15 @@ module "api1_backend" {
     path      = "${path.module}"
 }
 
+module "api2_backend" {
+    source    = "./backend"
+
+    bucket    = "${local.bucket_name}"
+    component = "build/api2"
+    region    = "${local.region}"
+    path      = "${path.module}"
+}
+
 module "app1_backend" {
     source    = "./backend"
 
