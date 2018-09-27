@@ -23,6 +23,10 @@ variable github_branch {
     default = "master"
 }
 
+variable github_token_alias {
+    type = "string"
+}
+
 variable build_project_name {
     type = "string"
 }

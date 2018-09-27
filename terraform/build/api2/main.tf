@@ -15,6 +15,7 @@ module "component" {
     build_type = "python"
     github_owner = "RoweIT"
     github_repo = "CCSExampleApi2"
+    github_token_alias = "ccs-build_github_token"
     cluster_name = "CCSDEV_api_cluster"
     task_count = 1
     environment = [

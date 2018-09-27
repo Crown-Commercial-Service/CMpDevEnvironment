@@ -4,7 +4,7 @@
 #
 ##############################################################
 data "aws_ssm_parameter" "github_token" {
-  name  = "ccs-build_github_token"
+  name  = "${var.github_token_alias}"
 }
 
 resource "aws_codepipeline" "pipeline" {

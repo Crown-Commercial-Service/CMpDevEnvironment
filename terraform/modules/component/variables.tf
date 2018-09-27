@@ -52,6 +52,14 @@ variable github_branch {
 }
 
 ##############################################################
+# Component source Github token alias as used in
+#  the Parameter Store
+##############################################################
+variable github_token_alias {
+    type = "string"
+}
+
+##############################################################
 # ECS Cluster name
 ##############################################################
 variable cluster_name {

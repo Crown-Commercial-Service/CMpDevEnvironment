@@ -79,6 +79,7 @@ module "pipeline" {
   github_owner = "${var.github_owner}"
   github_repo = "${var.github_repo}"
   github_branch = "${var.github_branch}"
+  github_token_alias = "${var.github_token_alias}"
   build_project_name = "${module.build.project_name}"
   deploy_cluster_name = "${var.cluster_name}"
   deploy_service_name = "${module.ecs_service.name}"
