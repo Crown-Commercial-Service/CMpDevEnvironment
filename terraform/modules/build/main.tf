@@ -8,9 +8,10 @@ locals {
   deploy_image_name = "${local.base_image_name}:latest"
 
   build_images = {
-    java = "aws/codebuild/java:openjdk-8"
     docker = "aws/codebuild/docker:17.09.0"
+    java = "aws/codebuild/java:openjdk-8"
     npm-publish = "aws/codebuild/nodejs:8.11.0"
+    python = "aws/codebuild/python:3.6.5"
   }
   __valid_build_types__ = "${keys(local.build_images)}"
 }
