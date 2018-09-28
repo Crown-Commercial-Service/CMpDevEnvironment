@@ -12,4 +12,10 @@ resource "aws_s3_bucket" "build-artifacts" {
       days = 3
     }
   }
+
+  tags {
+    Name = "CCSDEV Build Artifacts bucket"
+    CCSRole = "Infrastructure"
+    CCSEnvironment = "${var.environment_name}"
+  }
 }

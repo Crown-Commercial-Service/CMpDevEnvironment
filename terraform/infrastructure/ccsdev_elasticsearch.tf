@@ -15,6 +15,12 @@
 resource "aws_kms_key" "ccsdev_es_key" {
   description             = "CCSDEV ES Key"
   deletion_window_in_days = 10
+
+  tags {
+    Name = "CCSDEV ElasticSearch KMS key"
+    CCSRole = "Infrastructure"
+    CCSEnvironment = "${var.environment_name}"
+  }
 }
 
 resource "aws_kms_alias" "ccsdev_es_key_alias" {
@@ -81,7 +87,9 @@ CONFIG
   }
 
   tags {
-    "Name" = "CCSDEV-internal-es"
+    Name = "CCSDEV-internal-es"
+    CCSRole = "Infrastructure"
+    CCSEnvironment = "${var.environment_name}"
   }
 }
 

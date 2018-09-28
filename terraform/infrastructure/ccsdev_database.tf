@@ -23,6 +23,12 @@ resource "aws_db_subnet_group" "ccsdev-database-subnets" {
   name        = "ccsdev-database-subnets"
   description = "Access to CCSDEV databases from private and management subnets"
   subnet_ids  = ["${aws_subnet.CCSDEV-AZ-a-Private-1.id}", "${aws_subnet.CCSDEV-AZ-b-Private-1.id}", "${aws_subnet.CCSDEV-AZ-c-Private-1.id}", "${aws_subnet.CCSDEV-AZ-a-Management.id}", "${aws_subnet.CCSDEV-AZ-b-Management.id}", "${aws_subnet.CCSDEV-AZ-c-Management.id}"]
+
+  tags {
+    Name = "CCSDEV database subnets"
+    CCSRole = "Infrastructure"
+    CCSEnvironment = "${var.environment_name}"
+  }
 }
 
 ##############################################################
@@ -42,6 +48,12 @@ resource "aws_db_parameter_group" "ccsdev-db-parameters" {
     value        = "1"
     apply_method = "pending-reboot"
   }
+
+  tags {
+    Name = "CCSDEV database parameters"
+    CCSRole = "Infrastructure"
+    CCSEnvironment = "${var.environment_name}"
+  }
 }
 
 ##############################################################
@@ -51,6 +63,12 @@ resource "aws_db_parameter_group" "ccsdev-db-parameters" {
 resource "aws_kms_key" "ccsdev_db_key" {
   description             = "CCSDEV DB Key"
   deletion_window_in_days = 10
+
+  tags {
+    Name = "CCSDEV database KMS key"
+    CCSRole = "Infrastructure"
+    CCSEnvironment = "${var.environment_name}"
+  }
 }
 
 resource "aws_kms_alias" "ccsdev_db_key_alias" {
@@ -97,6 +115,12 @@ resource "aws_db_instance" "ccsdev_db" {
   final_snapshot_identifier = "${format("ccsdev-db-final-%s", md5(timestamp()))}"
   storage_encrypted         = true
   kms_key_id                = "${aws_kms_key.ccsdev_db_key.arn}"
+
+  tags {
+    Name = "CCSDEV database"
+    CCSRole = "Infrastructure"
+    CCSEnvironment = "${var.environment_name}"
+  }
 }
 
 ##############################################################
