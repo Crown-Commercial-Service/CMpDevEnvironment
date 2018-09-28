@@ -85,26 +85,20 @@ variable task_count {
 ##############################################################
 variable environment {
     type = "list"
+    default = []
 }
 
 ##############################################################
 # Domain that component will be hosted within,e.g. example.com
 ##############################################################
-variable domain {
-    type = "string"
+variable "environment_name" {
+  default = "Development"
 }
 
 ##############################################################
 # Port that the component will be accessible through
 ##############################################################
 variable port {
-    type = "string"
-}
-
-##############################################################
-# Protocol that the component will be accessible through
-##############################################################
-variable protocol {
     type = "string"
 }
 

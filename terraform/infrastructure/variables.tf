@@ -13,6 +13,10 @@ variable "region" {
 
 data "aws_caller_identity" "current" {}
 
+variable "environment_name" {
+  default = "Development"
+}
+
 ##############################################################
 # Bastion host server settings
 ##############################################################

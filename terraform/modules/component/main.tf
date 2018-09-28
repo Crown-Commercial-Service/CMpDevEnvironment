@@ -18,11 +18,23 @@ resource "null_resource" "is_component_type_valid" {
 }
 
 ##############################################################
-# S3 Bucket name
+# Infrastructure config
 ##############################################################
 
 locals {
-   artifact_bucket_name = "ccs.${data.aws_caller_identity.current.account_id}.build-artifacts"
+  artifact_bucket_name = "ccs.${data.aws_caller_identity.current.account_id}.build-artifacts"
+}
+
+data "aws_ssm_parameter" "domain_name" {
+  name  = "/${var.environment_name}/config/domain_name"
+}
+
+data "aws_ssm_parameter" "domain_prefix" {
+  name  = "/${var.environment_name}/config/domain_prefix"
+}
+
+data "aws_ssm_parameter" "enable_https" {
+  name  = "/${var.environment_name}/config/enable_https"
 }
 
 ##############################################################
@@ -55,12 +67,37 @@ resource "aws_cloudwatch_log_group" "component" {
 # ECS configuration
 ##############################################################
 
+locals {
+    config_protocol = "${data.aws_ssm_parameter.enable_https.value == true ? "https": "http" }"
+    config_app_domain = "${data.aws_ssm_parameter.domain_name.value}"
+    config_api_domain = "${data.aws_ssm_parameter.domain_prefix.value}.${data.aws_ssm_parameter.domain_name.value}"
+    config_domain = "${var.type == "app" ? local.config_app_domain : local.config_api_domain}"
+    config_environment = [
+      {
+        name = "CCS_APP_BASE_URL",
+        value = "${local.config_app_domain}"
+      },
+      {
+        name = "CCS_APP_PROTOCOL",
+        value = "${local.config_protocol}"
+      }, 
+      {
+        name = "CCS_API_BASE_URL",
+        value = "${local.config_api_domain}"
+      },
+      {
+        name = "CCS_API_PROTOCOL",
+        value = "${local.config_protocol}"
+      }
+    ]
+}
+
 module "ecs_service" {
   source = "../ecs_service"
 
   task_name = "${var.name}"
   task_count = "${var.task_count}"
-  task_environment = "${var.environment}"
+  task_environment = "${concat(local.config_environment, var.environment)}"
   log_group = "${aws_cloudwatch_log_group.component.name}"
   cluster_name = "${var.cluster_name}"
   image = "${module.build.image_name}"
@@ -93,7 +130,7 @@ module "routing" {
 
   type     = "${var.type}"
   name     = "${var.name}"
-  domain   = "${var.domain}"
+  domain   = "${local.config_domain}"
   port     = "${var.port}"
-  protocol = "${var.protocol}"
+  protocol = "${local.config_protocol}"
 }
