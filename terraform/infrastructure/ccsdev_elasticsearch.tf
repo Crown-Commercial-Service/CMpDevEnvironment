@@ -30,15 +30,15 @@ resource "aws_kms_alias" "ccsdev_es_key_alias" {
 #
 ##############################################################
 
-resource "aws_elasticsearch_domain" "CCSDEV-internal-es" {
+resource "aws_elasticsearch_domain" "CCSDEV-internal-default-es" {
   # Only create if create_elasticsearch_domain is true (1) 
-  count = "${var.create_elasticsearch_domain}"
+  count = "${var.create_elasticsearch_default_domain}"
 
-  domain_name           = "${var.elasticsearch_domain}"
+  domain_name           = "${var.elasticsearch_default_domain}"
   elasticsearch_version = "6.3"
 
   cluster_config {
-    instance_type = "${var.elasticsearch_instance_class}"
+    instance_type = "${var.elasticsearch_default_instance_class}"
   }
 
   vpc_options {
@@ -70,7 +70,7 @@ resource "aws_elasticsearch_domain" "CCSDEV-internal-es" {
         "AWS": "*"
       },
       "Action": "es:*",
-       "Resource": "arn:aws:es:${var.region}:${data.aws_caller_identity.current.account_id}:domain/${var.elasticsearch_domain}/*"
+       "Resource": "arn:aws:es:${var.region}:${data.aws_caller_identity.current.account_id}:domain/${var.elasticsearch_default_domain}/*"
     }
   ]
 }
@@ -81,12 +81,12 @@ CONFIG
   }
 
   tags {
-    "Name" = "CCSDEV-internal-es"
+    "Name" = "CCSDEV-internal-default-es"
   }
 }
 
 ##############################################################
-# Private VPC DNS zone CNAME to map to elastic search
+# Private VPC DNS zone CNAME to map to default elastic search
 #
 # NOTE: This is not currently very useful because AWS
 #       generated an HTTPS certificate that includes their
@@ -95,13 +95,13 @@ CONFIG
 #
 ##############################################################
 
-resource "aws_route53_record" "CCSDEV-internal-es-CNAME" {
+resource "aws_route53_record" "CCSDEV-internal-default-es-CNAME" {
   # Only create if create_elasticsearch_domain is true (1) 
-  count = "${var.create_elasticsearch_domain}"
+  count = "${var.create_elasticsearch_default_domain}"
 
   zone_id = "${aws_route53_zone.ccsdev-internal-org-private.zone_id}"
-  name    = "${var.elasticsearch_domain}.${aws_route53_zone.ccsdev-internal-org-private.name}"
+  name    = "${var.elasticsearch_default_domain}.es.${aws_route53_zone.ccsdev-internal-org-private.name}"
   type    = "CNAME"
-  records = ["${aws_elasticsearch_domain.CCSDEV-internal-es.endpoint}"]
+  records = ["${aws_elasticsearch_domain.CCSDEV-internal-default-es.endpoint}"]
   ttl     = "300"
 }

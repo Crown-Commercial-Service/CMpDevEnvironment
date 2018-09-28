@@ -127,15 +127,15 @@ variable "default_db_password" {
 # Elastic Search Settings
 ##############################################################
 
-variable "create_elasticsearch_domain" {
+variable "create_elasticsearch_default_domain" {
   default = false
 }
 
-variable "elasticsearch_domain" {
-  default = "ccsdev-search"
+variable "elasticsearch_default_domain" {
+  default = "cmpdefault"
 }
 
-variable "elasticsearch_instance_class" {
+variable "elasticsearch_default_instance_class" {
   default = "c4.large.elasticsearch"
 }
 
