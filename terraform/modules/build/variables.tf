@@ -49,6 +49,13 @@ variable service_role_arn {
 }
 
 ##############################################################
+# Environment that the build is linked to
+##############################################################
+variable "environment_name" {
+  default = "Development"
+}
+
+##############################################################
 # VPC that the build will run within
 ##############################################################
 variable vpc_id {

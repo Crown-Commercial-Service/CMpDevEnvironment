@@ -89,7 +89,7 @@ variable environment {
 }
 
 ##############################################################
-# Domain that component will be hosted within,e.g. example.com
+# Environment that component will be hosted within
 ##############################################################
 variable "environment_name" {
   default = "Development"
