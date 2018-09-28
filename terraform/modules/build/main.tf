@@ -68,4 +68,9 @@ resource "aws_codebuild_project" "project" {
 
     security_group_ids = ["${var.security_group_ids}"]
   }
+
+  tags {
+    CCSRole = "Build"
+    CCSEnvironment = "${var.environment_name}"
+  }
 }

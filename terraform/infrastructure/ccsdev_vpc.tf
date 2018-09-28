@@ -158,7 +158,7 @@ resource "aws_network_acl_rule" "acl-0a4ad1624819281ff-ingress-http" {
   to_port        = "${var.http_port}"
   rule_number    = 100
   rule_action    = "allow"
-  protocol       = "6"
+  protocol       = "tcp"
   cidr_block     = "0.0.0.0/0"
 }
 
@@ -169,7 +169,7 @@ resource "aws_network_acl_rule" "acl-0a4ad1624819281ff-ingress-https" {
   to_port        = "${var.https_port}"
   rule_number    = 110
   rule_action    = "allow"
-  protocol       = "6"
+  protocol       = "tcp"
   cidr_block     = "0.0.0.0/0"
 }
 
@@ -180,7 +180,7 @@ resource "aws_network_acl_rule" "acl-0a4ad1624819281ff-ingress-ssh-AZ-a" {
   to_port        = "${var.ssh_port}"
   rule_number    = 120
   rule_action    = "allow"
-  protocol       = "6"
+  protocol       = "tcp"
   cidr_block     = "${aws_subnet.CCSDEV-AZ-a-Management.cidr_block}"
 }
 
@@ -191,7 +191,7 @@ resource "aws_network_acl_rule" "acl-0a4ad1624819281ff-ingress-ssh-AZ-b" {
   to_port        = "${var.ssh_port}"
   rule_number    = 130
   rule_action    = "allow"
-  protocol       = "6"
+  protocol       = "tcp"
   cidr_block     = "${aws_subnet.CCSDEV-AZ-b-Management.cidr_block}"
 }
 
@@ -202,7 +202,7 @@ resource "aws_network_acl_rule" "acl-0a4ad1624819281ff-ingress-ssh-AZ-c" {
   to_port        = "${var.ssh_port}"
   rule_number    = 140
   rule_action    = "allow"
-  protocol       = "6"
+  protocol       = "tcp"
   cidr_block     = "${aws_subnet.CCSDEV-AZ-c-Management.cidr_block}"
 }
 
@@ -213,7 +213,7 @@ resource "aws_network_acl_rule" "acl-0a4ad1624819281ff-ingress-ephemeral" {
   to_port        = 65535
   rule_number    = 150
   rule_action    = "allow"
-  protocol       = "6"
+  protocol       = "tcp"
   cidr_block     = "0.0.0.0/0"
 }
 
@@ -225,7 +225,7 @@ resource "aws_network_acl_rule" "acl-0a4ad1624819281ff-ingress-ssh" {
   to_port        = "${var.ssh_port}"
   rule_number    = "${200 + count.index}"
   rule_action    = "allow"
-  protocol       = "6"
+  protocol       = "tcp"
   cidr_block     = "${element(values(var.ssh_access_cidrs), count.index)}"
 }
 
@@ -236,7 +236,7 @@ resource "aws_network_acl_rule" "acl-0a4ad1624819281ff-egress-http" {
   to_port        = "${var.http_port}"
   rule_number    = 100
   rule_action    = "allow"
-  protocol       = "6"
+  protocol       = "tcp"
   cidr_block     = "0.0.0.0/0"
 }
 
@@ -247,7 +247,7 @@ resource "aws_network_acl_rule" "acl-0a4ad1624819281ff-egress-https" {
   to_port        = "${var.https_port}"
   rule_number    = 110
   rule_action    = "allow"
-  protocol       = "6"
+  protocol       = "tcp"
   cidr_block     = "0.0.0.0/0"
 }
 
@@ -258,7 +258,7 @@ resource "aws_network_acl_rule" "acl-0a4ad1624819281ff-egress-ssh" {
   to_port        = "${var.ssh_port}"
   rule_number    = 120
   rule_action    = "allow"
-  protocol       = "6"
+  protocol       = "tcp"
   cidr_block     = "${aws_vpc.CCSDEV-Services.cidr_block}"
 }
 
@@ -269,7 +269,7 @@ resource "aws_network_acl_rule" "acl-0a4ad1624819281ff-egress-ephemeral" {
   to_port        = 65535
   rule_number    = 130
   rule_action    = "allow"
-  protocol       = "6"
+  protocol       = "tcp"
   cidr_block     = "0.0.0.0/0"
 }
 
