@@ -77,7 +77,7 @@ resource "aws_kms_alias" "ccsdev_db_key_alias" {
 }
 
 ##############################################################
-# PostgreSQL Database instance
+# PostgreSQL Default Database instance
 #
 # Note that this is currently an example with limited 
 # performance and no replication or multi-AZ support
@@ -85,23 +85,23 @@ resource "aws_kms_alias" "ccsdev_db_key_alias" {
 # Note use of timestamp to create unique final snapshot id
 ##############################################################
 
-resource "aws_db_instance" "ccsdev_db" {
+resource "aws_db_instance" "ccsdev_default_db" {
   # Only create if create_rds_database is true (1) 
-  count = "${var.create_rds_database}"
+  count = "${var.create_default_rds_database}"
 
   lifecycle {
     ignore_changes = ["final_snapshot_identifier"]
   }
 
   identifier                = "ccsdev-db"
-  allocated_storage         = "${var.db_storage}"
+  allocated_storage         = "${var.default_db_storage}"
   storage_type              = "gp2"
   engine                    = "postgres"
   engine_version            = "9.6.6"
-  instance_class            = "${var.db_instance_class}"
-  name                      = "${var.db_name}"
-  username                  = "${var.db_username}"
-  password                  = "${var.db_password}"
+  instance_class            = "${var.default_db_instance_class}"
+  name                      = "${var.default_db_name}"
+  username                  = "${var.default_db_username}"
+  password                  = "${var.default_db_password}"
   port                      = "${var.postgres_port}"
   publicly_accessible       = false
   multi_az                  = false
@@ -128,13 +128,13 @@ resource "aws_db_instance" "ccsdev_db" {
 #
 ##############################################################
 
-resource "aws_route53_record" "CCSDEV-internal-db-CNAME" {
+resource "aws_route53_record" "CCSDEV-internal-default-db-CNAME" {
   # Only create if create_rds_database is true (1) 
-  count = "${var.create_rds_database}"
+  count = "${var.create_default_rds_database}"
 
   zone_id = "${aws_route53_zone.ccsdev-internal-org-private.zone_id}"
-  name    = "${var.db_name}.${aws_route53_zone.ccsdev-internal-org-private.name}"
+  name    = "${var.default_db_name}.db.${aws_route53_zone.ccsdev-internal-org-private.name}"
   type    = "CNAME"
-  records = ["${aws_db_instance.ccsdev_db.address}"]
+  records = ["${aws_db_instance.ccsdev_default_db.address}"]
   ttl     = "300"
 }
