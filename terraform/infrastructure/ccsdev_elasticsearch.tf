@@ -38,6 +38,10 @@ resource "aws_kms_alias" "ccsdev_es_key_alias" {
 # development work.
 #
 ##############################################################
+resource "aws_iam_service_linked_role" "es" {
+  aws_service_name = "es.amazonaws.com"
+  description      = "AWSServiceRoleForAmazonElasticsearchService Service-Linked Role"
+}
 
 resource "aws_elasticsearch_domain" "CCSDEV-internal-default-es" {
   # Only create if create_elasticsearch_domain is true (1) 
@@ -94,6 +98,8 @@ CONFIG
     CCSRole = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
+
+  depends_on = ["aws_iam_service_linked_role.es"]
 }
 
 ##############################################################

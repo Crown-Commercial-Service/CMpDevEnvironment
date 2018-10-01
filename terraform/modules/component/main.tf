@@ -49,6 +49,10 @@ data "aws_ssm_parameter" "db_config_password" {
   name = "/${var.environment_name}/config/rds_password"
 }
 
+data "aws_ssm_parameter" "config_es_endpoint" {
+  name = "/${var.environment_name}/config/es_endpoint"
+}
+
 ##############################################################
 # Build
 ##############################################################
@@ -113,6 +117,10 @@ locals {
       {
         name = "CCS_DEFAULT_DB_PASSWORD",
         value = "${data.aws_ssm_parameter.db_config_password.value}"
+      }, 
+      {
+        name = "CCS_DEFAULT_ES_ENDPOINT",
+        value = "${data.aws_ssm_parameter.config_es_endpoint.value}"
       }, 
       {
         name = "CCS_VERSION",
