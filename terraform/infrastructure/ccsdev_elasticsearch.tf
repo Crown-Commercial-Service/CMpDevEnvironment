@@ -28,6 +28,9 @@ resource "aws_kms_alias" "ccsdev_es_key_alias" {
 # Many settings are defaults at present.
 # Security is based on private VPC access
 #
+# Note access from public subnet granted for initial 
+# development work.
+#
 ##############################################################
 
 resource "aws_elasticsearch_domain" "CCSDEV-internal-default-es" {
@@ -43,7 +46,7 @@ resource "aws_elasticsearch_domain" "CCSDEV-internal-default-es" {
 
   vpc_options {
     "security_group_ids" = ["${aws_security_group.vpc-CCSDEV-internal-ES.id}"]
-    "subnet_ids"         = ["${aws_subnet.CCSDEV-AZ-a-Private-1.id}"]
+    "subnet_ids"         = ["${aws_subnet.CCSDEV-AZ-a-Public-1.id}"]
   }
 
   encrypt_at_rest {
