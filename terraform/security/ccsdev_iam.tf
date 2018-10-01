@@ -36,7 +36,6 @@ data "aws_caller_identity" "current" {
 # Users in this group are 'superusers' with full access to all
 # AWS assets.
 #
-#   IAMFullAccess
 #   AWSCertificateManagerFullAccess
 #   AmazonS3FullAccess
 #   AmazonSSMFullAccess
@@ -45,11 +44,6 @@ data "aws_caller_identity" "current" {
 
 resource "aws_iam_group" "CCSDEV_iam_sys_admin" {
   name = "CCS_System_Administration"
-}
-
-resource "aws_iam_group_policy_attachment" "sys_admin_iam_full" {
-  group      = "${aws_iam_group.CCSDEV_iam_sys_admin.name}"
-  policy_arn = "arn:aws:iam::aws:policy/IAMFullAccess"
 }
 
 resource "aws_iam_group_policy_attachment" "sys_admin_cert_full" {
