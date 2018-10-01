@@ -36,3 +36,46 @@ resource "aws_ssm_parameter" "enable_https" {
     CCSEnvironment = "${var.environment_name}"
   }
 }
+
+locals {
+  rds_url = "jdbc:postgresql://${var.default_db_name}.db.${var.domain_internal_prefix}.${var.domain_name}:5432/${var.default_db_name}"
+}
+
+resource "aws_ssm_parameter" "config_rds_url" {
+  name  = "/${var.environment_name}/config/rds_url"
+  description  = "Infrastructure configured database URL"
+  type  = "SecureString"
+  value = "${var.create_default_rds_database ? local.rds_url : "_"}"
+
+  tags {
+    Name = "Parameter Store: Infrastructure configured database URL"
+    CCSRole = "Infrastructure"
+    CCSEnvironment = "${var.environment_name}"
+  }
+}
+
+resource "aws_ssm_parameter" "config_rds_username" {
+  name  = "/${var.environment_name}/config/rds_username"
+  description  = "Infrastructure configured database username"
+  type  = "SecureString"
+  value = "${var.create_default_rds_database ? var.default_db_username : "_"}"
+
+  tags {
+    Name = "Parameter Store: Infrastructure configured database username"
+    CCSRole = "Infrastructure"
+    CCSEnvironment = "${var.environment_name}"
+  }
+}
+
+resource "aws_ssm_parameter" "config_rds_password" {
+  name  = "/${var.environment_name}/config/rds_password"
+  description  = "Infrastructure configured database password"
+  type  = "SecureString"
+  value = "${var.create_default_rds_database ? var.default_db_password : "_"}"
+
+  tags {
+    Name = "Parameter Store: Infrastructure configured database password"
+    CCSRole = "Infrastructure"
+    CCSEnvironment = "${var.environment_name}"
+  }
+}

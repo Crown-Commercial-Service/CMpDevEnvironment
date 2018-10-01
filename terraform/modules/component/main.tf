@@ -26,15 +26,27 @@ locals {
 }
 
 data "aws_ssm_parameter" "domain_name" {
-  name  = "/${var.environment_name}/config/domain_name"
+  name = "/${var.environment_name}/config/domain_name"
 }
 
 data "aws_ssm_parameter" "domain_prefix" {
-  name  = "/${var.environment_name}/config/domain_prefix"
+  name = "/${var.environment_name}/config/domain_prefix"
 }
 
 data "aws_ssm_parameter" "enable_https" {
-  name  = "/${var.environment_name}/config/enable_https"
+  name = "/${var.environment_name}/config/enable_https"
+}
+
+data "aws_ssm_parameter" "db_config_url" {
+  name = "/${var.environment_name}/config/rds_url"
+}
+
+data "aws_ssm_parameter" "db_config_username" {
+  name = "/${var.environment_name}/config/rds_username"
+}
+
+data "aws_ssm_parameter" "db_config_password" {
+  name = "/${var.environment_name}/config/rds_password"
 }
 
 ##############################################################
@@ -71,6 +83,7 @@ locals {
     config_protocol = "${data.aws_ssm_parameter.enable_https.value ? "https": "http" }"
     config_app_domain = "${data.aws_ssm_parameter.domain_name.value}"
     config_api_domain = "${data.aws_ssm_parameter.domain_prefix.value}.${data.aws_ssm_parameter.domain_name.value}"
+
     config_domain = "${var.type == "app" ? local.config_app_domain : local.config_api_domain}"
     config_environment = [
       {
@@ -88,7 +101,23 @@ locals {
       {
         name = "CCS_API_PROTOCOL",
         value = "${local.config_protocol}"
-      }
+      },
+      {
+        name = "CCS_DEFAULT_DB_URL",
+        value = "${data.aws_ssm_parameter.db_config_url.value}"
+      }, 
+      {
+        name = "CCS_DEFAULT_DB_USER",
+        value = "${data.aws_ssm_parameter.db_config_username.value}"
+      }, 
+      {
+        name = "CCS_DEFAULT_DB_PASSWORD",
+        value = "${data.aws_ssm_parameter.db_config_password.value}"
+      }, 
+      {
+        name = "CCS_VERSION",
+        value = "0.0.1"
+      } 
     ]
 }
 

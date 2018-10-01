@@ -98,7 +98,6 @@ variable "api_cluster_key_name" {
 ##############################################################
 # Default Databases Settings
 ##############################################################
-
 variable "create_default_rds_database" {
   default = false
 }
