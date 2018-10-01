@@ -30,6 +30,8 @@ resource "aws_instance" "CCSDEV_BASTION_a" {
   }
 
   tags {
-    "Name" = "CCSDEV_BASTION_a"
+    Name = "CCSDEV_BASTION_a"
+    CCSRole = "Infrastructure"
+    CCSEnvironment = "${var.environment_name}"
   }
 }

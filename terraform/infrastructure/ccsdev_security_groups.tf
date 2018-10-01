@@ -28,7 +28,9 @@ resource "aws_security_group" "vpc-CCSDEV-internal-ssh" {
   }
 
   tags {
-    "Name" = "CCSDEV-internal-ssh"
+    Name = "CCSDEV-internal-ssh"
+    CCSRole = "Infrastructure"
+    CCSEnvironment = "${var.environment_name}"
   }
 }
 
@@ -38,7 +40,9 @@ resource "aws_security_group" "vpc-CCSDEV-external-ssh" {
   vpc_id      = "${aws_vpc.CCSDEV-Services.id}"
 
   tags {
-    "Name" = "CCSDEV-external-ssh"
+    Name = "CCSDEV-external-ssh"
+    CCSRole = "Infrastructure"
+    CCSEnvironment = "${var.environment_name}"
   }
 }
 
@@ -86,7 +90,9 @@ resource "aws_security_group" "vpc-CCSDEV-internal-app" {
   }
 
   tags {
-    "Name" = "CCSDEV-internal-app"
+    Name = "CCSDEV-internal-app"
+    CCSRole = "Infrastructure"
+    CCSEnvironment = "${var.environment_name}"
   }
 }
 
@@ -96,7 +102,9 @@ resource "aws_security_group" "vpc-CCSDEV-external-app" {
   vpc_id      = "${aws_vpc.CCSDEV-Services.id}"
 
   tags {
-    "Name" = "CCSDEV-external-app"
+    Name = "CCSDEV-external-app"
+    CCSRole = "Infrastructure"
+    CCSEnvironment = "${var.environment_name}"
   }
 }
 
@@ -106,7 +114,9 @@ resource "aws_security_group" "vpc-CCSDEV-external-app-alb" {
   vpc_id      = "${aws_vpc.CCSDEV-Services.id}"
 
   tags {
-    "Name" = "CCSDEV-external-app-alb"
+    Name = "CCSDEV-external-app-alb"
+    CCSRole = "Infrastructure"
+    CCSEnvironment = "${var.environment_name}"
   }
 }
 
@@ -165,7 +175,9 @@ resource "aws_security_group" "vpc-CCSDEV-internal-api" {
   }
 
   tags {
-    "Name" = "CCSDEV-internal-api"
+    Name = "CCSDEV-internal-api"
+    CCSRole = "Infrastructure"
+    CCSEnvironment = "${var.environment_name}"
   }
 }
 
@@ -196,7 +208,9 @@ resource "aws_security_group" "vpc-CCSDEV-internal-api-alb" {
   }
 
   tags {
-    "Name" = "CCSDEV-internal-api-alb"
+    Name = "CCSDEV-internal-api-alb"
+    CCSRole = "Infrastructure"
+    CCSEnvironment = "${var.environment_name}"
   }
 }
 
@@ -224,7 +238,9 @@ resource "aws_security_group" "vpc-CCSDEV-internal-PG-DB" {
   }
 
   tags {
-    "Name" = "CCSDEV-internal-PG-DB"
+    Name = "CCSDEV-internal-PG-DB"
+    CCSRole = "Infrastructure"
+    CCSEnvironment = "${var.environment_name}"
   }
 }
 
@@ -252,6 +268,8 @@ resource "aws_security_group" "vpc-CCSDEV-internal-ES" {
   }
 
   tags {
-    "Name" = "CCSDEV-internal-ES"
+    Name = "CCSDEV-internal-ES"
+    CCSRole = "Infrastructure"
+    CCSEnvironment = "${var.environment_name}"
   }
 }

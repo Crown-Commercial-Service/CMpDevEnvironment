@@ -5,6 +5,7 @@ resource "aws_ssm_parameter" "domain_name" {
   value = "${var.domain_name}"
 
   tags {
+    Name = "Parameter Store: Infrastructure configured domain name"
     CCSRole = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
@@ -17,6 +18,7 @@ resource "aws_ssm_parameter" "domain_prefix" {
   value = "${var.domain_internal_prefix}"
 
   tags {
+    Name = "Parameter Store: Infrastructure configured domain internal prefix"
     CCSRole = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
@@ -29,6 +31,7 @@ resource "aws_ssm_parameter" "enable_https" {
   value = "${var.enable_https}"
 
   tags {
+    Name = "Parameter Store: Whether HTTPS should be enabled"
     CCSRole = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }

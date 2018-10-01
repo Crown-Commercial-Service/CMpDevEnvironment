@@ -22,7 +22,9 @@ resource "aws_alb" "CCSDEV_app_cluster_alb" {
   subnets         = ["${aws_subnet.CCSDEV-AZ-a-Public-1.id}", "${aws_subnet.CCSDEV-AZ-b-Public-1.id}", "${aws_subnet.CCSDEV-AZ-c-Public-1.id}"]
 
   tags {
-    "Name" = "CCSDEV_app_cluster_alb"
+    Name = "CCSDEV_app_cluster_alb"
+    CCSRole = "Application"
+    CCSEnvironment = "${var.environment_name}"
   }
 }
 
@@ -115,7 +117,9 @@ resource "aws_alb_target_group" "CCSDEV_app_cluster_alb_def_tg" {
   }
 
   tags {
-    "Name" = "CCSDEV_app_cluster_alb_def-tg"
+    Name = "CCSDEV_app_cluster_alb_def-tg"
+    CCSRole = "Application"
+    CCSEnvironment = "${var.environment_name}"
   }
 }
 
@@ -140,6 +144,16 @@ resource "aws_autoscaling_group" "CCSDEV_app_cluster_scaling" {
     {
       key                 = "Name"
       value               = "CCSDEV_app_cluster_host"
+      propagate_at_launch = true
+    },
+    {
+      key                 = "CCSRole"
+      value               = "Application"
+      propagate_at_launch = true
+    },
+    {
+      key                 = "CCSEnvironment"
+      value               = "${var.environment_name}"
       propagate_at_launch = true
     },
   ]
