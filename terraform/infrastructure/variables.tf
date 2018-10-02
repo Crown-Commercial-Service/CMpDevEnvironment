@@ -64,7 +64,7 @@ variable "app_cluster_ami" {
 }
 
 variable "app_cluster_instance_class" {
-  default = "m5.large"
+  default = "m4.large"
 }
 
 variable "app_cluster_instance_count" {
@@ -84,7 +84,7 @@ variable "api_cluster_ami" {
 }
 
 variable "api_cluster_instance_class" {
-  default = "m5.large"
+  default = "m4.large"
 }
 
 variable "api_cluster_instance_count" {

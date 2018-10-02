@@ -227,7 +227,7 @@ resource "aws_security_group" "vpc-CCSDEV-internal-PG-DB" {
     from_port   = "${var.postgres_port}"
     to_port     = "${var.postgres_port}"
     protocol    = "tcp"
-    cidr_blocks = ["${aws_subnet.CCSDEV-AZ-a-Private-1.cidr_block}", "${aws_subnet.CCSDEV-AZ-b-Private-1.cidr_block}", "${aws_subnet.CCSDEV-AZ-c-Private-1.cidr_block}", "${aws_subnet.CCSDEV-AZ-a-Management.cidr_block}", "${aws_subnet.CCSDEV-AZ-b-Management.cidr_block}", "${aws_subnet.CCSDEV-AZ-c-Management.cidr_block}"]
+    cidr_blocks = ["${aws_subnet.CCSDEV-AZ-a-Public-1.cidr_block}", "${aws_subnet.CCSDEV-AZ-b-Public-1.cidr_block}", "${aws_subnet.CCSDEV-AZ-c-Public-1.cidr_block}", "${aws_subnet.CCSDEV-AZ-a-Private-1.cidr_block}", "${aws_subnet.CCSDEV-AZ-b-Private-1.cidr_block}", "${aws_subnet.CCSDEV-AZ-c-Private-1.cidr_block}", "${aws_subnet.CCSDEV-AZ-a-Management.cidr_block}", "${aws_subnet.CCSDEV-AZ-b-Management.cidr_block}", "${aws_subnet.CCSDEV-AZ-c-Management.cidr_block}"]
   }
 
   egress {
@@ -257,7 +257,7 @@ resource "aws_security_group" "vpc-CCSDEV-internal-ES" {
     from_port   = "${var.https_port}"
     to_port     = "${var.https_port}"
     protocol    = "tcp"
-    cidr_blocks = ["${aws_subnet.CCSDEV-AZ-a-Private-1.cidr_block}", "${aws_subnet.CCSDEV-AZ-b-Private-1.cidr_block}", "${aws_subnet.CCSDEV-AZ-c-Private-1.cidr_block}", "${aws_subnet.CCSDEV-AZ-a-Management.cidr_block}", "${aws_subnet.CCSDEV-AZ-b-Management.cidr_block}", "${aws_subnet.CCSDEV-AZ-c-Management.cidr_block}"]
+    cidr_blocks = ["${aws_subnet.CCSDEV-AZ-a-Public-1.cidr_block}", "${aws_subnet.CCSDEV-AZ-b-Public-1.cidr_block}", "${aws_subnet.CCSDEV-AZ-c-Public-1.cidr_block}","${aws_subnet.CCSDEV-AZ-a-Private-1.cidr_block}", "${aws_subnet.CCSDEV-AZ-b-Private-1.cidr_block}", "${aws_subnet.CCSDEV-AZ-c-Private-1.cidr_block}", "${aws_subnet.CCSDEV-AZ-a-Management.cidr_block}", "${aws_subnet.CCSDEV-AZ-b-Management.cidr_block}", "${aws_subnet.CCSDEV-AZ-c-Management.cidr_block}"]
   }
 
   egress {
