@@ -6,15 +6,16 @@
 # Load Balancer configuration
 ##############################################################
 resource "aws_alb_target_group" "component" {
-  name     = "CCSDEV-${var.type}-cluster-alb-${var.name}-tg"
-  port     = "${var.port}"
-  protocol = "HTTP"
-  vpc_id   = "${data.aws_vpc.CCSDEV-Services.id}"
+  name                 = "CCSDEV-${var.type}-cluster-alb-${var.name}-tg"
+  port                 = "${var.port}"
+  protocol             = "HTTP"
+  vpc_id               = "${data.aws_vpc.CCSDEV-Services.id}"
+  deregistration_delay = 30
 
   health_check {
     healthy_threshold   = "5"
     unhealthy_threshold = "2"
-    interval            = "30"
+    interval            = "60"
     matcher             = "200"
     path                = "/"
     port                = "traffic-port"
