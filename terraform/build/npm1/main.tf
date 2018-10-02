@@ -58,13 +58,14 @@ locals {
 # Build
 ##############################################################
 module "build" {
-  # source = "git::https://github.com/RoweIT/CCSDevEnvironment.git//terraform/modules/build"
+  # source = "git::https://github.com/Crown-Commercial-Service/CMpDevEnvironment.git//terraform/modules/build"
   source = "../../modules/build"
 
   artifact_prefix = "ccs"
   artifact_name = "npm1"
-  github_owner = "RoweIT"
-  github_repo = "CCSExampleNPMModule"
+  github_owner = "Crown-Commercial-Service"
+  github_repo = "CMpExampleNPMModule"
+  github_branch = "master"
   build_type = "npm-publish"
   service_role_arn = "${data.aws_iam_role.codebuild_service_role.arn}"
   vpc_id = "${data.aws_vpc.CCSDEV-Services.id}"
@@ -76,14 +77,16 @@ module "build" {
 # Pipeline
 ##############################################################
 module "pipeline" {
-  # source = "git::https://github.com/RoweIT/CCSDevEnvironment.git//terraform/modules/build_pipeline"
+  # source = "git::https://github.com/Crown-Commercial-Service/CMpDevEnvironment.git//terraform/modules/build_pipeline"
   source = "../../modules/build_pipeline"
 
   artifact_name = "npm1"
   service_role_arn = "${data.aws_iam_role.codepipeline_service_role.arn}"
   artifact_bucket_name = "${local.artifact_bucket_name}"
-  github_owner = "RoweIT"
-  github_repo = "CCSExampleNPMModule"
+  github_owner = "Crown-Commercial-Service"
+  github_repo = "CMpExampleNPMModule"
+  github_branch = "master"
+  github_token_alias = "ccs-build_github_token"
   build_project_name = "${module.build.project_name}"
 }
 
