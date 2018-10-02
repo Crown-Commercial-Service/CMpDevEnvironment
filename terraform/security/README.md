@@ -17,9 +17,10 @@ Where possible pre-existing, AWS defined, policies have been assigned to these g
 ### CCS_System_Administration ###
 This group is for for *super users* and membership would normally be combined with the infrastructure administration and build pipeline groups. Members of this group are the only ones who can add or remove users from this group.
 
+**NOTE** The IAMFullAccess policy as been removed from this group in this release. The ability to create and maintain any users should be granted outside of the CCS CMp configuration.
+
 The following policies are attached:
 
-- IAMFullAccess
 - AWSCertificateManagerFullAccess
 - AmazonS3FullAccess
 - AmazonSSMFullAccess

@@ -2,7 +2,7 @@
 
 This project contains [Terraform](https://www.terraform.io/) scripts that are used to generate a container hosting environment in AWS. This environment is in the eu-west-2 region.
 
-This environment allows the deployment of externally accessible *application* containers and private *api* containers. Example build pipelines for an application, api and NPM module are also provided.
+This environment allows the deployment of externally accessible *Application* containers and private *API* containers. Example build pipelines for an application, api and NPM module are also provided.
 
 The available scripts are divided into three areas: security, infrastructure and build pipelines. When creating a new environment scripts will need to be initially executed in that order.
 
@@ -45,40 +45,93 @@ The infrastructure scripts generate a complete AWS environment for deploying con
 - A basic bastion host for management.
 - Two ECS clusters:
   - **CCSDEV_app_cluster** for 'Applications' in the public subnet.
-  - **CCSDEV_api_cluster** for 'Apps' in the private subnet.
+  - **CCSDEV_api_cluster** for 'APIs' in the private subnet.
 - Public application load balancer for the application cluster.
-  - HTTP only for initial release.
+  - HTTP and HTTPS using AWS managed certificates.
 - Internal application load balancer for the api cluster.
-  - HTTP only for initial release.
+  - HTTP and HTTPS using AWS managed certificates.
+- Example RDS Postgres daatbase server. 
+- Example Elastic Search domain.
+- CloudWatch dashboard definition example
+
+**NOTE**
+In this release the example database and Elastic Search instances can be accessed from the Application and API clusters. The intention is that this is restricted to the API cluster in the next release.
+
+A file with the suffix `.auto.tfvars` must be created that defines the IP addresses from which access is allowed and the root domain name defined in Route53. An example file, `config.auto.tfvars.example` is provided:
+
+```
+# The domain name that the components will sit beneath
+domain_name = "example.com"
+
+# The subdomain beneath the main domain name that will be used for
+#  internal (api) components - this defaults to "internal"
+domain_internal_prefix = "internal"
+
+# Whether HTTPS should be available across the load balancers
+#  along with appropriate certificates
+enable_https = false
+
+# A map of external CIDR blocks that should have SSH access
+"ssh_access_cidrs" = {
+    "office" = "192.0.2.0/24"
+}
+
+# A map of external CIDR blocks that should have HTTP(S) access
+"app_access_cidrs" = {
+    "office" = "192.0.2.0/24"
+    "guests" = "198.51.100.0/24"
+}
+```
+
+When the infrastructure scripts are executed a number of settings are written to the `EC2 Parameter Store` as secure strings. These settings are then used to when creating the build pipelines to generate environment variables that are passed to running containers. In this way database and Elastic Search connection details are passed to the Applications and APIs.
+
 
 ---
 
 ## Build Pipeline Examples
 `/terraform/build`
 
-There are examples that create AWS CodePipeline and CodeBuild configurations for an application (*app1*), and an api (*api1*). These will take source code from Github and, ultimately, deploy an updated container image to the correct ECS cluster. There is also an example that publishes an updated NPM module to [https://www.npmjs.com](https://www.npmjs.com).
+There are examples that create AWS CodePipeline and CodeBuild configurations for an application (*app1*, *app2*), and an api (*api1*, *api2*). These will take source code from Github and, ultimately, deploy an updated container image to the correct ECS cluster. There is also an example that publishes an updated NPM module to [https://www.npmjs.com](https://www.npmjs.com).
 
 Each of these examples will generate AWS CodeBuild and CodePipeline configurations. The content of these will vary with the type of build. For example, an NPM module build will not create or update any ECS task definitions.
 
-All of these builds require an environment variable, `GITHUB_TOKEN`, that must contain a valid access token for Github. They each use pre-defined buildspec files that are [located within the terraform build module](https://github.com/RoweIT/CCSDevEnvironment/tree/master/terraform/modules/build) as &lt;prefix&gt;_buildspec.yml.
+All of these builds require access to a GitHub account for a GitHub token. This must be entered into the EC2 parameter store as a secure string called: `ccs-build_github_token`.They each use pre-defined buildspec files that are [located within the terraform build module](https://github.com/Crown-Commercial-Service/CMpDevEnvironment/tree/develop/terraform/modules/build) as &lt;prefix&gt;_buildspec.yml.
 
-### Application Example ###
+### Application Example 1 ###
 `/terraform/build/app1`
 
-This uses the contents of the `CCSExampleApp1` repository. It contains a minimal NodeJS/Express application and a Dockerfile for defining the container image.
+This uses the contents of the `CMpExampleApp1` repository. It contains a minimal NodeJS/Express application and a Dockerfile for defining the container image.
 
 The file `main.tf` defines the attributes of the build and identifies the location of the source code in Github, the name of the cluster to which it will be deployed and the type of build to be performed. It also contains a variable that specifies the root domain name for the Route 53 zone to which an 'A' record will be added to make the application accessible. The name and prefix settings will be combined to form the container image name within ECR.
 
 When executed the scripts will define the build pipeline and this will trigger the process of building and deploying the example application. Eventually, assuming the build succeeds, the application will be accessible as `http://app1.<domain>`.
 
-### Api Example ###
+### Application Example 2 ###
+`/terraform/build/app2`
+
+This uses the contents of the `CMpExampleApp2` repository. It contains a minimal Ruby on Rails application and a Dockerfile for defining the container image.
+
+The file `main.tf` defines the attributes of the build and identifies the location of the source code in Github, the name of the cluster to which it will be deployed and the type of build to be performed. It also contains a variable that specifies the root domain name for the Route 53 zone to which an 'A' record will be added to make the application accessible. The name and prefix settings will be combined to form the container image name within ECR.
+
+When executed the scripts will define the build pipeline and this will trigger the process of building and deploying the example application. Eventually, assuming the build succeeds, the application will be accessible as `http://app2.<domain>`.
+
+### Api Example 1 ###
 `/terraform/build/api1`
 
-This uses the contents of the `CCSExampleApi1` repository. It contains a minimal Java/Springboot REST API and a Dockerfile for defining the container image.
+This uses the contents of the `CMpExampleApi1` repository. It contains a minimal Java/Springboot REST API and a Dockerfile for defining the container image.
 
 The file `main.tf` defines the attributes of the build and identifies the location of the source code in Github, the name of cluster to which it will be deployed and the type of build to be performed. It also contains a variable that specifies the root domain name for the Route 53 zone to which an 'A' record will be added to make the api accessible. The default value for this is the private zone only usable within the VPC. The name and prefix settings will be combined to form the container image name within ECR.
 
-When executed the scripts will define the build pipeline and this will trigger the process of building and deploying the example api. Eventually, assuming the build succeeds, the api will be accessible as `http://api1.<domain>`. Note that with the settings in the example this is deployed to the api cluster within a private subnet. To test, one option is to ssh to the basiton host and execute `curl`. See the documentation within the `CCSExampleApi1` repository for details of the REST interface.
+When executed the scripts will define the build pipeline and this will trigger the process of building and deploying the example api. Eventually, assuming the build succeeds, the api will be accessible as `http://api1.<domain>`. Note that with the settings in the example this is deployed to the api cluster within a private subnet. To test, one option is to ssh to the basiton host and execute `curl`. See the documentation within the `CMpExampleApi1` repository for details of the REST interface.
+
+### Api Example 2 ###
+`/terraform/build/api2`
+
+This uses the contents of the `CMpExampleApi2` repository. It contains a minimal Python + Flask REST API and a Dockerfile for defining the container image.
+
+The file `main.tf` defines the attributes of the build and identifies the location of the source code in Github, the name of cluster to which it will be deployed and the type of build to be performed. It also contains a variable that specifies the root domain name for the Route 53 zone to which an 'A' record will be added to make the api accessible. The default value for this is the private zone only usable within the VPC. The name and prefix settings will be combined to form the container image name within ECR.
+
+When executed the scripts will define the build pipeline and this will trigger the process of building and deploying the example api. Eventually, assuming the build succeeds, the api will be accessible as `http://api2.<domain>`. Note that with the settings in the example this is deployed to the api cluster within a private subnet. To test, one option is to ssh to the basiton host and execute `curl`. See the documentation within the `CMpExampleApi2` repository for details of the REST interface.
 
 
 ### NPM Module Example ###
@@ -108,6 +161,17 @@ The build pipeline scripts will ensure that a number of environment variables ar
  `CCS_API_PROTOCOL + "://" + "api1." + CCS_API_BASE_URL`
 
 The example NPM module actually contains a simple class for this purpose and is used by the example application.
+
+Database and Elastic Search connection information is also supplied as environment variables:
+
+- CCS_DEFAULT_DB_URL
+- CCS_DEFAULT_DB_USER
+- CCS_DEFAULT_DB_PASSWORD
+- CCS_DEFAULT_ES_ENDPOINT
+
+`CCS_DEFAULT_DB_URL` is JDBC style connection string for accessing the database.
+
+Var variable `CCS_VERSION` is also defined, this is currently hard-coded to `0.0.1` but will represent a release for the API or Ap[plication.
 
 Environment variables can also be used to pass feature switches to containers. These variables should all be  prefixed with `CCS_FEATURE_` and contain a value of `on` or `off`. For example
 
