@@ -99,7 +99,7 @@ variable "api_cluster_key_name" {
 # Default Databases Settings
 ##############################################################
 variable "create_default_rds_database" {
-  default = false
+  default = true
 }
 
 variable "default_db_instance_class" {
@@ -127,7 +127,7 @@ variable "default_db_password" {
 ##############################################################
 
 variable "create_elasticsearch_default_domain" {
-  default = false
+  default = true
 }
 
 variable "elasticsearch_default_domain" {
