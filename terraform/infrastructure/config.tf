@@ -71,7 +71,7 @@ resource "aws_ssm_parameter" "config_rds_password" {
   name  = "/${var.environment_name}/config/rds_password"
   description  = "Infrastructure configured database password"
   type  = "SecureString"
-  value = "${var.create_default_rds_database ? var.default_db_password : "_"}"
+  value = "${var.create_default_rds_database ? local.ccsdev_default_db_password : "_"}"
 
   tags {
     Name = "Parameter Store: Infrastructure configured database password"
