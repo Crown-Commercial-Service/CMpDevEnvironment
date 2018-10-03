@@ -121,11 +121,7 @@ locals {
       {
         name = "CCS_DEFAULT_ES_ENDPOINT",
         value = "${data.aws_ssm_parameter.config_es_endpoint.value}"
-      }, 
-      {
-        name = "CCS_VERSION",
-        value = "0.0.1"
-      } 
+      }
     ]
 }
 
