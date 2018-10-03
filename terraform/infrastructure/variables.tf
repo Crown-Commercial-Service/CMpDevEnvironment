@@ -99,7 +99,7 @@ variable "api_cluster_key_name" {
 # Default Databases Settings
 ##############################################################
 variable "create_default_rds_database" {
-  default = true
+  default = false
 }
 
 variable "default_db_instance_class" {
@@ -108,6 +108,18 @@ variable "default_db_instance_class" {
 
 variable "default_db_storage" {
   default = 20
+}
+
+variable "default_db_type" {
+  default = "postgresql"
+}
+
+variable "default_db_host" {
+  default = ""
+}
+
+variable "default_db_port" {
+  default = "5432"
 }
 
 variable "default_db_name" {

@@ -41,6 +41,22 @@ data "aws_ssm_parameter" "db_config_url" {
   name = "/${var.environment_name}/config/rds_url"
 }
 
+data "aws_ssm_parameter" "db_config_type" {
+  name = "/${var.environment_name}/config/rds_type"
+}
+
+data "aws_ssm_parameter" "db_config_host" {
+  name = "/${var.environment_name}/config/rds_host"
+}
+
+data "aws_ssm_parameter" "db_config_port" {
+  name = "/${var.environment_name}/config/rds_port"
+}
+
+data "aws_ssm_parameter" "db_config_name" {
+  name = "/${var.environment_name}/config/rds_name"
+}
+
 data "aws_ssm_parameter" "db_config_username" {
   name = "/${var.environment_name}/config/rds_username"
 }
@@ -109,6 +125,22 @@ locals {
       {
         name = "CCS_DEFAULT_DB_URL",
         value = "${data.aws_ssm_parameter.db_config_url.value}"
+      }, 
+      {
+        name = "CCS_DEFAULT_DB_TYPE",
+        value = "${data.aws_ssm_parameter.db_config_type.value}"
+      }, 
+      {
+        name = "CCS_DEFAULT_DB_HOST",
+        value = "${data.aws_ssm_parameter.db_config_host.value}"
+      }, 
+      {
+        name = "CCS_DEFAULT_DB_PORT",
+        value = "${data.aws_ssm_parameter.db_config_port.value}"
+      }, 
+      {
+        name = "CCS_DEFAULT_DB_NAME",
+        value = "${data.aws_ssm_parameter.db_config_name.value}"
       }, 
       {
         name = "CCS_DEFAULT_DB_USER",

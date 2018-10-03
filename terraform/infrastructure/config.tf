@@ -38,6 +38,8 @@ resource "aws_ssm_parameter" "enable_https" {
 }
 
 locals {
+  computed_rds_host = "${var.default_db_name}.db.${var.domain_internal_prefix}.${var.domain_name}"
+  rds_host = "${var.default_db_host == "" ? local.computed_rds_host : var.default_db_host}"
   rds_url = "jdbc:postgresql://${var.default_db_name}.db.${var.domain_internal_prefix}.${var.domain_name}:5432/${var.default_db_name}"
 }
 
@@ -49,6 +51,58 @@ resource "aws_ssm_parameter" "config_rds_url" {
 
   tags {
     Name = "Parameter Store: Infrastructure configured database URL"
+    CCSRole = "Infrastructure"
+    CCSEnvironment = "${var.environment_name}"
+  }
+}
+
+resource "aws_ssm_parameter" "config_rds_type" {
+  name  = "/${var.environment_name}/config/rds_type"
+  description  = "Infrastructure configured database type"
+  type  = "SecureString"
+  value = "${var.create_default_rds_database ? var.default_db_type : "_"}"
+
+  tags {
+    Name = "Parameter Store: Infrastructure configured database type"
+    CCSRole = "Infrastructure"
+    CCSEnvironment = "${var.environment_name}"
+  }
+}
+
+resource "aws_ssm_parameter" "config_rds_host" {
+  name  = "/${var.environment_name}/config/rds_host"
+  description  = "Infrastructure configured database host"
+  type  = "SecureString"
+  value = "${var.create_default_rds_database ? local.rds_host : "_"}"
+
+  tags {
+    Name = "Parameter Store: Infrastructure configured database host"
+    CCSRole = "Infrastructure"
+    CCSEnvironment = "${var.environment_name}"
+  }
+}
+
+resource "aws_ssm_parameter" "config_rds_port" {
+  name  = "/${var.environment_name}/config/rds_port"
+  description  = "Infrastructure configured database port"
+  type  = "SecureString"
+  value = "${var.create_default_rds_database ? var.default_db_port : "_"}"
+
+  tags {
+    Name = "Parameter Store: Infrastructure configured database port"
+    CCSRole = "Infrastructure"
+    CCSEnvironment = "${var.environment_name}"
+  }
+}
+
+resource "aws_ssm_parameter" "config_rds_name" {
+  name  = "/${var.environment_name}/config/rds_name"
+  description  = "Infrastructure configured database name"
+  type  = "SecureString"
+  value = "${var.create_default_rds_database ? var.default_db_name : "_"}"
+
+  tags {
+    Name = "Parameter Store: Infrastructure configured database name"
     CCSRole = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
