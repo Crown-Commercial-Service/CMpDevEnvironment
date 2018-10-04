@@ -14,10 +14,6 @@ module "component" {
     task_count = 1
     environment = [
       {
-        name = "CCS_FEATURE_EG1",
-        value = "off"
-      },
-      {
         name = "RAILS_ENV",
         value = "production"
       },
