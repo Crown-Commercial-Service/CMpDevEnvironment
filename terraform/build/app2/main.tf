@@ -5,7 +5,7 @@ module "component" {
     type = "app"
     prefix = "ccs"
     name = "app2"
-    build_type = "docker"
+    build_type = "ruby"
     github_owner = "Crown-Commercial-Service"
     github_repo = "CMpExampleApp2"
     github_branch = "master"

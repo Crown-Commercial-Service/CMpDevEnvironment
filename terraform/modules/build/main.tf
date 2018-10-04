@@ -12,6 +12,7 @@ locals {
     java = "aws/codebuild/java:openjdk-8"
     npm-publish = "aws/codebuild/nodejs:8.11.0"
     python = "aws/codebuild/python:3.6.5"
+    ruby = "aws/codebuild/ruby:2.5.1"
   }
   __valid_build_types__ = "${keys(local.build_images)}"
 }
