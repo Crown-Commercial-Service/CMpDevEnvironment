@@ -4,7 +4,7 @@ module "component" {
 
     type = "app"
     prefix = "ccs"
-    name = "crown-marketplace"
+    name = "cmp"
     build_type = "ruby"
     github_owner = "Crown-Commercial-Service"
     github_repo = "crown-marketplace"
