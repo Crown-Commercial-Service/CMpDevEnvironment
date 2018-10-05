@@ -95,3 +95,12 @@ module "npm1_backend" {
     region    = "${local.region}"
     path      = "${path.module}"
 }
+
+module "cmp_backend" {
+    source    = "./backend"
+
+    bucket    = "${local.bucket_name}"
+    component = "build/crown-marketplace"
+    region    = "${local.region}"
+    path      = "${path.module}"
+}
