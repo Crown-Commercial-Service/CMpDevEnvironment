@@ -87,6 +87,7 @@ data "aws_iam_policy_document" "codebuild_service_policy" {
   statement {
     actions = [
       "ssm:GetParameters",
+      "ssm:GetParameter"
    ]
 
     resources = ["*"]
