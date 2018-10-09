@@ -16,7 +16,7 @@ resource "aws_alb_target_group" "component" {
     healthy_threshold   = "5"
     unhealthy_threshold = "2"
     interval            = "60"
-    matcher             = "200"
+    matcher             = "200-499"
     path                = "/"
     port                = "traffic-port"
     protocol            = "HTTP"
