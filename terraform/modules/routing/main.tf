@@ -6,7 +6,7 @@
 # Load Balancer configuration
 ##############################################################
 resource "aws_alb_target_group" "component" {
-  name                 = "CCSDEV-${var.type}-cluster-alb-${var.name}-tg"
+  name                 = "CCSDEV-${var.type}-cl-alb-${var.name}-tg"
   port                 = "${var.port}"
   protocol             = "HTTP"
   vpc_id               = "${data.aws_vpc.CCSDEV-Services.id}"
@@ -24,7 +24,7 @@ resource "aws_alb_target_group" "component" {
   }
 
   tags {
-    "Name" = "CCSDEV_${var.type}_cluster_alb_${var.name}-tg"
+    "Name" = "CCSDEV_${var.type}_cl_alb_${var.name}-tg"
   }
 }
 
