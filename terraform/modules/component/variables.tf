@@ -29,6 +29,10 @@ variable build_type {
     type = "string"
 }
 
+variable enable_tests {
+    type = "string"
+    default = false
+}
 ##############################################################
 # Component source Github user/org
 ##############################################################

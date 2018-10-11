@@ -81,6 +81,7 @@ module "build" {
   github_repo = "${var.github_repo}"
   github_branch = "${var.github_branch}"
   build_type = "${var.build_type}"
+  enable_tests = "${var.enable_tests}"
   service_role_arn = "${data.aws_iam_role.codebuild_service_role.arn}"
   vpc_id = "${data.aws_vpc.CCSDEV-Services.id}"
   subnet_ids = ["${data.aws_subnet.CCSDEV-AZ-a-Private-1.id}"]
@@ -172,7 +173,31 @@ module "ecs_service" {
 ##############################################################
 # Pipeline
 ##############################################################
-module "pipeline" {
+locals {
+  test_count = "${var.enable_tests ? 1 : 0}"
+  no_test_count = "${local.test_count ? 0 : 1}"
+}
+
+module "test_deploy_pipeline" {
+  enable = "${local.test_count}"
+  source = "../test_deploy_pipeline"
+
+  artifact_name = "${var.name}"
+  service_role_arn = "${data.aws_iam_role.codepipeline_service_role.arn}"
+  artifact_bucket_name = "${local.artifact_bucket_name}"
+  github_owner = "${var.github_owner}"
+  github_repo = "${var.github_repo}"
+  github_branch = "${var.github_branch}"
+  github_token_alias = "${var.github_token_alias}"
+  build_test_project_name = "${module.build.build_test_project_name}"
+  deploy_test_project_name = "${module.build.deploy_test_project_name}"
+  build_project_name = "${module.build.build_project_name}"
+  deploy_cluster_name = "${var.cluster_name}"
+  deploy_service_name = "${module.ecs_service.name}"
+}
+
+module "deploy_pipeline" {
+  enable = "${local.no_test_count}"
   source = "../deploy_pipeline"
 
   artifact_name = "${var.name}"
@@ -182,7 +207,7 @@ module "pipeline" {
   github_repo = "${var.github_repo}"
   github_branch = "${var.github_branch}"
   github_token_alias = "${var.github_token_alias}"
-  build_project_name = "${module.build.project_name}"
+  build_project_name = "${module.build.build_project_name}"
   deploy_cluster_name = "${var.cluster_name}"
   deploy_service_name = "${module.ecs_service.name}"
 }

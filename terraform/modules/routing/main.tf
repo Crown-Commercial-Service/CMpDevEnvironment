@@ -6,7 +6,7 @@
 # Load Balancer configuration
 ##############################################################
 resource "aws_alb_target_group" "component" {
-  name                 = "CCSDEV-${var.type}-cluster-alb-${var.name}-tg"
+  name                 = "CCSDEV-${var.type}-cl-alb-${var.name}-tg"
   port                 = "${var.port}"
   protocol             = "HTTP"
   vpc_id               = "${data.aws_vpc.CCSDEV-Services.id}"
@@ -24,16 +24,36 @@ resource "aws_alb_target_group" "component" {
   }
 
   tags {
-    "Name" = "CCSDEV_${var.type}_cluster_alb_${var.name}-tg"
+    "Name" = "CCSDEV_${var.type}_cl_alb_${var.name}-tg"
   }
 }
 
 resource "aws_alb_listener_rule" "http_subdomain_rule" {
+  count = "${local.provision_https_certificates == 0 ? 1 : 0}"
   listener_arn = "${data.aws_alb_listener.http_listener.arn}"
 
   action {
     type             = "forward"
     target_group_arn = "${aws_alb_target_group.component.arn}"
+  }
+
+  condition {
+    field  = "host-header"
+    values = ["${var.name}.${var.domain}"]
+  }
+}
+
+resource "aws_alb_listener_rule" "http_subdomain_redirect_rule" {
+  count = "${local.provision_https_certificates}"
+  listener_arn = "${data.aws_alb_listener.http_listener.arn}"
+
+  action {
+    type = "redirect"
+    redirect {
+      port = "443"
+      protocol = "HTTPS"
+      status_code = "HTTP_301"
+    }
   }
 
   condition {
