@@ -40,6 +40,29 @@ resource "aws_ecr_repository" "build" {
   name = "${var.artifact_prefix}/${var.artifact_name}"
 }
 
+resource "aws_ecr_lifecycle_policy" "build_policy" {
+  repository = "${aws_ecr_repository.build.name}"
+
+  policy = <<EOF
+{
+    "rules": [
+        {
+            "rulePriority": 1,
+            "description": "Keep last 5 images",
+            "selection": {
+                "tagStatus": "any",
+                "countType": "imageCountMoreThan",
+                "countNumber": 5
+            },
+            "action": {
+                "type": "expire"
+            }
+        }
+    ]
+}
+EOF
+}
+
 resource "aws_codebuild_project" "project" {
   name          = "${var.artifact_name}-build-project"
   description   = "${var.artifact_name}_codebuild_project"
