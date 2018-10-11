@@ -29,11 +29,31 @@ resource "aws_alb_target_group" "component" {
 }
 
 resource "aws_alb_listener_rule" "http_subdomain_rule" {
+  count = "${local.provision_https_certificates == 0 ? 1 : 0}"
   listener_arn = "${data.aws_alb_listener.http_listener.arn}"
 
   action {
     type             = "forward"
     target_group_arn = "${aws_alb_target_group.component.arn}"
+  }
+
+  condition {
+    field  = "host-header"
+    values = ["${var.name}.${var.domain}"]
+  }
+}
+
+resource "aws_alb_listener_rule" "http_subdomain_redirect_rule" {
+  count = "${local.provision_https_certificates}"
+  listener_arn = "${data.aws_alb_listener.http_listener.arn}"
+
+  action {
+    type = "redirect"
+    redirect {
+      port = "443"
+      protocol = "HTTPS"
+      status_code = "HTTP_301"
+    }
   }
 
   condition {
