@@ -9,38 +9,42 @@ variable artifact_prefix {
 # Build Artifact (Container) Name  
 ##############################################################
 variable artifact_name {
-        type = "string"
+    type = "string"
 }
 
 ##############################################################
 # Github Owner  
 ##############################################################
 variable github_owner {
-        type = "string"
+    type = "string"
 }
 
 ##############################################################
 # Github Repo
 ##############################################################
 variable github_repo {
-        type = "string"
+    type = "string"
 }
 
 ##############################################################
 # Github Branch
 ##############################################################
 variable github_branch {
-        type = "string"
-        default = "master"
+    type = "string"
+    default = "master"
 }
 
 ##############################################################
 # Build Type (docker, java, etc.) see build module for options
 ##############################################################
 variable build_type {
-        type = "string"
+    type = "string"
 }
 
+variable enable_tests {
+    type = "string"
+    default = false
+}
 ##############################################################
 # AWS IAM role providing build permissions
 ##############################################################
@@ -52,14 +56,14 @@ variable service_role_arn {
 # Environment that the build is linked to
 ##############################################################
 variable "environment_name" {
-  default = "Development"
+    default = "Development"
 }
 
 ##############################################################
 # VPC that the build will run within
 ##############################################################
 variable vpc_id {
-        type = "string"
+    type = "string"
 }
 
 ##############################################################

@@ -40,6 +40,24 @@ resource "aws_codepipeline" "pipeline" {
   }
 
   stage {
+    name = "Build_Tests"
+
+    action {
+      name             = "Test"
+      category         = "Build"
+      owner            = "AWS"
+      provider         = "CodeBuild"
+      input_artifacts  = ["${var.artifact_name}_source"]
+      output_artifacts = ["${var.artifact_name}_build_test"]
+      version          = "1"
+
+      configuration {
+        ProjectName = "${var.build_test_project_name}"
+      }
+    }
+  }
+
+  stage {
     name = "Build"
 
     action {
@@ -53,6 +71,24 @@ resource "aws_codepipeline" "pipeline" {
 
       configuration {
         ProjectName = "${var.build_project_name}"
+      }
+    }
+  }
+
+  stage {
+    name = "Deploy_Tests"
+
+    action {
+      name             = "Test"
+      category         = "Build"
+      owner            = "AWS"
+      provider         = "CodeBuild"
+      input_artifacts  = ["${var.artifact_name}_source"]
+      output_artifacts = ["${var.artifact_name}_deploy_test"]
+      version          = "1"
+
+      configuration {
+        ProjectName = "${var.deploy_test_project_name}"
       }
     }
   }
