@@ -141,7 +141,7 @@ data "aws_iam_policy_document" "codepipeline_service_role_assume_policy" {
   statement {
     principals = {
       type = "Service"
-      identifiers = ["codepipeline.amazonaws.com"]
+      identifiers = ["codepipeline.amazonaws.com", "application-autoscaling.amazonaws.com"]
     }
 
     actions = ["sts:AssumeRole"]
@@ -206,6 +206,16 @@ resource "aws_iam_role_policy_attachment" "codepipeline_api_container_registry_p
 resource "aws_iam_role_policy_attachment" "codepipeline_app_container_registry_permissions" {
   role = "${aws_iam_role.codepipeline_app_service_role.name}"
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser"
+}
+
+resource "aws_iam_role_policy_attachment" "codepipeline_api_ecs_autoscale_permissions" {
+  role = "${aws_iam_role.codepipeline_api_service_role.name}"
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceAutoscaleRole"
+}
+
+resource "aws_iam_role_policy_attachment" "codepipeline_app_ecs_autoscale_permissions" {
+  role = "${aws_iam_role.codepipeline_app_service_role.name}"
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceAutoscaleRole"
 }
 
 ##############################################################
