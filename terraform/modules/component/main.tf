@@ -163,11 +163,14 @@ module "ecs_service" {
 
   task_name = "${var.name}"
   task_count = "${var.task_count}"
+  autoscaling_min_count = "${var.autoscaling_min_count}"
+  autoscaling_max_count = "${var.autoscaling_max_count}"
   task_environment = "${concat(local.config_environment, var.environment)}"
   log_group = "${aws_cloudwatch_log_group.component.name}"
   cluster_name = "${var.cluster_name}"
   image = "${module.build.image_name}"
   target_group_arn = "${module.routing.target_group_arn}"
+  ecs_service_arn = "${data.aws_iam_role.codepipeline_service_role.arn}"
 }
 
 ##############################################################
