@@ -95,7 +95,7 @@ locals {
 
 resource "random_string" "ccsdev_default_db_password" {
   length = 30
-  special = true
+  special = false
   number = true
   lower = true
   upper = true
