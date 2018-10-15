@@ -91,6 +91,8 @@ resource "aws_appautoscaling_target" "ecs_target" {
   service_namespace  = "ecs"
 }
 
+# Helpful reference: https://docs.aws.amazon.com/autoscaling/ec2/userguide/as-scaling-simple-step.html
+
 resource "aws_appautoscaling_policy" "service_up" {
   count                     = "${local.enable_autoscaling}"
   name                      = "${var.task_name}-scale-up"
@@ -105,7 +107,6 @@ resource "aws_appautoscaling_policy" "service_up" {
 
     step_adjustment {
       metric_interval_lower_bound = 0
-      metric_interval_upper_bound = 50
       scaling_adjustment = 1
     }
   }
@@ -128,7 +129,6 @@ resource "aws_appautoscaling_policy" "service_down" {
     metric_aggregation_type   = "Average"
 
     step_adjustment {
-      metric_interval_lower_bound = -50
       metric_interval_upper_bound = 0
       scaling_adjustment = -1
     }
