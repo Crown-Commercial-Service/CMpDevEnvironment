@@ -16,7 +16,8 @@ phases:
         fi
   build:
     commands:
-      - mvn 
+      - mvn
+        --fail-fast 
         -Ddocker.image.prefix=${container_prefix} 
         -Ddocker.image.name=${container_name} 
         -Ddocker.git.owner=${github_owner} 
