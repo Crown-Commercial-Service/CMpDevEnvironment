@@ -12,6 +12,7 @@ module "component" {
     github_token_alias = "ccs-build_github_token"
     cluster_name = "CCSDEV_api_cluster"
     task_count = 1
+    enable_tests = true
     environment = [
       {
         name = "CCS_FEATURE_EG1",
