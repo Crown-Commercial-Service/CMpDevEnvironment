@@ -339,6 +339,12 @@ resource "aws_iam_group" "CCSDEV_iam_user_admin" {
   name = "CCS_User_Administration"
 }
 
+resource "aws_iam_group_membership" "iam_user_admin" {
+  name = "tf-testing-group-membership"
+  users = ["${basename(data.aws_caller_identity.current.arn)}"]
+  group = "${aws_iam_group.CCSDEV_iam_user_admin.name}"
+}
+
 resource "aws_iam_group_policy_attachment" "user_admin_iam_limited" {
   group      = "${aws_iam_group.CCSDEV_iam_user_admin.name}"
   policy_arn = "${aws_iam_policy.CCSDEV_policy_limited_user.arn}"
