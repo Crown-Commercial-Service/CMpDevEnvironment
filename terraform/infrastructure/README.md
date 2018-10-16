@@ -163,9 +163,11 @@ variable "default_db_username" {
 }
 
 variable "default_db_password" {
-  default = "????????"
+  default = ""
 }
 ```
+
+If the `default_db_password` entry is left as an empty string a random password will be generated. This is the recommended approach.
 
 When the database instance is created an entry in the private Route53 zone will be created that points to the database host. This will be in the form:
 
