@@ -145,7 +145,7 @@ When executed the scripts will define the build pipeline and this will trigger t
 
 ---
 
-## Environment variables passed to containers ##
+## Pre-defined Environment variables passed to containers ##
 
 The build pipeline scripts will ensure that a number of environment variables are passed to the running containers. Of particular importance are those variables that allow an *app* container to determine the URL for invoking an *api*. These are:
 
@@ -165,15 +165,32 @@ The example NPM module actually contains a simple class for this purpose and is 
 Database and Elastic Search connection information is also supplied as environment variables:
 
 - CCS_DEFAULT_DB_URL
+- CCS_DEFAULT_DB_TYPE
+- CCS_DEFAULT_DB_HOST
+- CCS_DEFAULT_DB_PORT
+- CCS_DEFAULT_DB_NAME
 - CCS_DEFAULT_DB_USER
 - CCS_DEFAULT_DB_PASSWORD
 - CCS_DEFAULT_ES_ENDPOINT
 
-`CCS_DEFAULT_DB_URL` is JDBC style connection string for accessing the database.
 
-Var variable `CCS_VERSION` is also defined, this is currently hard-coded to `0.0.1` but will represent a release for the API or Ap[plication.
+`CCS_DEFAULT_DB_URL` is JDBC style connection string for accessing the database. The `CCS_DEFAULT_DB_TYPE`, `CCS_DEFAULT_DB_HOST`, `CCS_DEFAULT_DB_PORT` and `CCS_DEFAULT_DB_NAME` variables the contain individual values that can be used to established a database connection. 
+
+Var variable `CCS_VERSION` is also defined. It will contain the contents of a file called `CCS_VERSION` from the root of the application or API repository. If no file is present it will contain `0.0.1`.
 
 Environment variables can also be used to pass feature switches to containers. These variables should all be  prefixed with `CCS_FEATURE_` and contain a value of `on` or `off`. For example
 
 `CCS_FEATURE_EG1=on`
+
+## Environment variables passed to containers from the EC2 Parameter Store ##
+Entries in the EC2 Parameter store will be automatically turned into environment variables and passed to the
+running container.
+
+The format is `/Environment/ccs/{App or API Name}/{Variable Name}`
+
+For example a Parameter Store entry:
+
+`/Environment/ccs/cmp/GOOGLE_GEOCODING_API_KEY` set to `'QWERTY'`
+
+Will result in an environment variable `GOOGLE_GEOCODING_API_KEY` being available to the running container.
 

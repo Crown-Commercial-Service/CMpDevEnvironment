@@ -14,6 +14,8 @@ The following groups are created:
 
 Where possible pre-existing, AWS defined, policies have been assigned to these groups. Custom policies that related to specific infrastructure have been avoided but cannot be ruled out in the future.
 
+When executing the Terraform scripts the AWS user corresponding to the access keys will be added to all of these groups.
+
 ### CCS_System_Administration ###
 This group is for for *super users* and membership would normally be combined with the infrastructure administration and build pipeline groups. Members of this group are the only ones who can add or remove users from this group.
 
@@ -57,6 +59,7 @@ The following policies are attached:
 - AmazonEC2ContainerRegistryPowerUser
 - AmazonECS_FullAccess
 - CloudWatchReadOnlyAccess
+- AmazonSSMFullAccess
 
 ### CCS_API_Developer ###
 This group provides access to the AWS assets typically needed by a developer who will be deploying apis.
@@ -68,7 +71,7 @@ The following policies are attached:
 - AmazonECS_FullAccess
 - AmazonRDSFullAccess
 - CloudWatchReadOnlyAccess
-
+- AmazonSSMFullAccess
 
 ### CCS_Code_Build_Pipeline ###
 This group provides access to the code build and code pipeline assets. The AWS access keys used to execute the application and api terraform scripts must be a member of this group.

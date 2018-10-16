@@ -14,6 +14,7 @@ phases:
             sed -i "s/##_PARAMETER_STORE_MARKER_##/##_PARAMETER_STORE_MARKER_##\nENV $SSM_ENV=$SSM_VALUE\n/" Dockerfile;
           done;
         fi
+
   build:
     commands:
       - docker build 
@@ -21,8 +22,8 @@ phases:
         --build-arg GIT_REPO=${github_repo} 
         --build-arg GIT_BRANCH=${github_branch} 
         --build-arg GIT_COMMIT=$CODEBUILD_RESOLVED_SOURCE_VERSION
-        --build-arg BUILD_TIME=$CODEBUILD_START_TIME
         --build-arg CCS_VERSION=$CCS_VERSION
+        --build-arg BUILD_TIME=$CODEBUILD_START_TIME
         --tag "${container_prefix}/${container_name}" .
   post_build:
     commands:

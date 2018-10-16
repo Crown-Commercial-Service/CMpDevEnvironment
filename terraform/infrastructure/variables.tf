@@ -110,6 +110,18 @@ variable "default_db_storage" {
   default = 20
 }
 
+variable "default_db_type" {
+  default = "postgresql"
+}
+
+variable "default_db_host" {
+  default = ""
+}
+
+variable "default_db_port" {
+  default = "5432"
+}
+
 variable "default_db_name" {
   default = "cmpdefault"
 }
@@ -119,7 +131,7 @@ variable "default_db_username" {
 }
 
 variable "default_db_password" {
-  default = "Adm1nDev"
+  default = ""
 }
 
 ##############################################################

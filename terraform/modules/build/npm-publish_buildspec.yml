@@ -6,10 +6,12 @@ phases:
   pre_build:
     commands:
       - echo "//registry.npmjs.org/:_authToken=$${NPM_TOKEN}" > .npmrc
+      - if [ -e pipeline_pre_build.sh ]; then chmod +x pipeline_pre_build.sh && . ./pipeline_pre_build.sh; else exit 0; fi
   build:
     commands:
       - npm install
       - npm test
   post_build:
     commands:
+      - if [ -e pipeline_post_build.sh ]; then chmod +x pipeline_post_build.sh && . ./pipeline_post_build.sh; else exit 0; fi
       - npm publish

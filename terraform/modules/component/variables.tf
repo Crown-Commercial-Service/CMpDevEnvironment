@@ -29,6 +29,10 @@ variable build_type {
     type = "string"
 }
 
+variable enable_tests {
+    type = "string"
+    default = false
+}
 ##############################################################
 # Component source Github user/org
 ##############################################################
@@ -72,6 +76,19 @@ variable cluster_name {
 variable task_count {
     type = "string"
     default = 1
+}
+
+##############################################################
+# Autoscaling task counts
+##############################################################
+variable autoscaling_min_count {
+    type = "string"
+    default = -1
+}
+
+variable autoscaling_max_count {
+    type = "string"
+    default = -1
 }
 
 ##############################################################

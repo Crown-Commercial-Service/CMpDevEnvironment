@@ -46,6 +46,12 @@ resource "aws_iam_group" "CCSDEV_iam_sys_admin" {
   name = "CCS_System_Administration"
 }
 
+resource "aws_iam_group_membership" "sys_admin" {
+  name = "tf-testing-group-membership"
+  users = ["${basename(data.aws_caller_identity.current.arn)}"]
+  group = "${aws_iam_group.CCSDEV_iam_sys_admin.name}"
+}
+
 resource "aws_iam_group_policy_attachment" "sys_admin_cert_full" {
   group      = "${aws_iam_group.CCSDEV_iam_sys_admin.name}"
   policy_arn = "arn:aws:iam::aws:policy/AWSCertificateManagerFullAccess"
@@ -117,6 +123,12 @@ resource "aws_iam_group" "CCSDEV_iam_infra_admin" {
   name = "CCS_Infrastructure_Administration"
 }
 
+resource "aws_iam_group_membership" "infra_admin" {
+  name = "tf-testing-group-membership"
+  users = ["${basename(data.aws_caller_identity.current.arn)}"]
+  group = "${aws_iam_group.CCSDEV_iam_infra_admin.name}"
+}
+
 resource "aws_iam_group_policy_attachment" "infra_admin_vpc_full" {
   group      = "${aws_iam_group.CCSDEV_iam_infra_admin.name}"
   policy_arn = "arn:aws:iam::aws:policy/AmazonVPCFullAccess"
@@ -174,6 +186,7 @@ resource "aws_iam_group_policy_attachment" "infra_admin_logs_full" {
 #   AmazonEC2ContainerRegistryPowerUser
 #   AmazonECS_FullAccess
 #   CloudWatchReadOnlyAccess
+#   AmazonSSMFullAccess
 #
 # TODO At present access NOT restricted to the app cluster
 #
@@ -181,6 +194,12 @@ resource "aws_iam_group_policy_attachment" "infra_admin_logs_full" {
 
 resource "aws_iam_group" "CCSDEV_iam_app_dev" {
   name = "CCS_Application_Developer"
+}
+
+resource "aws_iam_group_membership" "app_dev" {
+  name = "tf-testing-group-membership"
+  users = ["${basename(data.aws_caller_identity.current.arn)}"]
+  group = "${aws_iam_group.CCSDEV_iam_app_dev.name}"
 }
 
 resource "aws_iam_group_policy_attachment" "app_dev_ec2_readonly" {
@@ -203,6 +222,11 @@ resource "aws_iam_group_policy_attachment" "app_dev_logs_readonly" {
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchReadOnlyAccess"
 }
 
+resource "aws_iam_group_policy_attachment" "app_dev_ssm_full" {
+  group      = "${aws_iam_group.CCSDEV_iam_app_dev.name}"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMFullAccess"
+}
+
 ##############################################################
 # API Developer Group
 #
@@ -217,6 +241,7 @@ resource "aws_iam_group_policy_attachment" "app_dev_logs_readonly" {
 #   AmazonRDSFullAccess
 #   AmazonESFullAccess
 #   CloudWatchReadOnlyAccess
+#   AmazonSSMFullAccess
 #
 # TODO At present access NOT restricted to the api cluster
 #
@@ -224,6 +249,12 @@ resource "aws_iam_group_policy_attachment" "app_dev_logs_readonly" {
 
 resource "aws_iam_group" "CCSDEV_iam_api_dev" {
   name = "CCS_API_Developer"
+}
+
+resource "aws_iam_group_membership" "api_dev" {
+  name = "tf-testing-group-membership"
+  users = ["${basename(data.aws_caller_identity.current.arn)}"]
+  group = "${aws_iam_group.CCSDEV_iam_api_dev.name}"
 }
 
 resource "aws_iam_group_policy_attachment" "api_dev_ec2_readonly" {
@@ -255,6 +286,11 @@ resource "aws_iam_group_policy_attachment" "api_dev_logs_readonly" {
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchReadOnlyAccess"
 }
 
+resource "aws_iam_group_policy_attachment" "api_dev_ssm_full" {
+  group      = "${aws_iam_group.CCSDEV_iam_api_dev.name}"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMFullAccess"
+}
+
 ##############################################################
 # CCS Code Build Pipeline Group
 #
@@ -267,6 +303,12 @@ resource "aws_iam_group_policy_attachment" "api_dev_logs_readonly" {
 
 resource "aws_iam_group" "CCSDEV_iam_code_build_pipeline" {
   name = "CCS_Code_Build_Pipeline"
+}
+
+resource "aws_iam_group_membership" "code_build_pipeline" {
+  name = "tf-testing-group-membership"
+  users = ["${basename(data.aws_caller_identity.current.arn)}"]
+  group = "${aws_iam_group.CCSDEV_iam_code_build_pipeline.name}"
 }
 
 resource "aws_iam_group_policy_attachment" "code_build_admin" {
@@ -295,6 +337,12 @@ resource "aws_iam_group_policy_attachment" "code_pipeline_full" {
 
 resource "aws_iam_group" "CCSDEV_iam_user_admin" {
   name = "CCS_User_Administration"
+}
+
+resource "aws_iam_group_membership" "iam_user_admin" {
+  name = "tf-testing-group-membership"
+  users = ["${basename(data.aws_caller_identity.current.arn)}"]
+  group = "${aws_iam_group.CCSDEV_iam_user_admin.name}"
 }
 
 resource "aws_iam_group_policy_attachment" "user_admin_iam_limited" {

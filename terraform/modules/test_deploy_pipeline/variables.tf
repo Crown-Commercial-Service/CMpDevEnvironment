@@ -31,7 +31,15 @@ variable github_token_alias {
     type = "string"
 }
 
+variable build_test_project_name {
+    type = "string"
+}
+
 variable build_project_name {
+    type = "string"
+}
+
+variable deploy_test_project_name {
     type = "string"
 }
 

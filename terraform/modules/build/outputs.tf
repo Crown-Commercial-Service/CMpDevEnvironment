@@ -1,8 +1,16 @@
 ##############################################################
 # Name of the created CodeBuild project
 ##############################################################
-output "project_name" {
-  value = "${aws_codebuild_project.project.name}"
+output "build_test_project_name" {
+  value = "${join(" ", aws_codebuild_project.build_test_project.*.name)}"
+}
+
+output "deploy_test_project_name" {
+  value = "${join(" ", aws_codebuild_project.deploy_test_project.*.name)}"
+}
+
+output "build_project_name" {
+  value = "${aws_codebuild_project.build_project.name}"
 }
 
 ##############################################################

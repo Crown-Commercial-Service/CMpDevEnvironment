@@ -100,7 +100,7 @@ resource "aws_alb_listener" "CCSDEV_app_cluster_alb_listener_https" {
 ##############################################################
 
 resource "aws_alb_target_group" "CCSDEV_app_cluster_alb_def_tg" {
-  name     = "CCSDEV-app-cluster-alb-def-tg"
+  name     = "CCSDEV-app-cl-alb-def-tg"
   port     = "${var.http_port}"
   protocol = "HTTP"
   vpc_id   = "${aws_vpc.CCSDEV-Services.id}"
@@ -117,7 +117,7 @@ resource "aws_alb_target_group" "CCSDEV_app_cluster_alb_def_tg" {
   }
 
   tags {
-    Name = "CCSDEV_app_cluster_alb_def-tg"
+    Name = "CCSDEV_app_cl_alb_def-tg"
     CCSRole = "Application"
     CCSEnvironment = "${var.environment_name}"
   }

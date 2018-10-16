@@ -9,6 +9,16 @@ locals {
     bucket_name = "ccs.${data.aws_caller_identity.current.account_id}.tfstate"
 }
 
+resource "aws_iam_user_policy_attachment" "bootstrap-dynamodb-attach" {
+    user       = "${basename(data.aws_caller_identity.current.arn)}"
+    policy_arn = "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"
+}
+
+resource "aws_iam_user_policy_attachment" "bootstrap-s3-attach" {
+    user       = "${basename(data.aws_caller_identity.current.arn)}"
+    policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+}
+
 resource "aws_s3_bucket" "terraform_state" {
   bucket = "${local.bucket_name}"
 
@@ -17,7 +27,9 @@ resource "aws_s3_bucket" "terraform_state" {
   }
 
   lifecycle {
-    prevent_destroy = true
+    ignore_changes = [
+        "bucket",
+        ]
   }
 }
 
@@ -31,6 +43,11 @@ resource "aws_dynamodb_table" "terraform_state_lock" {
     name = "LockID"
     type = "S"
   }
+
+  depends_on = [
+      "aws_iam_user_policy_attachment.bootstrap-dynamodb-attach",
+      "aws_iam_user_policy_attachment.bootstrap-s3-attach"
+    ]
 }
 
 module "security_backend" {
@@ -92,6 +109,15 @@ module "npm1_backend" {
 
     bucket    = "${local.bucket_name}"
     component = "build/npm1"
+    region    = "${local.region}"
+    path      = "${path.module}"
+}
+
+module "cmp_backend" {
+    source    = "./backend"
+
+    bucket    = "${local.bucket_name}"
+    component = "build/crown-marketplace"
     region    = "${local.region}"
     path      = "${path.module}"
 }

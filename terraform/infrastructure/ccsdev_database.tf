@@ -89,6 +89,18 @@ resource "aws_kms_alias" "ccsdev_db_key_alias" {
 # Note use of timestamp to create unique final snapshot id
 ##############################################################
 
+locals {
+  ccsdev_default_db_password = "${var.default_db_password == "" ? random_string.ccsdev_default_db_password.result : var.default_db_password}"
+}
+
+resource "random_string" "ccsdev_default_db_password" {
+  length = 30
+  special = false
+  number = true
+  lower = true
+  upper = true
+}
+
 resource "aws_db_instance" "ccsdev_default_db" {
   # Only create if create_rds_database is true (1) 
   count = "${var.create_default_rds_database}"
@@ -105,7 +117,7 @@ resource "aws_db_instance" "ccsdev_default_db" {
   instance_class            = "${var.default_db_instance_class}"
   name                      = "${var.default_db_name}"
   username                  = "${var.default_db_username}"
-  password                  = "${var.default_db_password}"
+  password                  = "${local.ccsdev_default_db_password}"
   port                      = "${var.postgres_port}"
   publicly_accessible       = false
   multi_az                  = false
