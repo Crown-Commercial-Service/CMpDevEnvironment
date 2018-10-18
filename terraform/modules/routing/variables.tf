@@ -22,6 +22,13 @@ variable domain {
 }
 
 ##############################################################
+# Hostname that the component is at,e.g. app1 (.example.com)
+##############################################################
+variable hostname {
+    type = "string"
+}
+
+##############################################################
 # Port that the component will be accessible through
 ##############################################################
 variable port {

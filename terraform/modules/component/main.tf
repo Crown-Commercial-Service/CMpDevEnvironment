@@ -70,6 +70,14 @@ data "aws_ssm_parameter" "config_es_endpoint" {
 }
 
 ##############################################################
+# Subdomain
+##############################################################
+
+locals {
+  config_hostname = "${var.hostname=="" ? var.name : var.hostname}"
+}
+
+##############################################################
 # Build
 ##############################################################
 module "build" {
@@ -107,6 +115,10 @@ locals {
 
     config_domain = "${var.type == "app" ? local.config_app_domain : local.config_api_domain}"
     config_environment = [
+      {
+        name = "CCS_HOSTNAME",
+        value = "${local.config_hostname}"
+      },
       {
         name = "CCS_APP_BASE_URL",
         value = "${local.config_app_domain}"
@@ -224,6 +236,7 @@ module "routing" {
   type     = "${var.type}"
   name     = "${var.name}"
   domain   = "${local.config_domain}"
+  hostname = "${local.config_hostname}"
   port     = "${var.port}"
   protocol = "${local.config_protocol}"
 }

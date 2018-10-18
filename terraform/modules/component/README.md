@@ -20,6 +20,9 @@ module "build_pipeline" {
   # Specify a name for the component.
   name = "app1"
 
+  # Specify the hostname that the component should be hosted at
+  hostname = "application"
+
   # Specify the type of build (This can be the prefix of any buildspec.yml file within the build module directory).
   build_type = "docker"
 
