@@ -20,6 +20,9 @@ module "routing" {
   # Specify a (sub)domain that the rule and target group should be based upon.
   domain   = "apps.example.com"
 
+  # Specify the hostname that the rule and target group should point at
+  hostname = "application"
+
   # Specify the port that the rule will apply to.
   port     = "80"
 

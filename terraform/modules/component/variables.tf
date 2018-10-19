@@ -22,6 +22,11 @@ variable name {
     type = "string"
 }
 
+variable hostname {
+    type = "string"
+    default = ""
+}
+
 ##############################################################
 # Build Type (docker, java, etc.) see build module for options
 ##############################################################
