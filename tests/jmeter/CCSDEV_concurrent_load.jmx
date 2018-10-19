@@ -10,17 +10,27 @@
         <collectionProp name="Arguments.arguments">
           <elementProp name="APP_PORT" elementType="Argument">
             <stringProp name="Argument.name">APP_PORT</stringProp>
-            <stringProp name="Argument.value">80</stringProp>
+            <stringProp name="Argument.value">443</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="APP_HOST" elementType="Argument">
             <stringProp name="Argument.name">APP_HOST</stringProp>
-            <stringProp name="Argument.value">app1.ccs2.roweitdev.co.uk</stringProp>
+            <stringProp name="Argument.value">cmp.cmpdev.crowncommercial.gov.uk</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="APP_PATH" elementType="Argument">
             <stringProp name="Argument.name">APP_PATH</stringProp>
-            <stringProp name="Argument.value">/</stringProp>
+            <stringProp name="Argument.value">branches?hire_via_agency=yes&amp;nominated_worker=yes&amp;postcode=PL19+9DG&amp;school_payroll=</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="APP_USER" elementType="Argument">
+            <stringProp name="Argument.name">APP_USER</stringProp>
+            <stringProp name="Argument.value">ccs</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="APP_PASSWORD" elementType="Argument">
+            <stringProp name="Argument.name">APP_PASSWORD</stringProp>
+            <stringProp name="Argument.value">????????</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
@@ -33,15 +43,27 @@
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">1000</stringProp>
+          <stringProp name="LoopController.loops">2000</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">10</stringProp>
+        <stringProp name="ThreadGroup.num_threads">20</stringProp>
         <stringProp name="ThreadGroup.ramp_time">10</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
       </ThreadGroup>
       <hashTree>
+        <AuthManager guiclass="AuthPanel" testclass="AuthManager" testname="HTTP Authorization Manager" enabled="true">
+          <collectionProp name="AuthManager.auth_list">
+            <elementProp name="" elementType="Authorization">
+              <stringProp name="Authorization.url">https://${APP_HOST}</stringProp>
+              <stringProp name="Authorization.username">${APP_USER}</stringProp>
+              <stringProp name="Authorization.password">${APP_PASSWORD}</stringProp>
+              <stringProp name="Authorization.domain"></stringProp>
+              <stringProp name="Authorization.realm"></stringProp>
+            </elementProp>
+          </collectionProp>
+        </AuthManager>
+        <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="App1 Request" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments">
@@ -55,7 +77,7 @@
           </elementProp>
           <stringProp name="HTTPSampler.domain">${APP_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${APP_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">http</stringProp>
+          <stringProp name="HTTPSampler.protocol">https</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">${APP_PATH}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
