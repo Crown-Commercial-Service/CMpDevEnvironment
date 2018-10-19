@@ -18,7 +18,7 @@ resource "aws_cloudwatch_dashboard" "CCSDEV-Dashboard" {
             "height": 6,
             "properties": {
                 "metrics": [
-                    [ "AWS/ECS", "CPUUtilization", "ServiceName", "cmp", "ClusterName", "CCSDEV_app_cluster", { "period": 60 } ],
+                    [ "AWS/ECS", "CPUUtilization", "ServiceName", "cmp", "ClusterName", "${aws_ecs_cluster.CCSDEV_app_cluster.name}", { "period": 60 } ],
                     [ ".", "MemoryUtilization", ".", ".", ".", ".", { "period": 60, "yAxis": "right" } ]
                 ],
                 "view": "timeSeries",
@@ -45,7 +45,7 @@ resource "aws_cloudwatch_dashboard" "CCSDEV-Dashboard" {
             "height": 6,
             "properties": {
                 "metrics": [
-                    [ "AWS/ApplicationELB", "TargetResponseTime", "LoadBalancer", "app/CCSDEV-app-cluster-alb/1e7bb6416e6580ea", { "period": 60 } ]
+                    [ "AWS/ApplicationELB", "TargetResponseTime", "LoadBalancer", "${aws_alb.CCSDEV_app_cluster_alb.arn_suffix}", { "period": 60 } ]
                 ],
                 "view": "timeSeries",
                 "stacked": false,
@@ -64,7 +64,7 @@ resource "aws_cloudwatch_dashboard" "CCSDEV-Dashboard" {
                 "view": "timeSeries",
                 "stacked": false,
                 "metrics": [
-                    [ "AWS/ApplicationELB", "TargetResponseTime", "LoadBalancer", "app/CCSDEV-api-cluster-alb/b1bf767599e88b13", { "period": 60 } ]
+                    [ "AWS/ApplicationELB", "TargetResponseTime", "LoadBalancer", "${aws_alb.CCSDEV_api_cluster_alb.arn_suffix}", { "period": 60 } ]
                 ],
                 "region": "${var.region}",
                 "title": "Api Cluster Target Response Time",
@@ -79,7 +79,7 @@ resource "aws_cloudwatch_dashboard" "CCSDEV-Dashboard" {
             "height": 9,
             "properties": {
                 "metrics": [
-                    [ "AWS/ApplicationELB", "RequestCount", "LoadBalancer", "app/CCSDEV-app-cluster-alb/1e7bb6416e6580ea", { "period": 60, "stat": "Sum" } ]
+                    [ "AWS/ApplicationELB", "RequestCount", "LoadBalancer", "${aws_alb.CCSDEV_app_cluster_alb.arn_suffix}", { "period": 60, "stat": "Sum" } ]
                 ],
                 "view": "timeSeries",
                 "stacked": false,
@@ -98,7 +98,7 @@ resource "aws_cloudwatch_dashboard" "CCSDEV-Dashboard" {
                 "view": "timeSeries",
                 "stacked": false,
                 "metrics": [
-                    [ "AWS/ApplicationELB", "RequestCount", "LoadBalancer", "app/CCSDEV-api-cluster-alb/b1bf767599e88b13", { "period": 60 } ]
+                    [ "AWS/ApplicationELB", "RequestCount", "LoadBalancer", "${aws_alb.CCSDEV_api_cluster_alb.arn_suffix}", { "period": 60 } ]
                 ],
                 "region": "${var.region}",
                 "title": "Api Cluster Average Requests/Minute"
@@ -112,7 +112,7 @@ resource "aws_cloudwatch_dashboard" "CCSDEV-Dashboard" {
             "height": 9,
             "properties": {
                 "metrics": [
-                    [ "AWS/ApplicationELB", "HTTPCode_ELB_5XX_Count", "LoadBalancer", "app/CCSDEV-app-cluster-alb/1e7bb6416e6580ea", { "period": 60 } ],
+                    [ "AWS/ApplicationELB", "HTTPCode_ELB_5XX_Count", "LoadBalancer", "${aws_alb.CCSDEV_app_cluster_alb.arn_suffix}", { "period": 60 } ],
                     [ ".", "HTTPCode_ELB_4XX_Count", ".", ".", { "period": 60 } ]
                 ],
                 "view": "timeSeries",
@@ -130,7 +130,7 @@ resource "aws_cloudwatch_dashboard" "CCSDEV-Dashboard" {
             "height": 9,
             "properties": {
                 "metrics": [
-                    [ "AWS/ApplicationELB", "HTTPCode_ELB_5XX_Count", "LoadBalancer", "app/CCSDEV-api-cluster-alb/b1bf767599e88b13", { "period": 60 } ],
+                    [ "AWS/ApplicationELB", "HTTPCode_ELB_5XX_Count", "LoadBalancer", "${aws_alb.CCSDEV_api_cluster_alb.arn_suffix}", { "period": 60 } ],
                     [ ".", "HTTPCode_ELB_4XX_Count", ".", ".", { "period": 60 } ]
                 ],
                 "view": "timeSeries",
@@ -173,7 +173,7 @@ resource "aws_cloudwatch_dashboard" "CCSDEV-Dashboard" {
             "height": 6,
             "properties": {
                 "metrics": [
-                    [ "AWS/ECS", "CPUUtilization", "ClusterName", "CCSDEV_app_cluster", { "period": 60 } ],
+                    [ "AWS/ECS", "CPUUtilization", "ClusterName", "${aws_ecs_cluster.CCSDEV_app_cluster.name}", { "period": 60 } ],
                     [ ".", "MemoryUtilization", ".", ".", { "period": 60, "yAxis": "right" } ]
                 ],
                 "view": "timeSeries",
@@ -199,7 +199,7 @@ resource "aws_cloudwatch_dashboard" "CCSDEV-Dashboard" {
             "height": 6,
             "properties": {
                 "metrics": [
-                    [ "AWS/ECS", "CPUUtilization", "ClusterName", "CCSDEV_api_cluster", { "period": 60 } ],
+                    [ "AWS/ECS", "CPUUtilization", "ClusterName", "${aws_ecs_cluster.CCSDEV_api_cluster.name}", { "period": 60 } ],
                     [ ".", "MemoryUtilization", ".", ".", { "period": 60, "yAxis": "right" } ]
                 ],
                 "view": "timeSeries",
