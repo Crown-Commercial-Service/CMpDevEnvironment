@@ -18,6 +18,7 @@ provider "aws" {
 #     CCS_API_Developer
 #     CCS_User_Administration
 #     CCS_Code_Build_Pipeline
+#     CCS_Cognito_Administration
 #
 #   Users?
 #
@@ -320,6 +321,32 @@ resource "aws_iam_group_policy_attachment" "code_pipeline_full" {
   group      = "${aws_iam_group.CCSDEV_iam_code_build_pipeline.name}"
   policy_arn = "arn:aws:iam::aws:policy/AWSCodePipelineFullAccess"
 }
+
+
+##############################################################
+# CCS Cognito User Administration Group
+#
+# Users in this group are able to administer the Cognito
+# service used to application users.
+#
+#   AmazonCognitoPowerUser
+##############################################################
+
+resource "aws_iam_group" "CCSDEV_iam_cognito_admin" {
+  name = "CCS_Cognito_Administration"
+}
+
+resource "aws_iam_group_membership" "cognito_admin" {
+  name = "tf-testing-group-membership"
+  users = ["${basename(data.aws_caller_identity.current.arn)}"]
+  group = "${aws_iam_group.CCSDEV_iam_cognito_admin.name}"
+}
+
+resource "aws_iam_group_policy_attachment" "cognito_admin" {
+  group      = "${aws_iam_group.CCSDEV_iam_cognito_admin.name}"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonCognitoPowerUser"
+}
+
 
 ##############################################################
 # Users Administration Group
