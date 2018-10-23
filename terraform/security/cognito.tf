@@ -130,7 +130,7 @@ resource "aws_ssm_parameter" "cognito_user_pool_client_secret" {
 }
 
 resource "aws_ssm_parameter" "cognito_aws_region" {
-  name  = "/Environment/global/AWS_REGION" # NOTE: Change to COGNITO_AWS_REGION
+  name  = "/Environment/global/COGNITO_AWS_REGION" 
   description  = "Infrastructure configured AWS Region for Cognito"
   type  = "SecureString"
   value = "${local.region}"
