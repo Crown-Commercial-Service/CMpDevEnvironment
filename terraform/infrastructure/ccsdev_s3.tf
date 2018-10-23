@@ -39,11 +39,6 @@ data "aws_iam_policy_document" "log_policy_document" {
   }
 }
 
-# resource "aws_s3_bucket_policy" "logs_policy" {
-#   bucket = "${aws_s3_bucket.logs.id}"
-#   policy = "${aws}"
-# }
-
 resource "aws_s3_bucket" "logs" {
   bucket = "${local.log_bucket_name}"
   acl    = "private"
