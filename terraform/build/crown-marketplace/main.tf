@@ -8,12 +8,12 @@ module "component" {
     build_type = "ruby"
     github_owner = "Crown-Commercial-Service"
     github_repo = "crown-marketplace"
-    github_branch = "cognito_authentication"
+    github_branch = "master"
     github_token_alias = "ccs-build_github_token"
     cluster_name = "CCSDEV_app_cluster"
     task_count = 2
     autoscaling_max_count = 4
-    enable_tests = false
+    enable_tests = true
     environment = [
       {
         name = "RAILS_ENV",
