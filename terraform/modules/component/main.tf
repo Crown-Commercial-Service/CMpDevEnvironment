@@ -100,7 +100,7 @@ module "build" {
 # Cloudwatch Logs
 ##############################################################
 resource "aws_cloudwatch_log_group" "component" {
-  name = "/ccs/${var.name}"
+  name = "/${var.prefix}/${var.name}"
   retention_in_days = 3
 }
 
