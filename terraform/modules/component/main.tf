@@ -89,6 +89,8 @@ module "build" {
   github_repo = "${var.github_repo}"
   github_branch = "${var.github_branch}"
   build_type = "${var.build_type}"
+  build_image = "${var.build_image}"
+  build_image_version = "${var.build_image_version}"
   enable_tests = "${var.enable_tests}"
   service_role_arn = "${data.aws_iam_role.codebuild_service_role.arn}"
   vpc_id = "${data.aws_vpc.CCSDEV-Services.id}"

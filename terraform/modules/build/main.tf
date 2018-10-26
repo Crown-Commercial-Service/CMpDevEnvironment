@@ -6,6 +6,8 @@
 locals {
   base_image_name = "${aws_ecr_repository.build.repository_url}"
   deploy_image_name = "${local.base_image_name}:latest"
+  build_image = "${var.build_type == "custom" ? format("%s:%s", data.aws_ecr_repository.build_image.repository_url, var.build_image_version) : lookup(local.build_images, var.build_type)}"
+  test_spec_prefix = "${var.build_type == "custom" ? "customtest" : "test"}"
 
   build_images = {
     docker = "aws/codebuild/docker:17.09.0"
@@ -13,7 +15,10 @@ locals {
     npm-publish = "aws/codebuild/nodejs:8.11.0"
     python = "aws/codebuild/python:3.6.5"
     ruby = "aws/codebuild/ruby:2.5.1"
+    image = "aws/codebuild/docker:17.09.0"
+    custom = "${var.build_image}"
   }
+
   __valid_build_types__ = "${keys(local.build_images)}"
 }
 
@@ -22,9 +27,14 @@ resource "null_resource" "is_build_type_valid" {
   "${format("Build <type> must be one of %s", join(", ", local.__valid_build_types__))}" = true
 }
 
+resource "null_resource" "custom_validation" {
+  count = "${var.build_type == "custom" ? (var.build_image == "" ? 1 : 0) : 0}"
+  "If a build_type of 'custom' is specified, build_image must not be blank" = true
+}
+
 data "template_file" "buildtestspec" {
   count    = "${var.enable_tests ? 1 : 0}"
-  template = "${file("${path.module}/test_buildspec.yml")}"
+  template = "${file("${path.module}/${local.test_spec_prefix}_buildspec.yml")}"
 
   vars {
     test_type = "build"
@@ -49,7 +59,7 @@ data "template_file" "buildspec" {
 
 data "template_file" "deploytestspec" {
   count    = "${var.enable_tests ? 1 : 0}"
-  template = "${file("${path.module}/test_buildspec.yml")}"
+  template = "${file("${path.module}/${local.test_spec_prefix}_buildspec.yml")}"
 
   vars {
     test_type = "deploy"
@@ -60,6 +70,31 @@ data "template_file" "deploytestspec" {
 
 resource "aws_ecr_repository" "build" {
   name = "${var.artifact_prefix}/${var.artifact_name}"
+}
+
+data "aws_iam_policy_document" "image_policy_document" {
+  statement {
+
+    principals = {
+      type = "Service"
+      identifiers = ["codebuild.amazonaws.com"]
+    }
+
+    actions = [
+      "ecr:GetDownloadUrlForLayer",
+      "ecr:BatchGetImage",
+      "ecr:BatchCheckLayerAvailability"
+   ]
+  }
+}
+
+resource "aws_ecr_repository_policy" "image_policy" {
+  repository = "${aws_ecr_repository.build.name}"
+  policy = "${data.aws_iam_policy_document.image_policy_document.json}"
+}
+
+data "aws_ecr_repository" "build_image" {
+  name = "${var.build_type == "custom" ? var.build_image : aws_ecr_repository.build.name}"
 }
 
 resource "aws_ecr_lifecycle_policy" "build_policy" {
@@ -98,7 +133,7 @@ resource "aws_codebuild_project" "build_test_project" {
 
   environment {
     compute_type    = "${var.host_compute_type}"
-    image           = "${lookup(local.build_images, var.build_type)}"
+    image           = "${local.build_image}"
     type            = "${var.host_type}"
     privileged_mode = "${var.host_is_privileged}"
   }
@@ -134,7 +169,7 @@ resource "aws_codebuild_project" "build_project" {
 
   environment {
     compute_type    = "${var.host_compute_type}"
-    image           = "${lookup(local.build_images, var.build_type)}"
+    image           = "${local.build_image}"
     type            = "${var.host_type}"
     privileged_mode = "${var.host_is_privileged}"
   }
@@ -171,7 +206,7 @@ resource "aws_codebuild_project" "deploy_test_project" {
 
   environment {
     compute_type    = "${var.host_compute_type}"
-    image           = "${lookup(local.build_images, var.build_type)}"
+    image           = "${local.build_image}"
     type            = "${var.host_type}"
     privileged_mode = "${var.host_is_privileged}"
   }

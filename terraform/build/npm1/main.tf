@@ -87,6 +87,6 @@ module "pipeline" {
   github_repo = "CMpExampleNPMModule"
   github_branch = "master"
   github_token_alias = "ccs-build_github_token"
-  build_project_name = "${module.build.project_name}"
+  build_project_name = "${module.build.build_project_name}"
 }
 

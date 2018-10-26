@@ -41,6 +41,16 @@ variable build_type {
     type = "string"
 }
 
+variable build_image {
+    type = "string"
+    default = ""
+}
+
+variable build_image_version {
+    type = "string"
+    default = "latest"
+}
+
 variable enable_tests {
     type = "string"
     default = false
@@ -84,7 +94,7 @@ variable security_group_ids {
 # Build timeout in minutes
 ##############################################################
 variable timeout {
-    default = 5
+    default = 30
 }
 
 ##############################################################

@@ -34,6 +34,16 @@ variable build_type {
     type = "string"
 }
 
+variable build_image_version {
+    type = "string"
+    default = "latest"
+}
+
+variable build_image {
+    type = "string"
+    default = ""
+}
+
 variable enable_tests {
     type = "string"
     default = false

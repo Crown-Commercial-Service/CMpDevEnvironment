@@ -1,0 +1,25 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://127.0.0.1:2375 --storage-driver=overlay&
+      - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
+  pre_build:
+    commands:
+      - $(aws ecr get-login --no-include-email)
+      - if [ -e CCS_VERSION ]; then export CCS_VERSION=$(cat CCS_VERSION); else export CCS_VERSION=0.0.1; fi
+      - for SSM_ALIAS in $(aws ssm describe-parameters --query 'Parameters[?Name!=`null`]|[?(starts_with(Name, `/Environment/${container_prefix}/${container_name}/`) || starts_with(Name, `/Environment/global/`))][Name]' --output text);
+        do
+          SSM_ENV="$${SSM_ALIAS##*/}";
+          SSM_VALUE=`aws ssm get-parameter --with-decryption --name $SSM_ALIAS --query "Parameter.Value"`;
+          export $SSM_ENV=$SSM_VALUE;
+        done;
+      - set -v
+      - if [ -e pipeline_pre_${test_type}_tests.sh ]; then chmod +x pipeline_pre_${test_type}_tests.sh && . ./pipeline_pre_${test_type}_tests.sh; else exit 0; fi
+  build:
+    commands:
+      - if [ -e pipeline_run_${test_type}_tests.sh ]; then chmod +x pipeline_run_${test_type}_tests.sh && . ./pipeline_run_${test_type}_tests.sh; else exit 0; fi
+  post_build:
+    commands:
+      - if [ -e pipeline_post_${test_type}_tests.sh ]; then chmod +x pipeline_post_${test_type}_tests.sh && . ./pipeline_post_${test_type}_tests.sh; else exit 0; fi
