@@ -23,6 +23,7 @@ The following groups are created:
 - CCS_Application_Developer
 - CCS_API_Developer
 - CCS_Code_Build_Pipeline
+- CCS_Cognito_Administration
 
 Only a very small number of users should be a member of the system administration group. To have complete system administration privileges a user will need to be a member of the system administration, infrastructure administration and code build pipeline groups.
 
@@ -53,6 +54,7 @@ The infrastructure scripts generate a complete AWS environment for deploying con
 - Example RDS Postgres daatbase server. 
 - Example Elastic Search domain.
 - CloudWatch dashboard definition example
+- Cognito user pool
 
 **NOTE**
 In this release the example database and Elastic Search instances can be accessed from the Application and API clusters. The intention is that this is restricted to the API cluster in the next release.
@@ -183,10 +185,12 @@ Environment variables can also be used to pass feature switches to containers. T
 `CCS_FEATURE_EG1=on`
 
 ## Environment variables passed to containers from the EC2 Parameter Store ##
-Entries in the EC2 Parameter store will be automatically turned into environment variables and passed to the
-running container.
+Certain entries in the EC2 Parameter store will be automatically turned into environment variables and passed to the
+running container. These entries can be *global* that will be passed to all containers or specific to an Application or API.
 
-The format is `/Environment/ccs/{App or API Name}/{Variable Name}`
+For a global variable the format is `/Environment/global/{Variable Name}`
+
+For an Application or API specific variable the format is `/Environment/ccs/{App or API Name}/{Variable Name}`
 
 For example a Parameter Store entry:
 
