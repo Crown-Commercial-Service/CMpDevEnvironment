@@ -18,19 +18,19 @@ module "build_pipeline" {
   prefix = "ccs"
 
   # Specify a name for the component.
-  name = "app1"
+  name = "cmp"
 
-  # Specify the hostname that the component should be hosted at
+  # Specify the hostname that the component should be hosted at, default to the name if not specified
   hostname = "application"
 
   # Specify the type of build (This can be the prefix of any buildspec.yml file within the build module directory).
-  build_type = "docker"
+  build_type = "ruby"
 
   # Specify the github owner related to the source code repo.
   github_owner = "Crown-Commercial-Service"
 
   # Specify the github repo that holds the source code.
-  github_repo = "CMpExampleApp1"
+  github_repo = "crown-marketplace"
 
   # Specify the github branch to build.
   github_branch = "master"
@@ -41,8 +41,23 @@ module "build_pipeline" {
   # Specify the name of the AWS ECS Cluster that the container should be deployed to.
   cluster_name = "app_cluster"
 
-  # Specify the number of component instances that should be launched.
+  # Enable support for Cognito
+  enable_cognito_support = true
+
+  # If enabled the call-back to the Application or API the Cognito will use
+  cognito_login_callback = "auth/cognito/callback"
+
+  # Specify the number of component instances that should be launched initially.
   task_count = 1
+
+  # Enables an auto-scaling policy, setting minimum number of container instances
+  autoscaling_min_count = 1
+
+  # Enables an auto-scaling policy, setting maximum number of container instances
+  autoscaling_max_count = 4
+
+  # Enables test phases in the pipeline
+  enable_tests = true
 
   # Specify any additional environment variables that should be available to the component at runtime.
   environment = [
@@ -66,6 +81,7 @@ Note the following parameters:
   sources](https://www.terraform.io/docs/modules/sources.html)). The `ref` parameter specifies a specific Git tag in 
   this repo. That way, instead of using the latest version of this module from the `master` branch, which 
   will change every time you run Terraform, you're using a fixed version of the repo.
+* `enable_cognito_support` : If enabled this will generate a Cognito application client definition that allows access to the user pool defined in the infrastructure. It will generate a corresponding environment variable, `COGNITO_CLIENT_ID` containing the client identifier.
 
 You can find any other parameters in [variables.tf](variables.tf).
 

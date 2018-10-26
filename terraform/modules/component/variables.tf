@@ -177,3 +177,25 @@ data "aws_security_group" "vpc-CCSDEV-internal" {
     "Name" = "CCSDEV-internal-${var.type}"
   }
 }
+
+##############################################################
+# AWS Cognito support
+##############################################################
+
+variable "enable_cognito_support" {
+    default = false
+}
+
+variable "cognito_login_callback" {
+    type = "string"
+    default = ""
+}
+
+variable "cognito_logout_callback" {
+    type = "string"
+    default = ""
+}
+
+variable "cognito_generate_secret" {
+    default = true
+}

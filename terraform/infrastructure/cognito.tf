@@ -37,12 +37,18 @@ resource "aws_cognito_user_pool" "ccs_user_pool" {
     email_verification_subject = "Your Verification code"
     email_verification_message = "Your Verification code is {####}"
   
+    # User self-registration enabled, set to true to prevent self-registration.
+    admin_create_user_config {
+      allow_admin_create_user_only = false
+    }
+
+    # Set basic password restrictions    
     password_policy {
         minimum_length    = 8
-        require_lowercase = false
-        require_numbers   = false
-        require_symbols   = false
-        require_uppercase = false
+        require_lowercase = true
+        require_numbers   = true
+        require_symbols   = true
+        require_uppercase = true
     }
   
     tags {

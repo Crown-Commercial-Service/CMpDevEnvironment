@@ -229,6 +229,36 @@ The build pipeline also generates log groups. These will contain any output duri
 
 `/aws/codebuild/<app or api name>-build-project`
 
+---
+## Cognito User Pool ##
+Cognito is an AWS service that can be used to provide user authentication, and for certain AWS assets, authorisation. Within the CCS Infrastructure it can be used to by suitably modified Application and APIs to provide authentication.
 
+To facilitate this a single user pool, `ccs_user_pool` is defined within the infrastructure Terraform. This provides a set of users, identified by an email address, and authenticated by a password. Settings on the `cognito.tf` file allow the enabling/disabling of user self-registration and basic password policies to be defined:
+
+```
+    # User self-registration enabled, set to true to prevent self-registration.
+    admin_create_user_config {
+      allow_admin_create_user_only = false
+    }
+
+    # Set basic password restrictions    
+    password_policy {
+        minimum_length    = 8
+        require_lowercase = true
+        require_numbers   = true
+        require_symbols   = true
+        require_uppercase = true
+    }
+```
+
+Details of the user pool are made available to the Application and API containers via environment variables:
+
+ - COGNITO_AWS_REGION 
+ - COGNITO_USER_POOL_ID
+ - COGNITO_USER_POOL_SITE
+
+An application client that users the pool is created for each Application or API that enables Cognito support in its Terraform definition. Note that they *ALL* shared the same pool of users. This will also generate an Application/API specific environment variable, `COGNITO_CLIENT_ID`, identifying the corresponding Cognito client identifier.
+
+AWS Cognito supports extensive customisation, often using Lambda functions, it is highly likely that such customisation will be required before production use.
 
 
