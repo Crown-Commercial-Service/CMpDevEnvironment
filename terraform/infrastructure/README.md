@@ -257,7 +257,7 @@ Details of the user pool are made available to the Application and API container
  - COGNITO_USER_POOL_ID
  - COGNITO_USER_POOL_SITE
 
-An application client that users the pool is created for each Application or API that enables Cognito support in its Terraform definition. Note that they *ALL* shared the same pool of users.
+An application client that users the pool is created for each Application or API that enables Cognito support in its Terraform definition. Note that they *ALL* shared the same pool of users. This will also generate an Application/API specific environment variable, `COGNITO_CLIENT_ID`, identifying the corresponding Cognito client identifier.
 
 AWS Cognito supports extensive customisation, often using Lambda functions, it is highly likely that such customisation will be required before production use.
 
