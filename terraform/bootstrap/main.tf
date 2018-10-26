@@ -121,3 +121,12 @@ module "cmp_backend" {
     region    = "${local.region}"
     path      = "${path.module}"
 }
+
+module "image-ruby_backend" {
+    source    = "./backend"
+
+    bucket    = "${local.bucket_name}"
+    component = "build/image-ruby"
+    region    = "${local.region}"
+    path      = "${path.module}"
+}
