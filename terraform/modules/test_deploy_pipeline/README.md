@@ -9,7 +9,7 @@ code by adding a `module` configuration and setting its `source` parameter to UR
 
 ```hcl
 module "deploy_pipeline" {
-  source = "github.com/Crown-Commercial-Service/CMpDevEnvironment//terraform/modules/deploy_pipeline?ref=master"
+  source = "github.com/Crown-Commercial-Service/CMpDevEnvironment//terraform/modules/test_deploy_pipeline?ref=master"
 
   # Specify a name for the artifact being built.
   artifact_name = "app1"
@@ -32,8 +32,14 @@ module "deploy_pipeline" {
   # Specify the AWS Parameter Store Key name that holds a Personal Access token for Github.
   github_token_alias = "build_github_token"
 
+  # Specify the name of the AWS CodeBuild project to use for the build_test stage of the pipeline (this could be an output from a previously declared build module).
+  build_test_project_name = "${module.build.build_test_project_name}"
+
   # Specify the name of the AWS CodeBuild project to use for the build stage of the pipeline (this could be an output from a previously declared build module).
-  build_project_name = "${module.build.project_name}"
+  build_project_name = "${module.build.build_project_name}"
+
+  # Specify the name of the AWS CodeBuild project to use for the deploy_test stage of the pipeline (this could be an output from a previously declared build module).
+  deploy_test_project_name = "${module.build.deploy_test_project_name}"
 
   # Specify the name of the AWS ECS Cluster that the container should be deployed to.
   deploy_cluster_name = "deploy_cluster"
@@ -61,4 +67,4 @@ Also see [AWS CodePipeline Documentation](https://docs.aws.amazon.com/codepipeli
 
 ## What's included in this module?
 
-This module creates an AWS CodePipeline project.
+This module creates an AWS CodePipeline project that includes additional test stages.
