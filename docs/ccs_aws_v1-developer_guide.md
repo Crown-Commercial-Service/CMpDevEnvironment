@@ -1,12 +1,15 @@
-# Crown Commercial CMp Environment #
+# Crown Commercial AWS Environment #
 
-## Developer Guide
+## Developer Guide ##
 
-### Version 1.0
+Version 1.
 
-Rowe IT
+## DRAFT #
 
-October 2018
+## Rowe IT ##
+
+## October 2018 ##
+
 
 Table of Contents 
 =================
