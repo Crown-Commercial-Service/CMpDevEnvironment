@@ -22,6 +22,9 @@ variable name {
     type = "string"
 }
 
+##############################################################
+# Host Name (for DNS purposes)
+##############################################################
 variable hostname {
     type = "string"
     default = ""
@@ -34,20 +37,30 @@ variable build_type {
     type = "string"
 }
 
-variable build_image_version {
-    type = "string"
-    default = "latest"
-}
-
+##############################################################
+# Build Image (used if build_type is set to custom)
+##############################################################
 variable build_image {
     type = "string"
     default = ""
 }
 
+##############################################################
+# Build Image Version (if a specific version tag is required)
+##############################################################
+variable build_image_version {
+    type = "string"
+    default = "latest"
+}
+
+##############################################################
+# Whether a test (5-stage) pipeline is required
+##############################################################
 variable enable_tests {
     type = "string"
     default = false
 }
+
 ##############################################################
 # Component source Github user/org
 ##############################################################
