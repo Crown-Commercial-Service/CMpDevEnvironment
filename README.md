@@ -1,4 +1,4 @@
-# Crown Commercial Environment (Development)
+# Crown Commercial Environment (Development) #
 
 This project contains [Terraform](https://www.terraform.io/) scripts that are used to generate a container hosting environment in AWS. This environment is in the eu-west-2 region.
 
@@ -10,7 +10,15 @@ All of the scripts will require `terraform init` to be executed in the correct d
 
 ---
 
-## IAM Security
+## Additional Documentation ##
+
+Some additional documentation is also available:
+
+  * [Setup Guide](https://github.com/Crown-Commercial-Service/CMpDevEnvironment/blob/develop/docs/setup.md)
+  * [Developer Guide](https://github.com/Crown-Commercial-Service/CMpDevEnvironment/blob/develop/docs/ccs_aws_v1-developer_guide.md)
+---
+
+## IAM Security ##
 `/terraform/security`
 
 The security scripts generate a number of IAM user groups and policies documents. They do not create any actual users.
