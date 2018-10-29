@@ -62,6 +62,7 @@ The following policies are attached:
 - AmazonECS_FullAccess
 - CloudWatchReadOnlyAccess
 - AmazonSSMFullAccess
+- KMS ListAliases access using custom policy
 
 ### CCS_API_Developer ###
 This group provides access to the AWS assets typically needed by a developer who will be deploying apis.
@@ -74,6 +75,7 @@ The following policies are attached:
 - AmazonRDSFullAccess
 - CloudWatchReadOnlyAccess
 - AmazonSSMFullAccess
+- KMS ListAliases access using custom policy
 
 ### CCS_Code_Build_Pipeline ###
 This group provides access to the code build and code pipeline assets. The AWS access keys used to execute the application and api terraform scripts must be a member of this group.
