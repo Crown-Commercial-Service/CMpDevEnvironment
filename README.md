@@ -145,6 +145,18 @@ The file `main.tf` defines the attributes of the build and identifies the locati
 
 When executed the scripts will define the build pipeline and this will trigger the process of building and publishing the example NPM module.
 
+
+### Ruby Image Example ###
+`/terraform/build/image-ruby`
+
+This uses the contents of the `CMpDevBuildImage_Ruby` repository which contains a Dockerfile and associated context that can be built and published as docker image within the AWS Container Registry for use in other builds.
+
+The file `main.tf` defines the attributes of the build and identifies the location of the source code in Github. The image build type uses a 2-stage pipeline that will build the container image and then publish it to the AWS Container Registry.
+
+The produced image can be used in subsequent component builds by setting the `build_type` variable to `'custom'` and the `'build_image'` variable to `'{Image Prefix}/{Image Name}'` as specified when the image was built. For example:
+
+`build_image = "ccs/ruby"`
+
 ---
 
 ## Pre-defined Environment variables passed to containers ##
@@ -190,11 +202,11 @@ running container. These entries can be *global* that will be passed to all cont
 
 For a global variable the format is `/Environment/global/{Variable Name}`
 
-For an Application or API specific variable the format is `/Environment/ccs/{App or API Name}/{Variable Name}`
+For an Application or API specific variable the format is `/Environment/{App or API prefix}/{App or API Name}/{Variable Name}`
 
 For example a Parameter Store entry:
 
 `/Environment/ccs/cmp/GOOGLE_GEOCODING_API_KEY` set to `'QWERTY'`
 
-Will result in an environment variable `GOOGLE_GEOCODING_API_KEY` being available to the running container.
+Will result in an environment variable `GOOGLE_GEOCODING_API_KEY` with the value of `'QWERTY'` being available to the running container.
 
