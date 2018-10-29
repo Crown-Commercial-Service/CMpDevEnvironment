@@ -6,8 +6,6 @@ Version 1.
 
 ## DRAFT #
 
-## Gary Ratcliffe ##
-
 ## Rowe IT ##
 
 ## October 2018 ##
@@ -35,6 +33,7 @@ Version 1.
    - [Creating initial ‘App1’ build pipeline](#creating-initial-‘app1’-build-pipeline)
    - [Creating initial ‘Api1’ build pipeline](#creating-initial-‘api1’-build-pipeline)
    - [Creating initial ‘Npm’ build pipeline](#creating-initial-‘npm’-build-pipeline)
+   - [Creating initial ‘Ruby’ build pipeline](#creating-initial-‘ruby’-build-pipeline)
 - [Appendix 1 - Diagrams](#appendix-1---diagrams)
    - [Core AWS Infrastructure](#core-aws-infrastructure)
    - [ECS Clusters](#ecs-clusters)
@@ -91,6 +90,9 @@ corresponding build/api2 example pipeline.
 This contains an example application implemented using Ruby on Rails. It is referenced by
 the corresponding build/app2 example pipeline. This example project uses the example
 NPM module and the GOV UK frontend toolkit.
+
+`CMpDevBuildImage_Ruby` : 
+This contains a Dockerfile for creating a new build image that can be used by AWS Codebuild. This may be required when AWS to not provide a suitable build environment. For example, at present Ruby 2.5.3 is not supported by AWS.
 
 
 # Setting up CCSDEV on a new AWS Account #
@@ -363,6 +365,21 @@ It will create a build pipe line for an example NPM module called ‘npm1’.
 6. Run `terraform apply`.
 7. Enter `yes` when prompted.
 8. The example `npm1` build pipe line will now be created. This can take a while.
+
+## Creating initial Ruby build pipeline ##
+
+This uses the Terraform scripts in `terraform/build/image-ruby`.
+
+It will create a build pipe line for an AWS build image called 'ccs/ruby'. Once build this will result in a new AWS Build image that can be specified by other applications or APIs.
+
+1. Ensure the AWS access keys are configured as described previously.
+2. Ensure the GitHub token is stored in the parameter store.
+3. Ensure the command prompt is open in the `build/image-ruby` directory.
+4. Run `terraform init` to install and configure the required providers.
+5. Run `terraform apply`.
+6. Enter `yes` when prompted.
+7. The example `ruby-pipeline` build pipe line will now be created. This can take a while.
+8. Once build the the reulting images can be specified in an applications or APIs Terraform using the 'build_image' setting.
 
 # Appendix 1 - Diagrams #
 
