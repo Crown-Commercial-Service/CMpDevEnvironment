@@ -11,3 +11,7 @@ Draw IO file containing the following pages:
 
 * `ccs_aws_v1-App_Api Pipeline.png` : Build pipelines
 
+# ccs_aws_v1_ScriptFlow.xml #
+Draw IO file containing the following diagram:
+
+* `ccs_aws_v1-ScriptFlow.png` : Build pipeline script workflow
