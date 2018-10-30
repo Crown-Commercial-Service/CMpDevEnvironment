@@ -21,6 +21,12 @@ resource "aws_alb" "CCSDEV_app_cluster_alb" {
   security_groups = ["${aws_security_group.vpc-CCSDEV-external-app-alb.id}"]
   subnets         = ["${aws_subnet.CCSDEV-AZ-a-Public-1.id}", "${aws_subnet.CCSDEV-AZ-b-Public-1.id}", "${aws_subnet.CCSDEV-AZ-c-Public-1.id}"]
 
+  access_logs {
+    bucket  = "${local.log_bucket_name}"
+    prefix  = "alb/app"
+    enabled = "${var.app_cluster_alb_logging_enabled}"
+  }
+
   tags {
     Name = "CCSDEV_app_cluster_alb"
     CCSRole = "Application"

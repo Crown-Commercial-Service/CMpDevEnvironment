@@ -41,10 +41,30 @@ variable build_type {
     type = "string"
 }
 
+##############################################################
+# Build Image (used if build_type is set to custom)
+##############################################################
+variable build_image {
+    type = "string"
+    default = ""
+}
+
+##############################################################
+# Build Image Version (if a specific version tag is required)
+##############################################################
+variable build_image_version {
+    type = "string"
+    default = "latest"
+}
+
+##############################################################
+# Whether a test (5-stage) pipeline is required
+##############################################################
 variable enable_tests {
     type = "string"
     default = false
 }
+
 ##############################################################
 # AWS IAM role providing build permissions
 ##############################################################
@@ -84,7 +104,7 @@ variable security_group_ids {
 # Build timeout in minutes
 ##############################################################
 variable timeout {
-    default = 5
+    default = 30
 }
 
 ##############################################################

@@ -23,16 +23,44 @@ variable name {
 }
 
 ##############################################################
+# Host Name (for DNS purposes)
+##############################################################
+variable hostname {
+    type = "string"
+    default = ""
+}
+
+##############################################################
 # Build Type (docker, java, etc.) see build module for options
 ##############################################################
 variable build_type {
     type = "string"
 }
 
+##############################################################
+# Build Image (used if build_type is set to custom)
+##############################################################
+variable build_image {
+    type = "string"
+    default = ""
+}
+
+##############################################################
+# Build Image Version (if a specific version tag is required)
+##############################################################
+variable build_image_version {
+    type = "string"
+    default = "latest"
+}
+
+##############################################################
+# Whether a test (5-stage) pipeline is required
+##############################################################
 variable enable_tests {
     type = "string"
     default = false
 }
+
 ##############################################################
 # Component source Github user/org
 ##############################################################
@@ -161,4 +189,26 @@ data "aws_security_group" "vpc-CCSDEV-internal" {
   tags {
     "Name" = "CCSDEV-internal-${var.type}"
   }
+}
+
+##############################################################
+# AWS Cognito support
+##############################################################
+
+variable "enable_cognito_support" {
+    default = false
+}
+
+variable "cognito_login_callback" {
+    type = "string"
+    default = ""
+}
+
+variable "cognito_logout_callback" {
+    type = "string"
+    default = ""
+}
+
+variable "cognito_generate_secret" {
+    default = true
 }

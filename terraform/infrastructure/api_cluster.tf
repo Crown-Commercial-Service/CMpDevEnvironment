@@ -21,6 +21,12 @@ resource "aws_alb" "CCSDEV_api_cluster_alb" {
   security_groups = ["${aws_security_group.vpc-CCSDEV-internal-api-alb.id}"]
   subnets         = ["${aws_subnet.CCSDEV-AZ-a-Private-1.id}", "${aws_subnet.CCSDEV-AZ-b-Private-1.id}", "${aws_subnet.CCSDEV-AZ-c-Private-1.id}"]
 
+  access_logs {
+    bucket  = "${local.log_bucket_name}"
+    prefix  = "alb/api"
+    enabled = "${var.api_cluster_alb_logging_enabled}"
+  }
+
   tags {
     Name = "CCSDEV_api_cluster_alb"
     CCSRole = "API"

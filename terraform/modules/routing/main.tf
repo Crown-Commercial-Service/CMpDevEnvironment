@@ -39,7 +39,7 @@ resource "aws_alb_listener_rule" "http_subdomain_rule" {
 
   condition {
     field  = "host-header"
-    values = ["${var.name}.${var.domain}"]
+    values = ["${var.hostname}.${var.domain}"]
   }
 }
 
@@ -58,7 +58,7 @@ resource "aws_alb_listener_rule" "http_subdomain_redirect_rule" {
 
   condition {
     field  = "host-header"
-    values = ["${var.name}.${var.domain}"]
+    values = ["${var.hostname}.${var.domain}"]
   }
 }
 
@@ -83,7 +83,7 @@ resource "aws_alb_listener_rule" "https_subdomain_rule" {
 
   condition {
     field  = "host-header"
-    values = ["${var.name}.${var.domain}"]
+    values = ["${var.hostname}.${var.domain}"]
   }
 }
 ##############################################################
@@ -91,7 +91,7 @@ resource "aws_alb_listener_rule" "https_subdomain_rule" {
 ##############################################################
 resource "aws_route53_record" "component" {
   zone_id = "${data.aws_route53_zone.base_domain.zone_id}"
-  name    = "${var.name}.${var.domain}"
+  name    = "${var.hostname}.${var.domain}"
   type    = "A"
 
   alias {

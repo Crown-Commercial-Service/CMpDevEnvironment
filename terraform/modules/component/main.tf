@@ -70,6 +70,14 @@ data "aws_ssm_parameter" "config_es_endpoint" {
 }
 
 ##############################################################
+# Subdomain
+##############################################################
+
+locals {
+  config_hostname = "${var.hostname=="" ? var.name : var.hostname}"
+}
+
+##############################################################
 # Build
 ##############################################################
 module "build" {
@@ -81,6 +89,8 @@ module "build" {
   github_repo = "${var.github_repo}"
   github_branch = "${var.github_branch}"
   build_type = "${var.build_type}"
+  build_image = "${var.build_image}"
+  build_image_version = "${var.build_image_version}"
   enable_tests = "${var.enable_tests}"
   service_role_arn = "${data.aws_iam_role.codebuild_service_role.arn}"
   vpc_id = "${data.aws_vpc.CCSDEV-Services.id}"
@@ -92,8 +102,13 @@ module "build" {
 # Cloudwatch Logs
 ##############################################################
 resource "aws_cloudwatch_log_group" "component" {
-  name = "/ccs/${var.name}"
+  name = "/${var.prefix}/${var.name}"
   retention_in_days = 3
+  
+  tags {
+    Name = "Infrastructure configured Cloudwatch Log Group"
+    CCSRole = "Infrastructure"
+  }
 }
 
 ##############################################################
@@ -107,6 +122,10 @@ locals {
 
     config_domain = "${var.type == "app" ? local.config_app_domain : local.config_api_domain}"
     config_environment = [
+      {
+        name = "CCS_HOSTNAME",
+        value = "${local.config_hostname}"
+      },
       {
         name = "CCS_APP_BASE_URL",
         value = "${local.config_app_domain}"
@@ -224,6 +243,7 @@ module "routing" {
   type     = "${var.type}"
   name     = "${var.name}"
   domain   = "${local.config_domain}"
+  hostname = "${local.config_hostname}"
   port     = "${var.port}"
   protocol = "${local.config_protocol}"
 }

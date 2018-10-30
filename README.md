@@ -1,4 +1,4 @@
-# Crown Commercial Environment (Development)
+# Crown Commercial Environment (Development) #
 
 This project contains [Terraform](https://www.terraform.io/) scripts that are used to generate a container hosting environment in AWS. This environment is in the eu-west-2 region.
 
@@ -10,7 +10,16 @@ All of the scripts will require `terraform init` to be executed in the correct d
 
 ---
 
-## IAM Security
+## Additional Documentation ##
+
+Some additional documentation is also available:
+
+  * [Setup Guide](https://github.com/Crown-Commercial-Service/CMpDevEnvironment/blob/develop/docs/setup.md)
+  * [Update Guide](https://github.com/Crown-Commercial-Service/CMpDevEnvironment/blob/develop/docs/update.md)
+  * [Developer Guide](https://github.com/Crown-Commercial-Service/CMpDevEnvironment/blob/develop/docs/ccs_aws_v1-developer_guide.md)
+---
+
+## IAM Security ##
 `/terraform/security`
 
 The security scripts generate a number of IAM user groups and policies documents. They do not create any actual users.
@@ -23,6 +32,7 @@ The following groups are created:
 - CCS_Application_Developer
 - CCS_API_Developer
 - CCS_Code_Build_Pipeline
+- CCS_Cognito_Administration
 
 Only a very small number of users should be a member of the system administration group. To have complete system administration privileges a user will need to be a member of the system administration, infrastructure administration and code build pipeline groups.
 
@@ -53,6 +63,7 @@ The infrastructure scripts generate a complete AWS environment for deploying con
 - Example RDS Postgres daatbase server. 
 - Example Elastic Search domain.
 - CloudWatch dashboard definition example
+- Cognito user pool
 
 **NOTE**
 In this release the example database and Elastic Search instances can be accessed from the Application and API clusters. The intention is that this is restricted to the API cluster in the next release.
@@ -143,6 +154,18 @@ The file `main.tf` defines the attributes of the build and identifies the locati
 
 When executed the scripts will define the build pipeline and this will trigger the process of building and publishing the example NPM module.
 
+
+### Ruby Image Example ###
+`/terraform/build/image-ruby`
+
+This uses the contents of the `CMpDevBuildImage_Ruby` repository which contains a Dockerfile and associated context that can be built and published as docker image within the AWS Container Registry for use in other builds.
+
+The file `main.tf` defines the attributes of the build and identifies the location of the source code in Github. The image build type uses a 2-stage pipeline that will build the container image and then publish it to the AWS Container Registry.
+
+The produced image can be used in subsequent component builds by setting the `build_type` variable to `'custom'` and the `'build_image'` variable to `'{Image Prefix}/{Image Name}'` as specified when the image was built. For example:
+
+`build_image = "ccs/ruby"`
+
 ---
 
 ## Pre-defined Environment variables passed to containers ##
@@ -183,14 +206,16 @@ Environment variables can also be used to pass feature switches to containers. T
 `CCS_FEATURE_EG1=on`
 
 ## Environment variables passed to containers from the EC2 Parameter Store ##
-Entries in the EC2 Parameter store will be automatically turned into environment variables and passed to the
-running container.
+Certain entries in the EC2 Parameter store will be automatically turned into environment variables and passed to the
+running container. These entries can be *global* that will be passed to all containers or specific to an Application or API.
 
-The format is `/Environment/ccs/{App or API Name}/{Variable Name}`
+For a global variable the format is `/Environment/global/{Variable Name}`
+
+For an Application or API specific variable the format is `/Environment/{App or API prefix}/{App or API Name}/{Variable Name}`
 
 For example a Parameter Store entry:
 
 `/Environment/ccs/cmp/GOOGLE_GEOCODING_API_KEY` set to `'QWERTY'`
 
-Will result in an environment variable `GOOGLE_GEOCODING_API_KEY` being available to the running container.
+Will result in an environment variable `GOOGLE_GEOCODING_API_KEY` with the value of `'QWERTY'` being available to the running container.
 

@@ -7,27 +7,16 @@ phases:
       - if [ -e CCS_VERSION ]; then export CCS_VERSION=$(cat CCS_VERSION); else export CCS_VERSION=0.0.1; fi
       - if [ -e pipeline_pre_build.sh ]; then chmod +x pipeline_pre_build.sh && . ./pipeline_pre_build.sh; else exit 0; fi
       - if [ -e Dockerfile ]; then
-          for SSM_ALIAS in $(aws ssm describe-parameters --query 'Parameters[?Name!=`null`]|[?(starts_with(Name, `/Environment/${container_prefix}/${container_name}/`) || starts_with(Name, `/Environment/global/`))][Name]' --output text);
+          for SSM_ALIAS in $(aws ssm describe-parameters --query 'Parameters[?Name!=`null`]|[?(starts_with(Name, `/ImageEnvironment/${container_prefix}/${container_name}/`) || starts_with(Name, `/ImageEnvironment/global/`))][Name]' --output text);
           do
             SSM_ENV="$${SSM_ALIAS##*/}";
             SSM_VALUE=`aws ssm get-parameter --with-decryption --name $SSM_ALIAS --query "Parameter.Value"`;
-            sed -i "s|##_PARAMETER_STORE_MARKER_##|##_PARAMETER_STORE_MARKER_##\nENV $SSM_ENV=$SSM_VALUE\n|" Dockerfile;
             export $SSM_ENV=$SSM_VALUE;
           done;
         fi
   build:
     commands:
-      - mvn
-        --fail-fast 
-        -Ddocker.image.prefix=${container_prefix} 
-        -Ddocker.image.name=${container_name} 
-        -Ddocker.git.owner=${github_owner} 
-        -Ddocker.git.repo=${github_repo} 
-        -Ddocker.git.branch=${github_branch} 
-        -Ddocker.git.commit=$CODEBUILD_RESOLVED_SOURCE_VERSION 
-        -Ddocker.codebuild.time=$CODEBUILD_START_TIME
-        -Ddocker.code.version=$CCS_VERSION
-        install dockerfile:build
+      - docker build --tag "${container_prefix}/${container_name}" .
   post_build:
     commands:
       - if [ -e pipeline_post_build.sh ]; then chmod +x pipeline_post_build.sh && . ./pipeline_post_build.sh; else exit 0; fi
@@ -37,6 +26,3 @@ phases:
       - docker push "${base_image_name}:$CCS_VERSION"
       - docker tag "${container_prefix}/${container_name}" "${deploy_image_name}" 
       - docker push "${deploy_image_name}"
-      - printf '[{"name":"${container_name}","imageUri":"%s"}]' "${deploy_image_name}" > images.json
-artifacts:
-    files: images.json

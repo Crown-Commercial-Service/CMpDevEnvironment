@@ -53,7 +53,7 @@ variable domain_internal_prefix {
 
 variable enable_https {
   type = "string"
-  default = false
+  default = true
 }
 ##############################################################
 # cluster settings - Application
@@ -75,6 +75,10 @@ variable "app_cluster_key_name" {
   default = "ccs_cluster"
 }
 
+variable "app_cluster_alb_logging_enabled" {
+  default = true
+}
+
 ##############################################################
 # cluster settings - APIs
 ##############################################################
@@ -93,6 +97,10 @@ variable "api_cluster_instance_count" {
 
 variable "api_cluster_key_name" {
   default = "ccs_cluster"
+}
+
+variable "api_cluster_alb_logging_enabled" {
+  default = false
 }
 
 ##############################################################
@@ -189,4 +197,5 @@ variable "postgres_port" {
 
 locals {
   artifact_bucket_name = "ccs.${data.aws_caller_identity.current.account_id}.build-artifacts"
+  log_bucket_name = "ccs.${data.aws_caller_identity.current.account_id}.${lower(var.environment_name)}.logs"
 }

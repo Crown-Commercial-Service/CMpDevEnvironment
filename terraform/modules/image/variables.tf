@@ -1,47 +1,45 @@
 ##############################################################
-# Type of Component:
-#   api - an internal service 
-#   app - an external application 
+# Image Prefix  
 ##############################################################
-variable type {
+variable prefix {
     type = "string"
+    default = "ccs"
 }
 
 ##############################################################
-# Component Name
+# Image Name
 ##############################################################
 variable name {
     type = "string"
 }
 
 ##############################################################
-# Domain that component will be hosted within,e.g. example.com
+# Image source Github user/org
 ##############################################################
-variable domain {
+variable github_owner {
     type = "string"
 }
 
 ##############################################################
-# Hostname that the component is at,e.g. app1 (.example.com)
+# Image source Github repo
 ##############################################################
-variable hostname {
+variable github_repo {
     type = "string"
 }
 
 ##############################################################
-# Port that the component will be accessible through
+# Image source Github branch
 ##############################################################
-variable port {
+variable github_branch {
     type = "string"
+    default = "master"
 }
 
 ##############################################################
-# Protocol that the component will be accessible through
-# NOTE: This it the protocol between an external source and
-#       the load balancer. The load balancer will still use
-#       HTTP directly to the component.
+# Image source Github token alias as used in
+#  the Parameter Store
 ##############################################################
-variable protocol {
+variable github_token_alias {
     type = "string"
 }
 
@@ -50,6 +48,21 @@ variable protocol {
 ##############################################################
 provider "aws" {
   region = "eu-west-2"
+}
+
+data "aws_caller_identity" "current" {
+}
+
+##############################################################
+# IAM references
+##############################################################
+
+data "aws_iam_role" "codebuild_service_role" {
+  name = "codebuild-api-service-role"
+}
+
+data "aws_iam_role" "codepipeline_service_role" {
+  name = "codepipeline-api-service-role"
 }
 
 ##############################################################
@@ -62,20 +75,14 @@ data "aws_vpc" "CCSDEV-Services" {
   }
 }
 
-##############################################################
-# Load Balancer references
-##############################################################
-
-data "aws_alb" "CCSDEV_cluster_alb" {
-  name = "CCSDEV-${var.type}-cluster-alb"
+data "aws_subnet" "CCSDEV-AZ-a-Private-1" {
+  tags {
+    "Name" = "CCSDEV-AZ-a-Private-1"
+  }
 }
 
-data "aws_alb_listener" "http_listener" {
-  load_balancer_arn = "${data.aws_alb.CCSDEV_cluster_alb.arn}"
-  port = "${var.port}"
-}
-
-data "aws_route53_zone" "base_domain" {
-  name         = "${var.domain}."
-  private_zone = "${var.type == "api"}"
+data "aws_security_group" "vpc-CCSDEV-internal" {
+  tags {
+    "Name" = "CCSDEV-internal-api"
+  }
 }

@@ -1,0 +1,17 @@
+All diagrams have been created using drawIO. (https://www.draw.io/)
+
+# ccs_aws_v1.xml #
+Draw IO file containing the following pages:
+
+* `ccs_aws_v1-Infrastructure.png` : Overall architecture showing the VPC.
+
+* `ccs_aws_v1-App Cluster.png` : Application cluster.
+
+* `ccs_aws_v1-Api Cluster.png` : API Cluster.
+
+* `ccs_aws_v1-App_Api Pipeline.png` : Build pipelines
+
+# ccs_aws_v1_ScriptFlow.xml #
+Draw IO file containing the following diagram:
+
+* `ccs_aws_v1-ScriptFlow.png` : Build pipeline script workflow

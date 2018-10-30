@@ -1,6 +1,10 @@
 version: 0.2
 
 phases:
+  install:
+    commands:
+      - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://127.0.0.1:2375 --storage-driver=overlay&
+      - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
   pre_build:
     commands:
       - $(aws ecr get-login --no-include-email)
@@ -17,17 +21,14 @@ phases:
         fi
   build:
     commands:
-      - mvn
-        --fail-fast 
-        -Ddocker.image.prefix=${container_prefix} 
-        -Ddocker.image.name=${container_name} 
-        -Ddocker.git.owner=${github_owner} 
-        -Ddocker.git.repo=${github_repo} 
-        -Ddocker.git.branch=${github_branch} 
-        -Ddocker.git.commit=$CODEBUILD_RESOLVED_SOURCE_VERSION 
-        -Ddocker.codebuild.time=$CODEBUILD_START_TIME
-        -Ddocker.code.version=$CCS_VERSION
-        install dockerfile:build
+      - docker build 
+        --build-arg GIT_OWNER=${github_owner} 
+        --build-arg GIT_REPO=${github_repo} 
+        --build-arg GIT_BRANCH=${github_branch} 
+        --build-arg GIT_COMMIT=$CODEBUILD_RESOLVED_SOURCE_VERSION
+        --build-arg CCS_VERSION=$CCS_VERSION
+        --build-arg BUILD_TIME=$CODEBUILD_START_TIME
+        --tag "${container_prefix}/${container_name}" .
   post_build:
     commands:
       - if [ -e pipeline_post_build.sh ]; then chmod +x pipeline_post_build.sh && . ./pipeline_post_build.sh; else exit 0; fi
