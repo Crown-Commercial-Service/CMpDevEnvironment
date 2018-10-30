@@ -15,6 +15,7 @@ All of the scripts will require `terraform init` to be executed in the correct d
 Some additional documentation is also available:
 
   * [Setup Guide](https://github.com/Crown-Commercial-Service/CMpDevEnvironment/blob/develop/docs/setup.md)
+  * [Update Guide](https://github.com/Crown-Commercial-Service/CMpDevEnvironment/blob/develop/docs/update.md)
   * [Developer Guide](https://github.com/Crown-Commercial-Service/CMpDevEnvironment/blob/develop/docs/ccs_aws_v1-developer_guide.md)
 ---
 
