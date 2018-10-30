@@ -236,8 +236,9 @@ This uses the Terraform scripts in terraform/infrastructure.
 
 You will need to create a file ending with `.auto.tfvars` in this directory.
 `cmpdev.auto.tfvars` is suggested. An example file can be copied from
-`config.auto.tfvars.example`. The typical settings for development to
-cmpdev.crowncommercial.gov.uk are shown below:
+`config.auto.tfvars.example`.
+
+The typical settings for development to cmpdev.crowncommercial.gov.uk are shown below:
 
 ```
 "ssh_access_cidrs" = {
@@ -252,7 +253,9 @@ domain_internal_prefix = "internal"
 enable_https = true
 ```
 
-> Note that this file should not be stored in a public GitHub repository.
+> Note that this file should not be stored in a public GitHub repository. Files for existing environment
+can be found within a private [config repository](https://github.com/Crown-Commercial-Service/CMpDevEnvironment_Private)
+and it is best practice to add additional environments into this repository to ensure a common configuration.
 
 
 1. Ensure the AWS access keys are configured as described previously.
