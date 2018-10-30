@@ -331,7 +331,7 @@ than `master`.
 6. Enter `yes` when prompted.
 7. The example `app1` build pipe line will now be created. This can take a while.
 
-This will result in a build pipe line being created and. Eventually, the example `app1` being deployed
+This will result in a build pipe line being created and, eventually, the example `app1` being deployed
 into the `app` cluster.
 
 ## Creating initial ‘Api1’ build pipeline ##
@@ -351,7 +351,7 @@ than `master`.
 6. Enter `yes` when prompted.
 7. The example `api1` build pipe line will now be created. This can take a while.
 
-This will result in a build pipe line being created and. Eventually, the example `api1` being deployed
+This will result in a build pipe line being created and, eventually, the example `api1` being deployed
 into the `api` cluster.
 
 ## Creating initial ‘Npm’ build pipeline ##
