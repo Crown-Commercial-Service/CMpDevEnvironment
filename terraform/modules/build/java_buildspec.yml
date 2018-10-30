@@ -12,7 +12,7 @@ phases:
             SSM_ENV="$${SSM_ALIAS##*/}";
             SSM_VALUE=`aws ssm get-parameter --with-decryption --name $SSM_ALIAS --query "Parameter.Value"`;
             sed -i "s|##_PARAMETER_STORE_MARKER_##|##_PARAMETER_STORE_MARKER_##\nENV $SSM_ENV=$SSM_VALUE\n|" Dockerfile;
-            export $SSM_ENV=$SSM_VALUE;
+            export $SSM_ENV="$SSM_VALUE";
           done;
         fi
   build:
