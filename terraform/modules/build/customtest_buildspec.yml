@@ -13,7 +13,7 @@ phases:
         do
           SSM_ENV="$${SSM_ALIAS##*/}";
           SSM_VALUE=`aws ssm get-parameter --with-decryption --name $SSM_ALIAS --query "Parameter.Value"`;
-          export $SSM_ENV=$SSM_VALUE;
+          export $SSM_ENV="$SSM_VALUE";
         done;
       - set -v
       - if [ -e pipeline_pre_${test_type}_tests.sh ]; then chmod +x pipeline_pre_${test_type}_tests.sh && . ./pipeline_pre_${test_type}_tests.sh; else exit 0; fi

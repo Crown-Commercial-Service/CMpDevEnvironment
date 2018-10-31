@@ -182,7 +182,9 @@ When an application or API is provisioned, there are several parameters that can
 
 *name* &#8211; The (short) name of the component (e.g. app1)
 
-*build_type* &#8211; The type of build to perform (e.g. ruby, docker, java, python)
+*build_type* &#8211; The type of build to perform (e.g. ruby, docker, java, python, custom)
+
+*build_image* &#8211; The ECR image to use, if the *build_type* is set to **custom**
 
 *github_owner* &#8211; The GitHub owner of the source code for the component.
 
@@ -193,6 +195,16 @@ When an application or API is provisioned, there are several parameters that can
 These options are set (and will only change) when provisioning is
 (re)run via terraform and are not dynamically configurable at build time.
 
+Custom Build Environments
+---------------------------
+
+It is possible to create custom container images for bespoke build environments allow more flexible options (and more up-to-date image than AWS CodeBuild may provide).
+
+By creating a GitHub repository containing (at the very least) a Dockerfile and a new *build* project within the CMpDevEnvironment[^13] that specifies a *build_type* of **image**, a custom container image can be build and subsequently referenced within another build project using a *build_type* of **custom** and a *build_image* of **{prefix}/{name}** taken from the image project.
+
+For example, building the image within the *image-ruby*[^14] project would allow another project to use that image with a *build_type* of **custom** and a *build_image* of **ccs/ruby**
+
+As with other builds, if a **CCS_VERSION** file is found within the image repository, the image will be tagged with the version number found in that file. When using a **custom** *build_type*, it is also possible to specify the *build_image_version* variable (which will default to **latest**) to choose a specific version-tagged image, allowing for a more controlled release process.
 
 
 [^1]: <https://aws.amazon.com/codebuild/>
@@ -218,3 +230,7 @@ These options are set (and will only change) when provisioning is
 [^11]: <https://www.terraform.io/>
 
 [^12]: <https://github.com/Crown-Commercial-Service/CMpDevEnvironment/blob/develop/terraform/modules/component/variables.tf>
+
+[^13]: https://github.com/Crown-Commercial-Service/CMpDevEnvironment/tree/develop/terraform/build
+
+[^14]: https://github.com/Crown-Commercial-Service/CMpDevEnvironment/tree/develop/terraform/build/image-ruby
