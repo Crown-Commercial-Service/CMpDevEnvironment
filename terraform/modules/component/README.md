@@ -87,6 +87,12 @@ You can find any other parameters in [variables.tf](variables.tf).
 
 Check out the [app1 example](https://github.com/Crown-Commercial-Service/CMpDevEnvironment/blob/develop/terraform/build/app1/main.tf) for fully-working sample code. 
 
+## Important note regarding webhooks ##
+
+The pipeline will be triggered on each successive GitHub code push, via webhooks. These are automatically created within the terraform and rely on appropriate permissions existing via the stored token within the parameter store as specified within the *github_token_alias* parameter.
+
+The GitHub account that is associated with the token **MUST** have administrator rights to the source repository in order to be able to create webhooks. If they do not have the correct permissions, a 404 error will be received when the terraform is run.
+
 ## What's included in this module?
 
 This module creates an AWS CloudWatch Log Group and also calls into the [`build`](https://github.com/Crown-Commercial-Service/CMpDevEnvironment/tree/develop/terraform/modules/build), [`deploy_pipeline`](https://github.com/Crown-Commercial-Service/CMpDevEnvironment/tree/develop/terraform/modules/deploy_pipeline), [`ecs_service`](https://github.com/Crown-Commercial-Service/CMpDevEnvironment/tree/develop/terraform/modules/ecs_service) and [`routing`](https://github.com/Crown-Commercial-Service/CMpDevEnvironment/tree/develop/terraform/modules/routing) modules.

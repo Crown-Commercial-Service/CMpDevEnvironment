@@ -152,6 +152,7 @@ variable port {
 ##############################################################
 provider "aws" {
   region = "eu-west-2"
+  version = ">= 1.41"
 }
 
 data "aws_caller_identity" "current" {

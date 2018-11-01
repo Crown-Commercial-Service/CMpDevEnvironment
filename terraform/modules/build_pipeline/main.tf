@@ -31,7 +31,7 @@ resource "aws_codepipeline" "pipeline" {
         Owner      = "${var.github_owner}"
         Repo       = "${var.github_repo}"
         Branch     = "${var.github_branch}"
-        PollForSourceChanges = "true"
+        PollForSourceChanges = "false"
         OAuthToken = "${data.aws_ssm_parameter.github_token.value}"
       }
     }
