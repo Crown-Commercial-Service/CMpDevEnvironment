@@ -43,6 +43,7 @@ resource "aws_cognito_user_pool" "ccs_user_pool" {
       invite_message_template {
         email_subject = "Crown Marketplace - Your temporary password"
         email_message = "<p>Welcome to the Crown Marketplace.</p><p>Your username is {username} and temporary password is {####}.</p>"
+        sms_message = "Welcome to the Crown Marketplace. Your username is {username} and temporary password is {####}."
       }
     }
 
