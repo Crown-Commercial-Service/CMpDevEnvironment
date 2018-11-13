@@ -34,15 +34,20 @@ resource "aws_cognito_user_pool" "ccs_user_pool" {
     name = "ccs_user_pool"
     username_attributes = ["email"]
     auto_verified_attributes = ["email"]
-    email_verification_subject = "Your Verification code"
+    email_verification_subject = "Crown Marketplace - Your Verification code"
     email_verification_message = "Your Verification code is {####}"
-  
+
     # User self-registration enabled, set to true to prevent self-registration.
     admin_create_user_config {
-      allow_admin_create_user_only = false
+      allow_admin_create_user_only = true
+      invite_message_template {
+        email_subject = "Crown Marketplace - Your temporary password"
+        email_message = "<p>Welcome to the Crown Marketplace.</p><p>Your username is {username} and temporary password is {####}.</p><p>Access the site at https://cmp.cmpdev.crowncommercial.gov.uk/.</p>"
+        sms_message = "Welcome to the Crown Marketplace. Your username is {username} and temporary password is {####}."
+      }
     }
 
-    # Set basic password restrictions    
+    # Set basic password restrictions
     password_policy {
         minimum_length    = 8
         require_lowercase = true
@@ -50,7 +55,7 @@ resource "aws_cognito_user_pool" "ccs_user_pool" {
         require_symbols   = true
         require_uppercase = true
     }
-  
+
     tags {
         Name = "CCSDEV Services"
         CCSRole = "Infrastructure"
@@ -70,7 +75,7 @@ resource "aws_cognito_user_pool_domain" "ccs_cmp_domain" {
 # environment variables.
 ##############################################################
 resource "aws_ssm_parameter" "cognito_aws_region" {
-  name  = "/Environment/global/COGNITO_AWS_REGION" 
+  name  = "/Environment/global/COGNITO_AWS_REGION"
   description  = "Infrastructure configured AWS Region for Cognito"
   type  = "SecureString"
   value = "${local.region}"
