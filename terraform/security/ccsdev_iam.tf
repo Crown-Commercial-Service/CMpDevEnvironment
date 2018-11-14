@@ -328,6 +328,7 @@ resource "aws_iam_group_policy_attachment" "api_dev_kms_dev" {
 #
 #   CodeBuildAdminAccess
 #   CodePipelineFullAccess
+#   SNS Topic Creation (custom)
 ##############################################################
 
 resource "aws_iam_group" "CCSDEV_iam_code_build_pipeline" {
@@ -348,6 +349,33 @@ resource "aws_iam_group_policy_attachment" "code_build_admin" {
 resource "aws_iam_group_policy_attachment" "code_pipeline_full" {
   group      = "${aws_iam_group.CCSDEV_iam_code_build_pipeline.name}"
   policy_arn = "arn:aws:iam::aws:policy/AWSCodePipelineFullAccess"
+}
+
+resource "aws_iam_group_policy_attachment" "code_pipeline_notification" {
+  group      = "${aws_iam_group.CCSDEV_iam_code_build_pipeline.name}"
+  policy_arn = "${aws_iam_policy.CCSDEV_policy_pipeline_notification.arn}"
+}
+
+resource "aws_iam_policy" "CCSDEV_policy_pipeline_notification" {
+  name   = "CCSDEV_policy_pipeline_notification"
+  path   = "/"
+  policy = "${data.aws_iam_policy_document.CCSDEV_policy_doc_pipeline_notification.json}"
+}
+
+data "aws_iam_policy_document" "CCSDEV_policy_doc_pipeline_notification" {
+
+  statement {
+
+    actions = [
+        "sns:CreateTopic",
+        "events:*"
+    ]
+
+    resources = [
+		"*"
+    ]
+  }
+
 }
 
 
