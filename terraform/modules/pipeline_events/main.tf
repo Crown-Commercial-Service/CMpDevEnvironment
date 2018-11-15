@@ -3,9 +3,16 @@
 #
 # This includea custom police to allow events to post
 # to the topic.
+#
+# For the specified Pipeline success and failure topics
+# are created. CloudWatch events are then triggered to
+# post information to these topics.
+#
 ##############################################################
 
+##############################################################
 # Build Success
+##############################################################
 resource "aws_sns_topic" "pipeline_success_topic" {
 
   count = "${var.enable}"
@@ -91,13 +98,15 @@ resource "aws_cloudwatch_event_target" "pipeline_success_target" {
   input_transformer = {
       input_paths = {"state" = "$.detail.state", "pipeline" = "$.detail.pipeline"}
       input_template = <<INPUT_TEMPLATE_EOF
-        "The Application/API build: [<pipeline>] <state>. From GitHub: ${var.github_owner}/${var.github_repo}/${var.github_branch}"
+        "The Application/API build: [<pipeline>] <state> building from GitHub: ${var.github_owner}/${var.github_repo}/${var.github_branch}"
       INPUT_TEMPLATE_EOF
   }
 
 }
 
+##############################################################
 # Build Failure
+##############################################################
 resource "aws_sns_topic" "pipeline_failure_topic" {
 
   count = "${var.enable}"
@@ -184,7 +193,7 @@ resource "aws_cloudwatch_event_target" "pipeline_failure_target" {
   input_transformer = {
       input_paths = {"state" = "$.detail.state", "pipeline" = "$.detail.pipeline"}
       input_template = <<INPUT_TEMPLATE_EOF
-        "The Application/API build: [<pipeline>] <state>. From GitHub: ${var.github_owner}/${var.github_repo}/${var.github_branch}"
+        "The Application/API build: [<pipeline>] <state> building from GitHub: ${var.github_owner}/${var.github_repo}/${var.github_branch}"
       INPUT_TEMPLATE_EOF
   }
 }
