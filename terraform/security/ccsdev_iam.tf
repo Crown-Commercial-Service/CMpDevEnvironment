@@ -206,6 +206,7 @@ data "aws_iam_policy_document" "CCSDEV_policy_doc_kms_dev" {
 #   AmazonECS_FullAccess
 #   CloudWatchReadOnlyAccess
 #   AmazonSSMFullAccess
+#   SNS Topic subscription (custom)
 #
 # TODO At present access NOT restricted to the app cluster
 #
@@ -251,6 +252,11 @@ resource "aws_iam_group_policy_attachment" "app_dev_kms_dev" {
   policy_arn = "${aws_iam_policy.CCSDEV_policy_kms_dev.arn}"
 }
 
+resource "aws_iam_group_policy_attachment" "app_dev_topic_subscription" {
+  group      = "${aws_iam_group.CCSDEV_iam_app_dev.name}"
+  policy_arn = "${aws_iam_policy.CCSDEV_policy_topic_subscription.arn}"
+}
+
 ##############################################################
 # API Developer Group
 #
@@ -266,6 +272,7 @@ resource "aws_iam_group_policy_attachment" "app_dev_kms_dev" {
 #   AmazonESFullAccess
 #   CloudWatchReadOnlyAccess
 #   AmazonSSMFullAccess
+#   SNS Topic subscription (custom)
 #
 # TODO At present access NOT restricted to the api cluster
 #
@@ -319,6 +326,12 @@ resource "aws_iam_group_policy_attachment" "api_dev_kms_dev" {
   group      = "${aws_iam_group.CCSDEV_iam_api_dev.name}"
   policy_arn = "${aws_iam_policy.CCSDEV_policy_kms_dev.arn}"
 }
+
+resource "aws_iam_group_policy_attachment" "api_dev_topic_subscription" {
+  group      = "${aws_iam_group.CCSDEV_iam_api_dev.name}"
+  policy_arn = "${aws_iam_policy.CCSDEV_policy_topic_subscription.arn}"
+}
+
 
 ##############################################################
 # CCS Code Build Pipeline Group
@@ -486,3 +499,26 @@ data "aws_iam_policy_document" "CCSDEV_policy_doc_limited_user" {
     ]
   }
 }
+
+resource "aws_iam_policy" "CCSDEV_policy_topic_subscription" {
+  name   = "CCSDEV_policy_topic_subscription"
+  path   = "/"
+  policy = "${data.aws_iam_policy_document.CCSDEV_policy_doc_topic_subscription.json}"
+}
+
+data "aws_iam_policy_document" "CCSDEV_policy_doc_topic_subscription" {
+
+  statement {
+
+    actions = [
+      "sns:Subscribe",
+      "sns:Unsubscribe"
+    ]
+
+    resources = [
+		"*"
+    ]
+  }
+
+}
+
