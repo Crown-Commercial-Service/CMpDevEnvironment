@@ -80,7 +80,6 @@ resource "aws_cloudwatch_event_rule" "pipeline_success_event" {
       ],
       "detail": {
         "state": [
-          "STARTED",
           "SUCCEEDED"
         ]
       }
@@ -175,7 +174,6 @@ resource "aws_cloudwatch_event_rule" "pipeline_failure_event" {
       ],
       "detail": {
         "state": [
-          "STARTED",
           "FAILED"
         ]
       }
