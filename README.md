@@ -168,6 +168,22 @@ The produced image can be used in subsequent component builds by setting the `bu
 
 ---
 
+## Build Pipeline Notifications
+
+When the build pipelines are created AWS Simple Notification Service (SNS) `topics` are also created. Each pipeline will have two topics, that represent successful and failed builds. AWS console users can subscribe to these topics to receive, via email, notification of the corresponding event.
+
+### Successful Builds
+Topic: `[pipeline name]-success`
+Notification generated when the pipeline state changes to `SUCCEEDED`.
+
+### Failed Builds
+Topic: `[pipeline name]-failure`
+Notification generated when the pipeline state changes to `FAILED`.
+
+AWS Console users who are members of the `CCS_Application_Developer` and `CCS_Application_Developer` IAM groups receive permissions that allow them to subscribe to the topics.
+
+---
+
 ## Pre-defined Environment variables passed to containers ##
 
 The build pipeline scripts will ensure that a number of environment variables are passed to the running containers. Of particular importance are those variables that allow an *app* container to determine the URL for invoking an *api*. These are:
