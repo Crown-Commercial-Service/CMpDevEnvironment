@@ -89,7 +89,7 @@ resource "aws_alb_listener" "CCSDEV_app_cluster_alb_listener_https" {
   load_balancer_arn = "${aws_alb.CCSDEV_app_cluster_alb.arn}"
   port              = "${var.https_port}"
   protocol          = "HTTPS"
-  ssl_policy        = "ELBSecurityPolicy-2015-05"
+  ssl_policy        = "ELBSecurityPolicy-FS-2018-06"
   certificate_arn   = "${aws_acm_certificate.public_cluster_wildcard_certificate.arn}"
 
   default_action {

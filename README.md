@@ -235,3 +235,30 @@ For example a Parameter Store entry:
 
 Will result in an environment variable `GOOGLE_GEOCODING_API_KEY` with the value of `'QWERTY'` being available to the running container.
 
+Note that these settings are handled by re-writing the Application or API `Dockerfile` during the build process. To facilitate this the `Dockerfile` must contain a special marker to indicate where the additional environment variables should be injected: `##_PARAMETER_STORE_MARKER_##`.
+
+For example:
+
+```
+ARG BUILD_TIME
+LABEL build_time=$BUILD_TIME
+ENV BUILD_TIME=$BUILD_TIME
+
+ARG CCS_VERSION
+LABEL ccs_version=$CCS_VERSION
+ENV CCS_VERSION=$CCS_VERSION
+
+##_PARAMETER_STORE_MARKER_##
+
+ENV BUILD_PACKAGES curl-dev ruby-dev postgresql-dev build-base tzdata
+
+# Update and install base packages
+RUN apk update && apk upgrade && apk add bash $BUILD_PACKAGES nodejs-current-npm git
+```
+
+
+
+
+
+
+
