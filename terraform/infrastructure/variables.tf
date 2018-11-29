@@ -107,7 +107,7 @@ variable "api_cluster_alb_logging_enabled" {
 # Default Databases Settings
 ##############################################################
 variable "create_default_rds_database" {
-  default = false
+  default = true
 }
 
 variable "default_db_instance_class" {
@@ -143,7 +143,7 @@ variable "default_db_password" {
 }
 
 variable "default_db_retention_period" {
-  default = "1"
+  default = "7"
 }
 
 ##############################################################
