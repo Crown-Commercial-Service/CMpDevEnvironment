@@ -22,7 +22,7 @@ variable "environment_name" {
 ##############################################################
 
 variable "bastion_ami" {
-  default = "ami-dff017b8"
+  default = "ami-0307e8ce88a8245d4"
 }
 
 variable "bastion_instance_class" {
@@ -60,7 +60,7 @@ variable enable_https {
 ##############################################################
 
 variable "app_cluster_ami" {
-   default = "ami-0209769f0c963e791"
+   default = "ami-01bee3897bba49d78"
 }
 
 variable "app_cluster_instance_class" {
@@ -84,7 +84,7 @@ variable "app_cluster_alb_logging_enabled" {
 ##############################################################
 
 variable "api_cluster_ami" {
-  default = "ami-0209769f0c963e791"
+  default = "ami-01bee3897bba49d78"
 }
 
 variable "api_cluster_instance_class" {
