@@ -42,7 +42,7 @@ resource "aws_cognito_user_pool" "ccs_user_pool" {
       allow_admin_create_user_only = true
       invite_message_template {
         email_subject = "Crown Marketplace - Your temporary password"
-        email_message = "<p>Welcome to the Crown Marketplace.</p><p>Your username is {username} and temporary password is {####}</p><p><strong>NOTE.</strong>Your username is case-sensitive.</p><p>Access the site at https://cmp.cmpdev.crowncommercial.gov.uk/.</p>"
+        email_message = "<p>Welcome to the Crown Marketplace.</p><p>Your username is {username} and temporary password is {####}</p><p><strong>NOTE.</strong>Your username is case-sensitive.</p><p>Access the site at https://marketplace.service.crowncommercial.gov.uk/.</p>"
         sms_message = "Welcome to the Crown Marketplace. Your username is {username} and temporary password is {####}"
       }
     }
