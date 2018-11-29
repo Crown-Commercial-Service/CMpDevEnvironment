@@ -219,7 +219,7 @@ As with other builds, if a **CCS_VERSION** file is found within the image reposi
 
 [^6]: <https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-available.html>
 
-[^7]: <https://github.com/Crown-Commercial-Service/CMpDevEnvironment/tree/develop/terraform/modules/build>
+[^7]: <https://github.com/Crown-Commercial-Service/CMpDevEnvironment/tree/production/terraform/modules/build>
 
 [^8]: <https://github.com/Crown-Commercial-Service/CMpExampleApi1>
 
@@ -229,8 +229,8 @@ As with other builds, if a **CCS_VERSION** file is found within the image reposi
 
 [^11]: <https://www.terraform.io/>
 
-[^12]: <https://github.com/Crown-Commercial-Service/CMpDevEnvironment/blob/develop/terraform/modules/component/variables.tf>
+[^12]: <https://github.com/Crown-Commercial-Service/CMpDevEnvironment/blob/production/terraform/modules/component/variables.tf>
 
-[^13]: https://github.com/Crown-Commercial-Service/CMpDevEnvironment/tree/develop/terraform/build
+[^13]: https://github.com/Crown-Commercial-Service/CMpDevEnvironment/tree/production/terraform/build
 
-[^14]: https://github.com/Crown-Commercial-Service/CMpDevEnvironment/tree/develop/terraform/build/image-ruby
+[^14]: https://github.com/Crown-Commercial-Service/CMpDevEnvironment/tree/production/terraform/build/image-ruby

@@ -40,7 +40,7 @@ Note the following parameters:
 
 You can find any other parameters in [variables.tf](variables.tf).
 
-Check out the [deploy_pipeline module](https://github.com/Crown-Commercial-Service/CMpDevEnvironment/blob/develop/terraform/modules/deploy_pipeline/main.tf) for fully-working sample code. 
+Check out the [deploy_pipeline module](https://github.com/Crown-Commercial-Service/CMpDevEnvironment/blob/production/terraform/modules/deploy_pipeline/main.tf) for fully-working sample code. 
 
 ## What's included in this module?
 

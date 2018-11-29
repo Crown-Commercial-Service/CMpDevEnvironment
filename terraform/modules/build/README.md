@@ -55,7 +55,7 @@ Note the following parameters:
 
 You can find any other parameters in [variables.tf](variables.tf).
 
-Check out the [npm1 example](https://github.com/Crown-Commercial-Service/CMpDevEnvironment/blob/develop/terraform/build/npm1/main.tf) for fully-working sample code. 
+Check out the [npm1 example](https://github.com/Crown-Commercial-Service/CMpDevEnvironment/blob/production/terraform/build/npm1/main.tf) for fully-working sample code. 
 
 Also see [AWS CodeBuild Documentation](https://docs.aws.amazon.com/codebuild/latest/userguide/welcome.html) for additional information
 
