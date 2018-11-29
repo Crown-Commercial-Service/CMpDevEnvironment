@@ -14,7 +14,7 @@ variable "region" {
 data "aws_caller_identity" "current" {}
 
 variable "environment_name" {
-  default = "Development"
+  default = "Production"
 }
 
 ##############################################################
@@ -68,7 +68,7 @@ variable "app_cluster_instance_class" {
 }
 
 variable "app_cluster_instance_count" {
-  default = "2"
+  default = "3"
 }
 
 variable "app_cluster_key_name" {
@@ -88,11 +88,11 @@ variable "api_cluster_ami" {
 }
 
 variable "api_cluster_instance_class" {
-  default = "m4.large"
+  default = "t2.medium"
 }
 
 variable "api_cluster_instance_count" {
-  default = "2"
+  default = "1"
 }
 
 variable "api_cluster_key_name" {
