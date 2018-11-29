@@ -125,7 +125,7 @@ resource "aws_db_instance" "ccsdev_default_db" {
   vpc_security_group_ids    = ["${aws_security_group.vpc-CCSDEV-internal-PG-DB.id}"]
   db_subnet_group_name      = "${aws_db_subnet_group.ccsdev-database-subnets.id}"
   parameter_group_name      = "${aws_db_parameter_group.ccsdev-db-parameters.id}"
-  backup_retention_period   = 1
+  backup_retention_period   = "${var.default_db_retention_period}"
   backup_window             = "22:45-23:15"
   maintenance_window        = "sat:04:03-sat:04:33"
   final_snapshot_identifier = "${format("ccsdev-db-final-%s", md5(timestamp()))}"
