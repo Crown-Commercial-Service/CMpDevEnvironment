@@ -103,7 +103,7 @@ that is a member of all the CMp environment defined IAM groups.
 - To build and publish the example npm modules you will need an account and access token
 for npm
 - The CCSDEV environment repository is cloned from github at(https://github.com/Crown-Commercial-Service/CMpDevEnvironment). 
-- The 'master' branch of this repository is checked out.
+- The 'production' branch of this repository is checked out.
 - Thw AWS CLI or Terraform environment variables allows access to the AWS account are defined.
 - All EC2 Parameter store settings required by any applications or APIs are present.
 

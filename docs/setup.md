@@ -109,8 +109,7 @@ that allows the creation of IAM groups and policies.
 - The AWS CLI (https://aws.amazon.com/cli/) is useful but not required.
 - To build and publish the example npm modules you will need an account and access token
 for npm
-- The CCSDEV environment repository is checked out from github at(https://github.com/Crown-Commercial-Service/CMpDevEnvironment). The phase 2.2 release
-tag is ‘2.2.0’, however to aid future updates the ‘master’ branch should be checked out.
+- The CCSDEV environment repository is checked out from github at(https://github.com/Crown-Commercial-Service/CMpDevEnvironment). For production use the `production` branch must be checked out.
 
 
 ## Public Domain/Sub-domain Definition ##
