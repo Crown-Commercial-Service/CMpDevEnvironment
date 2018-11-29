@@ -142,6 +142,10 @@ variable "default_db_password" {
   default = ""
 }
 
+variable "default_db_retention_period" {
+  default = "1"
+}
+
 ##############################################################
 # Elastic Search Settings
 ##############################################################
