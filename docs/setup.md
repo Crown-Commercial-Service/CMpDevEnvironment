@@ -1,6 +1,6 @@
 # Crown Commercial AWS Environment #
 
-## Phase 2.2 Setup ##
+## Production Setup ##
 
 Version 1.
 
@@ -8,7 +8,7 @@ Version 1.
 
 ## Rowe IT ##
 
-## October 2018 ##
+## November 2018 ##
 
 ---
 
@@ -28,12 +28,9 @@ Version 1.
    - [Create EC2 Key Pairs](#create-ec2-key-pairs)
    - [Creating Infrastructure](#creating-infrastructure)
    - [Setting GitHub Access Token](#setting-github-access-token)
-   - [Setting NPM Access Token](#setting-npm-access-token)
    - [Defining additional parameter store entries](#defining-additional-parameter-store-entries)
-   - [Creating initial ‘App1’ build pipeline](#creating-initial-‘app1’-build-pipeline)
-   - [Creating initial ‘Api1’ build pipeline](#creating-initial-‘api1’-build-pipeline)
-   - [Creating initial ‘Npm’ build pipeline](#creating-initial-‘npm’-build-pipeline)
-   - [Creating initial ‘Ruby’ build pipeline](#creating-initial-‘ruby’-build-pipeline)
+   - [Creating Custom Ruby build image pipeline](#creating-‘custom-ruby-build-image’-build-pipeline)
+   - [Creating Marketplace application build pipeline](#creating-‘production-marketplace-application’-build-pipeline)
 - [Appendix 1 - Diagrams](#appendix-1---diagrams)
    - [Core AWS Infrastructure](#core-aws-infrastructure)
    - [ECS Clusters](#ecs-clusters)
@@ -69,27 +66,8 @@ This contains all the Terraform scripts used for building the AWS Infrastructure
 pipelines for the example applications. It also contains definitions of several AWS IAM
 security groups and policies.
 
-`CMpExampleNPMModule` :
-This contains an example NPM module that is referenced by the corresponding build/npm
-example pipeline.
-
-`CMpExampleApi1` :
-This contains an example api implemented using Java and Springboot. It is referenced by
-the corresponding build/api1 example pipeline.
-
-`CMpExampleApp1` : 
-This contains an example application implemented using nodeJS and Express. It is
-referenced by the corresponding build/app1 example pipeline. This example project uses the
-example NPM module and the GOV UK frontend toolkit.
-
-`CMpExampleApi2` : 
-This contains an example api implemented using Python and Flask. It is referenced by the
-corresponding build/api2 example pipeline.
-
-`CMpExampleApp2` : 
-This contains an example application implemented using Ruby on Rails. It is referenced by
-the corresponding build/app2 example pipeline. This example project uses the example
-NPM module and the GOV UK frontend toolkit.
+`crown-marketplace` : 
+This contains the actual Marketplace application. This is a Ruby application that is built using the custom build image defined in the `CMpDevBuildImage_Ruby` repository.
 
 `CMpDevBuildImage_Ruby` : 
 This contains a Dockerfile for creating a new build image that can be used by AWS Codebuild. This may be required when AWS to not provide a suitable build environment. For example, at present Ruby 2.5.3 is not supported by AWS.
@@ -285,16 +263,6 @@ contains the GitHub token.
 
 It is possible to define different tokens for different applications and APIs.
 
-## Setting NPM Access Token ##
-
-The NPM module example build pipeline requires access to the NPM repository site. This is
-controlled via a token; these tokens are stored in the AWS EC2 Parameter store.
-
-A token must be added because the NPM pipeline example can be created.
-
-Create a `secure string` entry in the EC2 Parameter store called `ccs-build_npm_token` that
-contains the NPM token.
-
 ## Defining additional parameter store entries ##
 
 Some application and Api build pipelines may require additional environment variables passed to the
@@ -313,66 +281,14 @@ These can be defined in the EC2 Parameter store as follows:
 
 `/Environment/global/{variable name}`
 
-## Creating initial ‘App1’ build pipeline ##
-
-This uses the Terraform scripts in `terraform/build/app1`.
-
-It will create a build pipe line for an example ‘app’ called ‘app1’.
-
-The contents of the `main.tf` file may need to be reviewed if creating a pipeline for a branch other
-than `master`.
-
-1. Ensure the AWS access keys are configured as described previously.
-2. Ensure the GitHub token is stored in the parameter store.
-3. Ensure the command prompt is open in the `build/app1` directory.
-4. Run `terraform init` to install and configure the required providers.
-5. Run `terraform apply`.
-6. Enter `yes` when prompted.
-7. The example `app1` build pipe line will now be created. This can take a while.
-
-This will result in a build pipe line being created and, eventually, the example `app1` being deployed
-into the `app` cluster.
-
-## Creating initial ‘Api1’ build pipeline ##
-
-This uses the Terraform scripts in `terraform/build/api1`.
-
-It will create a build pipe line for an example ‘api’ called ‘api1’.
-
-The contents of the `main.tf` file may need to be reviewed if creating a pipeline for a branch other
-than `master`.
-
-1. Ensure the AWS access keys are configured as described previously.
-2. Ensure the GitHub token is stored in the parameter store.
-3. Ensure the command prompt is open in the `build/api1` directory.
-4. Run `terraform init` to install and configure the required providers.
-5. Run `terraform apply`.
-6. Enter `yes` when prompted.
-7. The example `api1` build pipe line will now be created. This can take a while.
-
-This will result in a build pipe line being created and, eventually, the example `api1` being deployed
-into the `api` cluster.
-
-## Creating initial ‘Npm’ build pipeline ##
-
-This uses the Terraform scripts in `terraform/build/npm1`.
-
-It will create a build pipe line for an example NPM module called ‘npm1’.
-
-1. Ensure the AWS access keys are configured as described previously.
-2. Ensure the GitHub token is stored in the parameter store.
-3. Ensure the `ccs-build_npm_token` value is defined in the EC2 Parameter store.
-4. Ensure the command prompt is open in the `build/npm1` directory.
-5. Run `terraform init` to install and configure the required providers.
-6. Run `terraform apply`.
-7. Enter `yes` when prompted.
-8. The example `npm1` build pipe line will now be created. This can take a while.
-
-## Creating initial Ruby build pipeline ##
+## Creating ‘Custom Ruby Build Image’ build pipeline ##
 
 This uses the Terraform scripts in `terraform/build/image-ruby`.
 
-It will create a build pipe line for an AWS build image called 'ccs/ruby'. Once build this will result in a new AWS Build image that can be specified by other applications or APIs.
+It will create a build pipe line for a custom build image using in the pipeline for the Marketplace application.
+
+The contents of the `main.tf` file may need to be reviewed if creating a pipeline for a branch other
+than `master`.
 
 1. Ensure the AWS access keys are configured as described previously.
 2. Ensure the GitHub token is stored in the parameter store.
@@ -380,8 +296,29 @@ It will create a build pipe line for an AWS build image called 'ccs/ruby'. Once 
 4. Run `terraform init` to install and configure the required providers.
 5. Run `terraform apply`.
 6. Enter `yes` when prompted.
-7. The example `ruby-pipeline` build pipe line will now be created. This can take a while.
-8. Once build the the reulting images can be specified in an applications or APIs Terraform using the 'build_image' setting.
+7. The build pipe line will now be created. This can take a while.
+
+This will result in a custom build image being built and stored in the AWS Elastic Container Registry (ECR).
+
+## Creating ‘Production Marketplace Application’ build pipeline ##
+
+This uses the Terraform scripts in `terraform/build/crown-marketplace-production`.
+
+It will create a build pipe line for the main Marketplace application built from the 'production' branch.
+
+The contents of the `main.tf` file may need to be reviewed if creating a pipeline for a branch other
+than `production`.
+
+1. Ensure the AWS access keys are configured as described previously.
+2. Ensure the GitHub token is stored in the parameter store.
+3. Ensure the command prompt is open in the `build/crown-marketplace-production` directory.
+4. Run `terraform init` to install and configure the required providers.
+5. Run `terraform apply`.
+6. Enter `yes` when prompted.
+7. The build pipe line will now be created. This can take a while.
+
+This will result in the application being built, tested and deployed to the Application cluster.
+
 
 # Appendix 1 - Diagrams #
 

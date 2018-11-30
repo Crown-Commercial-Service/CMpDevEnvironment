@@ -99,6 +99,28 @@ When the infrastructure scripts are executed a number of settings are written to
 
 ---
 
+## Marketplace Build Pipelines
+`/terraform/build`
+
+There are two build projects needed to deploy the Marketplace application, a custom build image for Ruby projects and the actual Marketplace application.
+
+### image-ruby
+`/terraform/build/image-ruby`
+
+This pipeline generates a custom AWS CodeBuild image that is used to build and test the main marketplace application. This pipeline must be deployed and a build successfully completed before the application pipeline can be created.
+
+### crown-marketplace
+`/terraform/build/crown-marketplace`
+
+This is the main Marketplace application that is built from the master branch of the crown-marketplace repository.
+
+### crown-marketplace-production
+`/terraform/build/crown-marketplace-production`
+
+This is the main Marketplace application that will, eventually, build from the production branch of the crown-marketplace repository.
+
+---
+
 ## Build Pipeline Examples
 `/terraform/build`
 
