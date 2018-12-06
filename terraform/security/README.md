@@ -13,6 +13,7 @@ The following groups are created:
 - CCS_Code_Build_Pipeline
 - CCS_Code_Build_Pipeline
 - CCS_Cognito_Administration
+- CCS_Terraform_Execution
 
 Where possible pre-existing, AWS defined, policies have been assigned to these groups. Custom policies that related to specific infrastructure have been avoided but cannot be ruled out in the future.
 
@@ -91,4 +92,13 @@ This group provides access to the AWS Cognito service. This service provides aut
 The following policies are attached:
 
 - AmazonCognitoPowerUser
+
+### CCS_Terraform_Execution ###
+Membership of this group is required for users who need to execute the Terraform scripts, it allows them to access
+the shared state information. The AWS user who initially created the environment will already have suitable permissions.
+
+The following policies are attached:
+
+- AmazonS3FullAccess
+- AmazonDynamoDBFullAccess 
 
