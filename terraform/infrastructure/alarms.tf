@@ -22,9 +22,10 @@ resource "aws_sns_topic" "ccsdev_alarm_topic" {
 
   policy = <<EOF
   {
+    "Version": "2008-10-17",
     "Statement":[
         {
-          "Sid":"__default_statement_ID",
+          "Sid":"Allow_Access",
           "Effect":"Allow",
           "Principal":{
               "AWS":"*"
@@ -59,8 +60,8 @@ resource "aws_sns_topic" "ccsdev_alarm_topic" {
     ]
   }
   EOF
-}
 
+}
 
 ########################################################
 # Alaram:
