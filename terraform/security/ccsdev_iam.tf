@@ -117,7 +117,7 @@ data "aws_iam_policy_document" "CCSDEV_policy_doc_kms_full" {
 #   AmazonRDSFullAccess
 #   AmazonESFullAccess
 #   CloudWatchLogsFullAccess
-#   IAM limited access - custom policy
+#   Various custom policy settings
 #
 ##############################################################
 
@@ -176,19 +176,20 @@ resource "aws_iam_group_policy_attachment" "infra_admin_logs_full" {
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
 }
 
-resource "aws_iam_group_policy_attachment" "infra_admin_iam" {
+resource "aws_iam_group_policy_attachment" "infra_admin_custom" {
   group      = "${aws_iam_group.CCSDEV_iam_infra_admin.name}"
-  policy_arn = "${aws_iam_policy.CCSDEV_policy_infra_iam.arn}"
+  policy_arn = "${aws_iam_policy.CCSDEV_policy_infra_custom.arn}"
 }
 
-resource "aws_iam_policy" "CCSDEV_policy_infra_iam" {
-  name   = "CCSDEV_policy_infra_iam"
+resource "aws_iam_policy" "CCSDEV_policy_infra_custom" {
+  name   = "CCSDEV_policy_infra_custom"
   path   = "/"
-  policy = "${data.aws_iam_policy_document.CCSDEV_policy_doc_infra_iam.json}"
+  policy = "${data.aws_iam_policy_document.CCSDEV_policy_doc_infra_custom.json}"
 }
 
-data "aws_iam_policy_document" "CCSDEV_policy_doc_infra_iam" {
+data "aws_iam_policy_document" "CCSDEV_policy_doc_infra_custom" {
 
+  # GetInstanceProfile for cluster updates
   statement {
 
     effect = "Allow",
@@ -200,6 +201,20 @@ data "aws_iam_policy_document" "CCSDEV_policy_doc_infra_iam" {
 		"arn:aws:iam::*:instance-profile/*"
     ]
   }
+
+  # SNS Topic creation for alarams
+  statement {
+
+    actions = [
+        "sns:CreateTopic",
+        "events:*"
+    ]
+
+    resources = [
+		"*"
+    ]
+  }
+
 
 }
 
