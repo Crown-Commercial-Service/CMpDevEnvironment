@@ -103,7 +103,7 @@ module "build" {
 ##############################################################
 resource "aws_cloudwatch_log_group" "component" {
   name = "/${var.prefix}/${var.name}"
-  retention_in_days = 3
+  retention_in_days = "${var.log_retention}"
   
   tags {
     Name = "Infrastructure configured Cloudwatch Log Group"
