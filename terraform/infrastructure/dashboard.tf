@@ -5,38 +5,12 @@
 ##############################################################
 
 resource "aws_cloudwatch_dashboard" "CCSDEV-Dashboard" {
-  dashboard_name = "CCSDEV-Dashboard"
+
+  dashboard_name = "CCS-CMp-${var.environment_name}"
 
   dashboard_body = <<EOF
 {
     "widgets": [
-        {
-            "type": "metric",
-            "x": 0,
-            "y": 0,
-            "width": 18,
-            "height": 6,
-            "properties": {
-                "metrics": [
-                    [ "AWS/ECS", "CPUUtilization", "ServiceName", "cmp", "ClusterName", "${aws_ecs_cluster.CCSDEV_app_cluster.name}", { "period": 60 } ],
-                    [ ".", "MemoryUtilization", ".", ".", ".", ".", { "period": 60, "yAxis": "right" } ]
-                ],
-                "view": "timeSeries",
-                "stacked": false,
-                "region": "${var.region}",
-                "yAxis": {
-                    "left": {
-                        "min": 0
-                    },
-                    "right": {
-                        "max": 100,
-                        "min": 0
-                    }
-                },
-                "title": "Market Place Service CPU and Memory Utilisation",
-                "period": 300
-            }
-        },
         {
             "type": "metric",
             "x": 0,
@@ -143,7 +117,7 @@ resource "aws_cloudwatch_dashboard" "CCSDEV-Dashboard" {
         {
             "type": "metric",
             "x": 0,
-            "y": 6,
+            "y": 12,
             "width": 18,
             "height": 6,
             "properties": {
@@ -168,7 +142,7 @@ resource "aws_cloudwatch_dashboard" "CCSDEV-Dashboard" {
         {
             "type": "metric",
             "x": 0,
-            "y": 12,
+            "y": 6,
             "width": 18,
             "height": 6,
             "properties": {

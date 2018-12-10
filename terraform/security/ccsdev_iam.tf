@@ -19,6 +19,7 @@ provider "aws" {
 #     CCS_User_Administration
 #     CCS_Code_Build_Pipeline
 #     CCS_Cognito_Administration
+#     CCS_Terraform_Execution
 #
 #   Users?
 #
@@ -116,6 +117,7 @@ data "aws_iam_policy_document" "CCSDEV_policy_doc_kms_full" {
 #   AmazonRDSFullAccess
 #   AmazonESFullAccess
 #   CloudWatchLogsFullAccess
+#   Various custom policy settings
 #
 ##############################################################
 
@@ -173,6 +175,49 @@ resource "aws_iam_group_policy_attachment" "infra_admin_logs_full" {
   group      = "${aws_iam_group.CCSDEV_iam_infra_admin.name}"
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
 }
+
+resource "aws_iam_group_policy_attachment" "infra_admin_custom" {
+  group      = "${aws_iam_group.CCSDEV_iam_infra_admin.name}"
+  policy_arn = "${aws_iam_policy.CCSDEV_policy_infra_custom.arn}"
+}
+
+resource "aws_iam_policy" "CCSDEV_policy_infra_custom" {
+  name   = "CCSDEV_policy_infra_custom"
+  path   = "/"
+  policy = "${data.aws_iam_policy_document.CCSDEV_policy_doc_infra_custom.json}"
+}
+
+data "aws_iam_policy_document" "CCSDEV_policy_doc_infra_custom" {
+
+  # GetInstanceProfile for cluster updates
+  statement {
+
+    effect = "Allow",
+    actions = [
+                "iam:GetInstanceProfile"
+    ]
+
+    resources = [
+		"arn:aws:iam::*:instance-profile/*"
+    ]
+  }
+
+  # SNS Topic creation for alarams
+  statement {
+
+    actions = [
+        "sns:CreateTopic",
+        "events:*"
+    ]
+
+    resources = [
+		"*"
+    ]
+  }
+
+
+}
+
 
 ##############################################################
 # KMS Policy to allow access for developers to Parameter Store
@@ -522,3 +567,27 @@ data "aws_iam_policy_document" "CCSDEV_policy_doc_topic_subscription" {
 
 }
 
+##############################################################
+# Terraform Execution Group
+#
+# Users in this group are able to execute Terraform scripts
+# These usrs require access to IAM, S3 and DynamoDB to be able to
+# Execute the bootstrap process to accesss state information
+#
+#   AmazonS3FullAccess
+#   AmazonDynamoDBFullAccess 
+##############################################################
+
+resource "aws_iam_group" "CCSDEV_iam_terraform_exec" {
+  name = "CCS_Terraform_Execution"
+}
+
+resource "aws_iam_group_policy_attachment" "terraform_exec_s3_full" {
+  group      = "${aws_iam_group.CCSDEV_iam_terraform_exec.name}"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+}
+
+resource "aws_iam_group_policy_attachment" "terraform_exec_dynamodb_full" {
+  group      = "${aws_iam_group.CCSDEV_iam_terraform_exec.name}"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"
+}
