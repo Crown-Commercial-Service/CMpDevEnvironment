@@ -21,6 +21,7 @@ resource "aws_sns_topic" "pipeline_success_topic" {
 
   policy = <<EOF
   {
+    "Version": "2008-10-17",
     "Statement":[
         {
           "Sid":"__default_statement_ID",
@@ -114,6 +115,7 @@ resource "aws_sns_topic" "pipeline_failure_topic" {
 
   policy = <<EOF
   {
+    "Version": "2008-10-17",
     "Statement":[
         {
           "Sid":"__default_statement_ID",
