@@ -243,6 +243,7 @@ module "routing" {
   type     = "${var.type}"
   name     = "${var.name}"
   domain   = "${local.config_domain}"
+  catch_all = "${var.catch_all}"
   hostname = "${local.config_hostname}"
   port     = "${var.port}"
   protocol = "${local.config_protocol}"

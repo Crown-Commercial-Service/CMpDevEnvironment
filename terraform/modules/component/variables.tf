@@ -31,6 +31,15 @@ variable hostname {
 }
 
 ##############################################################
+# If true and additional rule will be added at the end of 
+# the routing rules with a host of *
+##############################################################
+variable catch_all {
+    type = "string"
+    default = false
+}
+
+##############################################################
 # Build Type (docker, java, etc.) see build module for options
 ##############################################################
 variable build_type {

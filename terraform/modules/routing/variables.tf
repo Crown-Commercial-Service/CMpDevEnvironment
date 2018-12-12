@@ -29,6 +29,15 @@ variable hostname {
 }
 
 ##############################################################
+# If true and additional rule will be added at the end of 
+# the routing rules with a host of *
+##############################################################
+variable catch_all {
+    type = "string"
+    default = false
+}
+
+##############################################################
 # Port that the component will be accessible through
 ##############################################################
 variable port {

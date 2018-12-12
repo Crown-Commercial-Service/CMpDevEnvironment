@@ -23,6 +23,9 @@ module "routing" {
   # Specify the hostname that the rule and target group should point at
   hostname = "application"
 
+# Setting this to true will generate an additional rule for *.domain to this application or container.
+  catch_all = false
+
   # Specify the port that the rule will apply to.
   port     = "80"
 
