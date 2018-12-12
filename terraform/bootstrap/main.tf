@@ -122,6 +122,15 @@ module "cmp_backend" {
     path      = "${path.module}"
 }
 
+module "cmp_maintenance_backend" {
+    source    = "./backend"
+
+    bucket    = "${local.bucket_name}"
+    component = "build/cmp-maintenance"
+    region    = "${local.region}"
+    path      = "${path.module}"
+}
+
 module "image-ruby_backend" {
     source    = "./backend"
 

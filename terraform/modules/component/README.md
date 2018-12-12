@@ -23,6 +23,9 @@ module "build_pipeline" {
   # Specify the hostname that the component should be hosted at, default to the name if not specified
   hostname = "application"
 
+  # Setting this to true will generate an additional rule for *.domain to this application or container.
+  catch_all = false
+
   # Specify the type of build (This can be the prefix of any buildspec.yml file within the build module directory).
   build_type = "ruby"
 

@@ -5,6 +5,9 @@
 ##############################################################
 # Load Balancer configuration
 ##############################################################
+locals {
+  provision_https_certificates = "${upper(var.protocol) == "HTTPS" ? 1 : 0}"
+}
 resource "aws_alb_target_group" "component" {
   name                 = "CCSDEV-${var.type}-cl-alb-${var.name}-tg"
   port                 = "${var.port}"
@@ -43,6 +46,24 @@ resource "aws_alb_listener_rule" "http_subdomain_rule" {
   }
 }
 
+resource "aws_alb_listener_rule" "http_subdomain_catchall_rule" {
+  count = "${(local.provision_https_certificates == 0) && var.catch_all ? 1 : 0}"
+
+  priority = 9999
+
+  listener_arn = "${data.aws_alb_listener.http_listener.arn}"
+
+  action {
+    type             = "forward"
+    target_group_arn = "${aws_alb_target_group.component.arn}"
+  }
+
+  condition {
+    field  = "host-header"
+    values = ["*.${var.domain}"]
+  }
+}
+
 resource "aws_alb_listener_rule" "http_subdomain_redirect_rule" {
   count = "${local.provision_https_certificates}"
   listener_arn = "${data.aws_alb_listener.http_listener.arn}"
@@ -62,8 +83,27 @@ resource "aws_alb_listener_rule" "http_subdomain_redirect_rule" {
   }
 }
 
-locals {
-  provision_https_certificates = "${upper(var.protocol) == "HTTPS" ? 1 : 0}"
+resource "aws_alb_listener_rule" "http_subdomain_redirect_catchall_rule" {
+
+  count = "${local.provision_https_certificates && var.catch_all ? 1 : 0}"
+
+  priority = 9999
+
+  listener_arn = "${data.aws_alb_listener.http_listener.arn}"
+
+  action {
+    type = "redirect"
+    redirect {
+      port = "443"
+      protocol = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
+
+  condition {
+    field  = "host-header"
+    values = ["*.${var.domain}"]
+  }
 }
 
 data "aws_alb_listener" "https_listener" {
@@ -86,6 +126,27 @@ resource "aws_alb_listener_rule" "https_subdomain_rule" {
     values = ["${var.hostname}.${var.domain}"]
   }
 }
+
+resource "aws_alb_listener_rule" "https_subdomain_catchall_rule" {
+
+  count = "${local.provision_https_certificates && var.catch_all ? 1 : 0}"
+
+  priority = 9999
+
+  listener_arn = "${data.aws_alb_listener.https_listener.arn}"
+
+  action {
+    type             = "forward"
+    target_group_arn = "${aws_alb_target_group.component.arn}"
+  }
+
+  condition {
+    field  = "host-header"
+    values = ["*.${var.domain}"]
+  }
+}
+
+
 ##############################################################
 # DNS configuration
 ##############################################################
