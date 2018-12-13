@@ -139,6 +139,15 @@ module "cmp_maintenance_backend" {
     path      = "${path.module}"
 }
 
+module "cmp_supply_teacher_upload_backend" {
+    source    = "./backend"
+
+    bucket    = "${local.bucket_name}"
+    component = "build/upload-supply-teacher-data"
+    region    = "${local.region}"
+    path      = "${path.module}"
+}
+
 module "image-ruby_backend" {
     source    = "./backend"
 
