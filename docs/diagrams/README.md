@@ -11,6 +11,8 @@ Draw IO file containing the following pages:
 
 * `ccs_aws_v1-App_Api Pipeline.png` : Build pipelines
 
+* `ccs_aws_v1-Data Import.png` : Build pipelines for import application data
+
 # ccs_aws_v1_ScriptFlow.xml #
 Draw IO file containing the following diagram:
 
