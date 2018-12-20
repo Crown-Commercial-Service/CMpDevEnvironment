@@ -1,6 +1,6 @@
-# Crown Commercial AWS Environment #
+# Crown Commercial CMp Platform #
 
-## Phase 2.2 Setup ##
+## Setup Instructions ##
 
 Version 1.
 
@@ -8,7 +8,7 @@ Version 1.
 
 ## Rowe IT ##
 
-## October 2018 ##
+## December 2018 ##
 
 ---
 
