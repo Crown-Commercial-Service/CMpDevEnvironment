@@ -9,13 +9,13 @@ module "upload" {
   # source = "git::https://github.com/Crown-Commercial-Service/CMpDevEnvironment.git//terraform/modules/image"
   source = "../../modules/upload"
 
-  environment_name = "Development"
+  environment_name = "Production"
 
   prefix = "ccs"
   name = "upload-supply-teacher"
   github_owner = "Crown-Commercial-Service"
   github_repo = "crown-marketplace-data"
-  github_branch = "master"
+  github_branch = "production"
   github_token_alias = "ccs-build_github_token"
 
   # Upload the standard data file to cmpupload API for supply teachers
