@@ -33,8 +33,11 @@ The following groups are created:
 - CCS_API_Developer
 - CCS_Code_Build_Pipeline
 - CCS_Cognito_Administration
+- CCS_Terraform_Execution
 
 Only a very small number of users should be a member of the system administration group. To have complete system administration privileges a user will need to be a member of the system administration, infrastructure administration and code build pipeline groups.
+
+The `CCS_Terraform_Execution` group is available to give additional AWS users the capability to run Terraform scripts via the shared-state.
 
 Note that members of the user administration group are not able to add users to the system administration group.
 
@@ -188,6 +191,28 @@ The produced image can be used in subsequent component builds by setting the `bu
 
 `build_image = "ccs/ruby"`
 
+### Maintenance/Service Unavailable Application ###
+`/terraform/build/cmp-maintenance`
+
+This uses the contents of the `crown-marketplace-maintenance` to build and deploy a small nodeJS application that displays a static HTML page. The file `main.tf` contains a setting, `catch_all` that will configure the application load balancer to direct any request to a non-existant application to this page.
+
+**NOTE** : The operation of the `catch-all` settings is dependent on the ordering of rules within the application load balancer listener rules. It is not always possible for Terraform to maintain this list in the correct order.
+
+### Crown Marketplace Application ###
+`/terraform/build/crown-marketplace`
+
+This is the actual Marketplace application taken from the `crown-marketplace` repository. It is a Ruby application and the build pipeline will use the custom Ruby build image described previously. This must be available as an image in the AWS Elastic Container Repository (ECR) before the application pipeline is created.
+
+### Crown Marketplace Data Upload Application ###
+`/terraform/build/crown-marketplace-upload`
+
+This is the actual Marketplace application taken from the `crown-marketplace` repository. However it is deployed to the `API Cluster` and, as can be seen in the file `main.tf`, sets the `APP_HAS_UPLOAD_PRIVILEGES` environment variable. This allows it to be used to upload data to the marketplace application. Because it is deployed to the `API Cluster` this capability can only be accessed from within the VPC.  
+
+### Uploading Supply Teacher Data ###
+`/terraform/build/upload-supply-teacher-data`
+
+This pipeline uses the `crown-marketplace-data` repository to detect changes to the data available for the application and, when changes are committed, will upload the supply teacher related data to the application by POSTing the data to the Marketplace  application deployed to the `API Cluster`. The data is uploaded using the same process described in the `crown-marketplace` repository documentation. 
+
 ---
 
 ## Build Pipeline Notifications
@@ -277,6 +302,8 @@ ENV BUILD_PACKAGES curl-dev ruby-dev postgresql-dev build-base tzdata
 # Update and install base packages
 RUN apk update && apk upgrade && apk add bash $BUILD_PACKAGES nodejs-current-npm git
 ```
+
+**NOTE**: For a change to a variable defined in this way to take affect the application/API the build pipeline must executed. This will require either a change in the source repository, or more simply, the selection of the `Release change` option from the CodePipeline area of the AWS Console.
 
 
 
