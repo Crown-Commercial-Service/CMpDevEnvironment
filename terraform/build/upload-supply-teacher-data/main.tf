@@ -9,7 +9,7 @@ module "upload" {
   # source = "git::https://github.com/Crown-Commercial-Service/CMpDevEnvironment.git//terraform/modules/image"
   source = "../../modules/upload"
 
-  environment_name = "Development"
+  environment_name = "Preview"
 
   prefix = "ccs"
   name = "upload-supply-teacher"

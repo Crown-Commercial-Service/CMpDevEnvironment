@@ -2,6 +2,8 @@ module "component" {
     # source = "git::https://github.com/Crown-Commercial-Service/CMpDevEnvironment.git//terraform/modules/component"
     source = "../../modules/component"
 
+    environment_name = "Preview"
+
     type = "app"
     prefix = "ccs"
     name = "cmp"
