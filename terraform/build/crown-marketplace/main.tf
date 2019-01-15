@@ -7,18 +7,19 @@ module "component" {
     type = "app"
     prefix = "ccs"
     name = "cmp"
+    hostname = "marketplace"
     build_type = "custom"
     build_image = "ccs/ruby"
     github_owner = "Crown-Commercial-Service"
     github_repo = "crown-marketplace"
-    github_branch = "master"
+    github_branch = "preview"
     github_token_alias = "ccs-build_github_token"
     cluster_name = "CCSDEV_app_cluster"
-    task_count = 2
-    autoscaling_max_count = 4
+    log_retention = "3"
+    task_count = 3
     enable_tests = true
     enable_cognito_support = true
-    cognito_login_callback = "auth/cognito/callback"
+    cognito_login_callback = "auth/cognito/callback"    
     environment = [
       {
         name = "RAILS_ENV",

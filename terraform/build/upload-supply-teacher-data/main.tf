@@ -15,7 +15,7 @@ module "upload" {
   name = "upload-supply-teacher"
   github_owner = "Crown-Commercial-Service"
   github_repo = "crown-marketplace-data"
-  github_branch = "master"
+  github_branch = "preview"
   github_token_alias = "ccs-build_github_token"
 
   # Upload the standard data file to cmpupload API for supply teachers
