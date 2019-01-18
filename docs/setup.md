@@ -1,6 +1,6 @@
-# Crown Commercial AWS Environment #
+# Crown Commercial CMp Platform #
 
-## Phase 2.2 Setup ##
+## Setup Instructions ##
 
 Version 1.
 
@@ -8,7 +8,7 @@ Version 1.
 
 ## Rowe IT ##
 
-## October 2018 ##
+## December 2018 ##
 
 ---
 
@@ -30,14 +30,15 @@ Version 1.
    - [Setting GitHub Access Token](#setting-github-access-token)
    - [Setting NPM Access Token](#setting-npm-access-token)
    - [Defining additional parameter store entries](#defining-additional-parameter-store-entries)
-   - [Creating initial ‘App1’ build pipeline](#creating-initial-‘app1’-build-pipeline)
-   - [Creating initial ‘Api1’ build pipeline](#creating-initial-‘api1’-build-pipeline)
-   - [Creating initial ‘Npm’ build pipeline](#creating-initial-‘npm’-build-pipeline)
-   - [Creating initial ‘Ruby’ build pipeline](#creating-initial-‘ruby’-build-pipeline)
+   - [Creating Marketplace Application build pipelines](#creating-marketplace-application-build-pipelines)
+   - [Creating example application and API build pipelines](#creating-example-application-and-api-build-pipelines)
+
+
 - [Appendix 1 - Diagrams](#appendix-1---diagrams)
    - [Core AWS Infrastructure](#core-aws-infrastructure)
    - [ECS Clusters](#ecs-clusters)
    - [App and Api Build Pipelines](#app-and-api-build-pipelines)
+   - [Data Upload Build Pipelines](#data-upload-build-pipelines)
 
 ---
 
@@ -48,7 +49,7 @@ Cloud (VPC), one for `applications` and the other for `apis`. Load balancers are
 deployed containers within the clusters. Example application and apis are provided along with
 corresponding AWS CodePipeline/Codebuild definitions.
 
-Example instances of an RDS Postgres databases and Elastic Search instances are created.
+Instances of an RDS Postgres databases and Elastic Search instances are also created when required. Note that Elastic Search is not currently being used by any applications or APIs so is not created by default..
 
 All of the required AWS assets are created using Terraform scripts except for SSH ‘key pairs’ and a
 public hosted zone with the Route 53 DNS service.
@@ -68,6 +69,34 @@ specific instructions.
 This contains all the Terraform scripts used for building the AWS Infrastructure and the build
 pipelines for the example applications. It also contains definitions of several AWS IAM
 security groups and policies.
+
+There are number of important branches in this repository:
+
+ - `master` : The latest release and is used directly in development and test environments.
+ - `production` : The latest release within any production environment specific changes.
+ - `develop` : Used for ongoing development of the Terraform scripts.
+ 
+ Other feature branches are used as required.
+
+## Production Application Repositories ##
+
+These repositories are required to build and deploy a working Marketplace application.
+
+`CMpDevBuildImage_Ruby` : 
+This contains a Dockerfile for creating a new build image that can be used by AWS Codebuild. This may be required when AWS to not provide a suitable build environment. For example, at present Ruby 2.5.3 is not supported by AWS.
+
+`crown-marketplace` :
+This contains the actual Marketplace application. It is used by two build pipelines, one to deploy it as as an application accessible from the public Internet and one to deploy a single instance as an 'API' with restricted access for the uploading of data.
+
+`crown-marketplace-data` :
+This is a *private* repository. It contains scripts for building data files in `JSON` format relating to different frameworks. These data files contain the data that is actually uploaded to the Marketplace application.
+
+`CMpDevEnvironment_Private` :
+This is a *private* repository. It contains Terraform configuration files used for the development, test and production environments. These files will define any IP restrictions relating to each environment. This repository also contains load testing scripts relating to the Marketplace application.
+
+## Example Application and API Repositories ##
+
+These repositories contain example applications and APIs implemented using various technologies. **They must NOT be deployed to any system accessible from the public Internet without any IP restrictions.**
 
 `CMpExampleNPMModule` :
 This contains an example NPM module that is referenced by the corresponding build/npm
@@ -91,10 +120,6 @@ This contains an example application implemented using Ruby on Rails. It is refe
 the corresponding build/app2 example pipeline. This example project uses the example
 NPM module and the GOV UK frontend toolkit.
 
-`CMpDevBuildImage_Ruby` : 
-This contains a Dockerfile for creating a new build image that can be used by AWS Codebuild. This may be required when AWS to not provide a suitable build environment. For example, at present Ruby 2.5.3 is not supported by AWS.
-
-
 # Setting up CCSDEV on a new AWS Account #
 
 ## Assumptions ##
@@ -109,9 +134,17 @@ that allows the creation of IAM groups and policies.
 - The AWS CLI (https://aws.amazon.com/cli/) is useful but not required.
 - To build and publish the example npm modules you will need an account and access token
 for npm
-- The CCSDEV environment repository is checked out from github at(https://github.com/Crown-Commercial-Service/CMpDevEnvironment). The phase 2.2 release
-tag is ‘2.2.0’, however to aid future updates the ‘master’ branch should be checked out.
+- The CCSDEV environment repository is checked out from github at(https://github.com/Crown-Commercial-Service/CMpDevEnvironment). 
 
+## Determining correct `CMpDevEnvironment` branch ##
+
+It is import that the correct branch of the `CMpDevEnvironment` is used. This is selected using the `git checkout` command.
+
+- Development : `git checkout master`
+- Test : `git checkout master`
+- Production : `git checkout production`
+
+ If there is any doubt about the local checkout being up to date then the `git pull origin <branch name>` should be used.
 
 ## Public Domain/Sub-domain Definition ##
 
@@ -248,7 +281,7 @@ The typical settings for development to cmpdev.crowncommercial.gov.uk are shown 
     "office" = "192.0.2.0/24"
     "guests" = "198.51.100.0/24"
 }
-domain_name = "cmpdev.crowncommercial.gov.uk"
+domain_name = "service.crowncommercial.gov.uk"
 domain_internal_prefix = "internal"
 enable_https = true
 ```
@@ -288,6 +321,8 @@ It is possible to define different tokens for different applications and APIs.
 
 ## Setting NPM Access Token ##
 
+> Note: No NPM modules are being build for use with the Marketplace application at present. An NPM token is only required if using the example NPM module project. Thus in most cases this is not required.
+
 The NPM module example build pipeline requires access to the NPM repository site. This is
 controlled via a token; these tokens are stored in the AWS EC2 Parameter store.
 
@@ -306,7 +341,7 @@ These can be defined in the EC2 Parameter store as follows:
 `/Environment/ccs/{app or api name}/{variable name}`
 
 To create an environment variable called TEST_VAR for the ‘app1’ example the following Parameter
-store entry should be added: `/Environment/ccs/app1/TEST_VAR`
+store entry should be added: `/Environment/ccs/app1/TEST_VAR`.
 
 It is also possible to define global environment variables that will be passed to all containers.
 
@@ -314,7 +349,96 @@ These can be defined in the EC2 Parameter store as follows:
 
 `/Environment/global/{variable name}`
 
-## Creating initial ‘App1’ build pipeline ##
+### Marketplace Application Environment Variables ###
+The Marketplace application required a number of variables to be set. These are documented in the `crown-marketplace` repository but include:
+
+- GOOGLE_GEOCODING_API_KEY
+- GA_TRACKING_ID
+- SECRET_KEY_BASE
+- HTTP_BASIC_AUTH_NAME
+- HTTP_BASIC_AUTH_PASSWORD
+- SUPPLY_TEACHERS_COGNITO_ENABLED
+- DFE_SIGNIN_URL
+- DFE_SIGNIN_CLIENT_ID
+- DFE_SIGNIN_CLIENT_SECRET
+- DFE_SIGNIN_REDIRECT_URI
+- DFE_SIGNIN_WHITELISTED_EMAIL_ADDRESSES
+
+**These should all be created in the EC2 parameter store before attempting to create the build pipelines.**
+
+> Note: Various AWS Cognito variables are configured automatically by the Terraform scripts and do not need to be configured manually.
+
+There are two build pipeline for the Marketplace application, one for the actually application and one as an API for uploading data. In the EC2 parameter store environment variables for these will have the prefix and `/Environment/ccs/cmp/` and `/Environment/ccs/cmpupload/`. **Currently the environment variables must be defined for BOTH.**
+
+## Creating Marketplace Application build pipelines ##
+
+### Creating Ruby build pipeline ###
+
+This uses the Terraform scripts in `terraform/build/image-ruby`.
+
+It will create a build pipe line for an AWS build image called 'ccs/ruby'. Once build this will result in a new AWS Build image that can be specified by other applications or APIs.
+
+1. Ensure the AWS access keys are configured as described previously.
+2. Ensure the GitHub token is stored in the parameter store.
+3. Ensure the command prompt is open in the `build/image-ruby` directory.
+4. Run `terraform init` to install and configure the required providers.
+5. Run `terraform apply`.
+6. Enter `yes` when prompted.
+7. The `ruby-pipeline` build pipe line will now be created. This can take a while.
+8. Once built the the resulting images can be specified in an applications or APIs Terraform using the 'build_image' setting.
+
+> Note: This pipeline should be created and allowed to execute before deploying any of the other pipelines.
+
+### Creating Marketplace Application build pipeline ###
+
+This uses the Terraform scripts in `terraform/build/crown-marketplace`.
+
+It will create a build pipe line for the main Crown Marketplace application.
+
+1. Ensure the AWS access keys are configured as described previously.
+2. Ensure the GitHub token is stored in the parameter store.
+3. Ensure that all the required environment variables are defined in the EC2 parameter store for the application `cmp`.
+4. Ensure the command prompt is open in the `build/crown-marketplace` directory.
+5. Run `terraform init` to install and configure the required providers.
+6. Run `terraform apply`.
+7. Enter `yes` when prompted.
+8. The `cmp-pipeline` build pipeline will now be created. This can take a while.
+9. Once built the application will be deployed and can be accessed on the correct URL for the environment, for example, `marketplace.service.crowncommercial.gov.uk` in the production environment.
+
+### Creating Marketplace data upload API build pipeline ###
+
+This uses the Terraform scripts in `terraform/build/crown-marketplace-upload`.
+
+It will create a build pipe line for the Crown Marketplace application into the API Cluster with the data upload capability enabled.
+
+1. Ensure the AWS access keys are configured as described previously.
+2. Ensure the GitHub token is stored in the parameter store.
+3. Ensure that all the required environment variables are defined in the EC2 parameter store for the application `cmpupload`.
+4. Ensure the command prompt is open in the `build/crown-marketplace-upload` directory.
+5. Run `terraform init` to install and configure the required providers.
+6. Run `terraform apply`.
+7. Enter `yes` when prompted.
+8. The `cmpupload-pipeline` build pipeline will now be created. This can take a while.
+
+### Creating Marketplace supply teacher data upload pipeline ###
+
+This uses the Terraform scripts in `terraform/build/upload-supply-teacher-data`.
+
+It will create a build pipe line for uploading supply teacher data to the application.
+
+1. Ensure the AWS access keys are configured as described previously.
+2. Ensure the GitHub token is stored in the parameter store.
+3. Ensure the command prompt is open in the `build/upload-supply-teacher-data` directory.
+4. Run `terraform init` to install and configure the required providers.
+5. Run `terraform apply`.
+6. Enter `yes` when prompted.
+7. The `upload-supply-teacher-pipeline` pipe line will now be created.
+
+## Creating example application and API build pipelines ##
+
+These build pipelines should only be created in a development environment. **They must NOT be deployed to any system accessible from the public Internet without any IP restrictions.**
+
+### Creating ‘App1’ build pipeline ###
 
 This uses the Terraform scripts in `terraform/build/app1`.
 
@@ -334,7 +458,27 @@ than `master`.
 This will result in a build pipe line being created and, eventually, the example `app1` being deployed
 into the `app` cluster.
 
-## Creating initial ‘Api1’ build pipeline ##
+### Creating ‘App2’ build pipeline ###
+
+This uses the Terraform scripts in `terraform/build/app2`.
+
+It will create a build pipe line for an example ‘app’ called ‘app2’.
+
+The contents of the `main.tf` file may need to be reviewed if creating a pipeline for a branch other
+than `master`.
+
+1. Ensure the AWS access keys are configured as described previously.
+2. Ensure the GitHub token is stored in the parameter store.
+3. Ensure the command prompt is open in the `build/app2` directory.
+4. Run `terraform init` to install and configure the required providers.
+5. Run `terraform apply`.
+6. Enter `yes` when prompted.
+7. The example `app2` build pipe line will now be created. This can take a while.
+
+This will result in a build pipe line being created and, eventually, the example `app2` being deployed
+into the `app2 cluster.
+
+### Creating ‘Api1’ build pipeline ###
 
 This uses the Terraform scripts in `terraform/build/api1`.
 
@@ -354,7 +498,27 @@ than `master`.
 This will result in a build pipe line being created and, eventually, the example `api1` being deployed
 into the `api` cluster.
 
-## Creating initial ‘Npm’ build pipeline ##
+### Creating ‘Api2’ build pipeline ###
+
+This uses the Terraform scripts in `terraform/build/api2`.
+
+It will create a build pipe line for an example ‘api’ called ‘api2’.
+
+The contents of the `main.tf` file may need to be reviewed if creating a pipeline for a branch other
+than `master`.
+
+1. Ensure the AWS access keys are configured as described previously.
+2. Ensure the GitHub token is stored in the parameter store.
+3. Ensure the command prompt is open in the `build/api2` directory.
+4. Run `terraform init` to install and configure the required providers.
+5. Run `terraform apply`.
+6. Enter `yes` when prompted.
+7. The example `api2` build pipe line will now be created. This can take a while.
+
+This will result in a build pipe line being created and, eventually, the example `api2` being deployed
+into the `api` cluster.
+
+### Creating ‘Npm’ build pipeline ###
 
 This uses the Terraform scripts in `terraform/build/npm1`.
 
@@ -369,21 +533,6 @@ It will create a build pipe line for an example NPM module called ‘npm1’.
 7. Enter `yes` when prompted.
 8. The example `npm1` build pipe line will now be created. This can take a while.
 
-## Creating initial Ruby build pipeline ##
-
-This uses the Terraform scripts in `terraform/build/image-ruby`.
-
-It will create a build pipe line for an AWS build image called 'ccs/ruby'. Once build this will result in a new AWS Build image that can be specified by other applications or APIs.
-
-1. Ensure the AWS access keys are configured as described previously.
-2. Ensure the GitHub token is stored in the parameter store.
-3. Ensure the command prompt is open in the `build/image-ruby` directory.
-4. Run `terraform init` to install and configure the required providers.
-5. Run `terraform apply`.
-6. Enter `yes` when prompted.
-7. The example `ruby-pipeline` build pipe line will now be created. This can take a while.
-8. Once build the the reulting images can be specified in an applications or APIs Terraform using the 'build_image' setting.
-
 # Appendix 1 - Diagrams #
 
 ## Core AWS Infrastructure ##
@@ -397,4 +546,5 @@ It will create a build pipe line for an AWS build image called 'ccs/ruby'. Once 
 ## App and Api Build Pipelines ##
 ![](./diagrams/ccs_aws_v1-App_Api_Pipeline.png)
 
-
+## Data Upload Build Pipelines ##
+![](./diagrams/ccs_aws_v1-Data-Import.png)
