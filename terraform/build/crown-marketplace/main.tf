@@ -19,7 +19,8 @@ module "component" {
     task_count = 3
     enable_tests = true
     enable_cognito_support = true
-    cognito_login_callback = "auth/cognito/callback"    
+    cognito_login_callback = "auth/cognito/callback"
+    cognito_logout_callback = "supply-teachers/gateway"
     environment = [
       {
         name = "RAILS_ENV",
