@@ -15,7 +15,7 @@ module "component" {
     github_branch = "production"
     github_token_alias = "ccs-build_github_token"
     cluster_name = "CCSDEV_app_cluster"
-    log_retention = "3"
+    log_retention = "5"
     task_count = 3
     enable_tests = true
     enable_cognito_support = true
