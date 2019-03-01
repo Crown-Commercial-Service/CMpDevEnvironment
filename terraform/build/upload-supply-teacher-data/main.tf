@@ -9,7 +9,7 @@ module "upload" {
   # source = "git::https://github.com/Crown-Commercial-Service/CMpDevEnvironment.git//terraform/modules/image"
   source = "../../modules/upload"
 
-  environment_name = "Development"
+  environment_name = "Sandbox"
 
   prefix = "ccs"
   name = "upload-supply-teacher"
@@ -21,7 +21,7 @@ module "upload" {
   # Upload the standard data file to cmpupload API for supply teachers
   upload_api = "cmpupload"
   framework = "supply-teachers"
-  data_file = "data.json"
+  data_file = "anonymous.json"
 }
 
 

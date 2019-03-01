@@ -14,7 +14,7 @@ variable "region" {
 data "aws_caller_identity" "current" {}
 
 variable "environment_name" {
-  default = "Development"
+  default = "Sandbox"
 }
 
 ##############################################################
@@ -64,11 +64,11 @@ variable "app_cluster_ami" {
 }
 
 variable "app_cluster_instance_class" {
-  default = "m4.large"
+  default = "t2.medium"
 }
 
 variable "app_cluster_instance_count" {
-  default = "2"
+  default = "1"
 }
 
 variable "app_cluster_key_name" {
@@ -88,11 +88,11 @@ variable "api_cluster_ami" {
 }
 
 variable "api_cluster_instance_class" {
-  default = "m4.large"
+  default = "t2.medium"
 }
 
 variable "api_cluster_instance_count" {
-  default = "2"
+  default = "1"
 }
 
 variable "api_cluster_key_name" {
@@ -159,7 +159,7 @@ variable "create_cloudwatch_alarms" {
 ##############################################################
 
 variable "create_elasticsearch_default_domain" {
-  default = true
+  default = false
 }
 
 variable "elasticsearch_default_domain" {
