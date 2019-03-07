@@ -64,7 +64,7 @@ variable "app_cluster_ami" {
 }
 
 variable "app_cluster_instance_class" {
-  default = "t2.medium"
+  default = "t2.large"
 }
 
 variable "app_cluster_instance_count" {
