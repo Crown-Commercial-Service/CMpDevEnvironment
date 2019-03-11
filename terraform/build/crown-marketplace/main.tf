@@ -52,7 +52,7 @@ module "component-fm" {
     build_image = "ccs/ruby"
     github_owner = "Crown-Commercial-Service"
     github_repo = "crown-marketplace"
-    github_branch = "master"
+    github_branch = "sandbox"
     github_token_alias = "ccs-build_github_token"
     cluster_name = "CCSDEV_app_cluster"
     task_count = 2
@@ -132,7 +132,7 @@ module "component-ats" {
     build_image = "ccs/ruby"
     github_owner = "Crown-Commercial-Service"
     github_repo = "crown-marketplace"
-    github_branch = "master"
+    github_branch = "apprenticeships"
     github_token_alias = "ccs-build_github_token"
     cluster_name = "CCSDEV_app_cluster"
     task_count = 2
