@@ -452,49 +452,7 @@ resource "aws_route_table_association" "CCSDEV-Main-Route-Table-Private-1-c" {
 ##############################################################
 # DNS Zones
 ##############################################################
-data "aws_route53_zone" "public_cluster_https_domain" {
-  name         = "${var.domain_name}."
-  private_zone = false
-}
 
-resource "aws_route53_zone" "ccsdev-internal-org-private" {
-  name       = "${var.domain_internal_prefix}.${var.domain_name}"
-  comment    = "Internal DNS for CCSDEV VPC"
-  vpc {
-    vpc_id     = "${aws_vpc.CCSDEV-Services.id}"
-    vpc_region = "eu-west-2"
-  }
 
-  tags {
-    Name = "Internal DNS for CCSDEV VPC"
-    CCSRole = "Infrastructure"
-    CCSEnvironment = "${var.environment_name}"
-  }
-}
 
-resource "aws_route53_zone" "ccsdev-internal-org-public" {
-  count      = "${var.enable_https}"
-  name       = "${var.domain_internal_prefix}.${var.domain_name}"
-  comment    = "Public DNS for CCSDEV VPC"
 
-  tags {
-    Name = "Public DNS for CCSDEV VPC"
-    CCSRole = "Infrastructure"
-    CCSEnvironment = "${var.environment_name}"
- }
-}
-
-resource "aws_route53_record" "ccsdev-internal-org-public-ns" {
-  count   = "${var.enable_https}"
-  zone_id = "${data.aws_route53_zone.public_cluster_https_domain.zone_id}"
-  name    = "${var.domain_internal_prefix}.${var.domain_name}"
-  type    = "NS"
-  ttl     = "60"
-
-  records = [
-    "${aws_route53_zone.ccsdev-internal-org-public.name_servers.0}",
-    "${aws_route53_zone.ccsdev-internal-org-public.name_servers.1}",
-    "${aws_route53_zone.ccsdev-internal-org-public.name_servers.2}",
-    "${aws_route53_zone.ccsdev-internal-org-public.name_servers.3}",
-  ]
-}

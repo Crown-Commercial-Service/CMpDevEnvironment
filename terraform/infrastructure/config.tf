@@ -1,15 +1,4 @@
-resource "aws_ssm_parameter" "domain_name" {
-  name  = "/${var.environment_name}/config/domain_name"
-  description  = "Infrastructure configured domain name"
-  type  = "SecureString"
-  value = "${var.domain_name}"
 
-  tags {
-    Name = "Parameter Store: Infrastructure configured domain name"
-    CCSRole = "Infrastructure"
-    CCSEnvironment = "${var.environment_name}"
-  }
-}
 
 resource "aws_ssm_parameter" "domain_prefix" {
   name  = "/${var.environment_name}/config/domain_prefix"
@@ -139,19 +128,7 @@ locals {
   es_is_disabled = "${var.create_elasticsearch_default_domain ? 0 : 1}"
 }
 
-resource "aws_ssm_parameter" "config_es_endpoint_enabled" {
-  count = "${local.es_is_enabled}"
-  name  = "/${var.environment_name}/config/es_endpoint"
-  description  = "Infrastructure configured elasticsearch endpoint"
-  type  = "SecureString"
-  value = "${aws_elasticsearch_domain.CCSDEV-internal-default-es.endpoint}"
 
-  tags {
-    Name = "Parameter Store: Infrastructure configured elasticsearch endpoint"
-    CCSRole = "Infrastructure"
-    CCSEnvironment = "${var.environment_name}"
-  }
-}
 
 resource "aws_ssm_parameter" "config_es_endpoint_disabled" {
   count = "${local.es_is_disabled}"
