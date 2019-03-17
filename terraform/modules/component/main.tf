@@ -117,7 +117,7 @@ resource "aws_cloudwatch_log_group" "component" {
 
 locals {
     config_protocol = "${data.aws_ssm_parameter.enable_https.value ? "https": "http" }"
-
+    config_app_domain = "${data.aws_ssm_parameter.domain_name.value}"
     config_api_domain = "${data.aws_ssm_parameter.domain_prefix.value}"
 
     config_domain = "${var.type == "app" ? local.config_app_domain : local.config_api_domain}"
