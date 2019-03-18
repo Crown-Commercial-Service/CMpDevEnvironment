@@ -64,7 +64,7 @@ variable "app_cluster_ami" {
 }
 
 variable "app_cluster_instance_class" {
-  default = "t2.large"
+  default = "t2.micro"
 }
 
 variable "app_cluster_instance_count" {
@@ -88,7 +88,7 @@ variable "api_cluster_ami" {
 }
 
 variable "api_cluster_instance_class" {
-  default = "t2.medium"
+  default = "t2.micro"
 }
 
 variable "api_cluster_instance_count" {
@@ -111,7 +111,7 @@ variable "create_default_rds_database" {
 }
 
 variable "default_db_instance_class" {
-  default = "db.t2.medium"
+  default = "db.t2.micro"
 }
 
 variable "default_db_storage" {

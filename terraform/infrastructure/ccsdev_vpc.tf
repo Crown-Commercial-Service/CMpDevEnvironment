@@ -2,6 +2,18 @@ provider "aws" {
   region = "${var.region}"
 }
 
+
+/* Elastic IP for NAT */
+resource "aws_eip" "nat_eip" {
+  vpc = true
+}
+
+
+
+
+
+
+
 ##############################################################
 #
 # CCSDEV Virtual Private Cloud Definition
