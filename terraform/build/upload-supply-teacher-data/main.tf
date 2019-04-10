@@ -21,7 +21,7 @@ module "upload" {
   # Upload the standard data file to cmpupload API for supply teachers
   upload_api = "cmpupload"
   framework = "supply-teachers"
-  data_file = "data.json"
+  data_file = "anonymous.json"
 }
 
 
