@@ -68,6 +68,12 @@ S3 buckets are used in the build pipeline for temporary artefacts. A bucket name
 
 Note that if a ```terraform destroy` is being performed the contents of the bucket must be manually deleted first.
 
+An S3 bucket is also created for use by application and API containers. The containers execute with an IAM role that allows full access to S3. The bucket name is:
+
+```ccs.<account number>.<environment_name>.app-api-data```
+
+The name of the bucket is passed to containers in the environment variable: `CCS_APP_API_DATA_BUCKET`.
+
 ---
 
 ## EC2 Instances ##

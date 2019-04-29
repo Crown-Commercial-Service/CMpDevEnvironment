@@ -14,6 +14,7 @@ The following groups are created:
 - CCS_Code_Build_Pipeline
 - CCS_Cognito_Administration
 - CCS_Terraform_Execution
+- CCS_Developer_API_Access
 
 Where possible pre-existing, AWS defined, policies have been assigned to these groups. Custom policies that related to specific infrastructure have been avoided but cannot be ruled out in the future.
 
@@ -77,6 +78,12 @@ The following policies are attached:
 - CloudWatchReadOnlyAccess
 - AmazonSSMFullAccess
 - KMS ListAliases access using custom policy
+
+### CCS_Developer_API_Access ###
+Users in the group have access to specific AWS resources via an access key.
+
+No specific policies are attached. Individual resources will attach to this group.
+For example the Application/API S3 data bucket will attach a policy to this group to allow limited API access.
 
 ### CCS_Code_Build_Pipeline ###
 This group provides access to the code build and code pipeline assets. The AWS access keys used to execute the application and api terraform scripts must be a member of this group.
