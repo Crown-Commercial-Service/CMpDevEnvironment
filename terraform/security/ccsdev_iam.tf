@@ -20,6 +20,7 @@ provider "aws" {
 #     CCS_Code_Build_Pipeline
 #     CCS_Cognito_Administration
 #     CCS_Terraform_Execution
+#     CCS_Developer_API_Access
 #
 #   Users?
 #
@@ -375,6 +376,26 @@ resource "aws_iam_group_policy_attachment" "api_dev_kms_dev" {
 resource "aws_iam_group_policy_attachment" "api_dev_topic_subscription" {
   group      = "${aws_iam_group.CCSDEV_iam_api_dev.name}"
   policy_arn = "${aws_iam_policy.CCSDEV_policy_topic_subscription.arn}"
+}
+
+
+
+##############################################################
+# Developer API Access Group
+#
+# Users in the group have access to specific AWS resources
+# via an access key.
+#
+# No specific policies are attached. Individual resources
+# will attach to this group.
+#
+# For example the Application/API S3 data bucket will attach
+# a policy to this group to allow limited API access.
+#
+##############################################################
+
+resource "aws_iam_group" "CCSDEV_iam_dev_api_access" {
+  name = "CCS_Developer_API_Access"
 }
 
 

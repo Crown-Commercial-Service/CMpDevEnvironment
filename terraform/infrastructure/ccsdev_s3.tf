@@ -82,3 +82,36 @@ resource "aws_s3_bucket" "app-api-data-bucket" {
     CCSEnvironment = "${var.environment_name}"
   }
 }
+
+##############################################################
+# Add custom policy to CCS_Developer_API_Access group to
+# allow access to this S3 bucket.
+##############################################################
+
+resource "aws_iam_group_policy_attachment" "app-api-data-bucket-access" {
+  group      = "CCS_Developer_API_Access"
+  policy_arn = "${aws_iam_policy.CCSDEV_app_api_data_bucket_policy.arn}"
+}
+
+resource "aws_iam_policy" "CCSDEV_app_api_data_bucket_policy" {
+  name   = "CCSDEV_app_api_data_bucket_policy"
+  path   = "/"
+  policy = "${data.aws_iam_policy_document.CCSDEV_app_api_data_bucket_policy_doc.json}"
+}
+
+data "aws_iam_policy_document" "CCSDEV_app_api_data_bucket_policy_doc" {
+
+  statement {
+
+    effect = "Allow",
+    actions = [
+                "s3:*",
+    ]
+
+    resources = [
+                "${aws_s3_bucket.app-api-data-bucket.arn}",
+                "${aws_s3_bucket.app-api-data-bucket.arn}/*"
+    ]
+  }
+
+}
