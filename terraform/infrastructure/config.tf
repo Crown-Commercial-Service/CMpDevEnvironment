@@ -166,3 +166,16 @@ resource "aws_ssm_parameter" "config_es_endpoint_disabled" {
     CCSEnvironment = "${var.environment_name}"
   }
 }
+
+resource "aws_ssm_parameter" "config_s3_app_api_data_bucket" {
+  name  = "/${var.environment_name}/config/app_api_data_bucket"
+  description  = "S3 bucket used for application/api data"
+  type  = "SecureString"
+  value = "${local.app_api_bucket_name}"
+
+  tags {
+    Name = "Parameter Store: S3 bucket used for application/api data"
+    CCSRole = "Infrastructure"
+    CCSEnvironment = "${var.environment_name}"
+  }
+}

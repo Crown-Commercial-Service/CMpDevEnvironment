@@ -68,3 +68,17 @@ resource "aws_s3_bucket" "logs" {
     CCSEnvironment = "${var.environment_name}"
   }
 }
+
+##############################################################
+# Appliaction/API Storage
+##############################################################
+resource "aws_s3_bucket" "app-api-data-bucket" {
+  bucket = "${local.app_api_bucket_name}"
+  acl    = "private"
+
+  tags {
+    Name = "CCSDEV Application/API data bucket"
+    CCSRole = "Infrastructure"
+    CCSEnvironment = "${var.environment_name}"
+  }
+}
