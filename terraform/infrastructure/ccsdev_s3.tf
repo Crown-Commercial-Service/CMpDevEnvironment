@@ -84,12 +84,18 @@ resource "aws_s3_bucket" "app-api-data-bucket" {
 }
 
 ##############################################################
-# Add custom policy to CCS_Developer_API_Access group to
+# Add custom policy to CCS_Developer_API_Access group and
+# the container task role to
 # allow access to this S3 bucket.
 ##############################################################
 
 resource "aws_iam_group_policy_attachment" "app-api-data-bucket-access" {
   group      = "CCS_Developer_API_Access"
+  policy_arn = "${aws_iam_policy.CCSDEV_app_api_data_bucket_policy.arn}"
+}
+
+resource "aws_iam_role_policy_attachment" "CCSDEV_task_role_attachment" {
+  role       = "CCSDEV-task-role"
   policy_arn = "${aws_iam_policy.CCSDEV_app_api_data_bucket_policy.arn}"
 }
 

@@ -616,10 +616,8 @@ resource "aws_iam_group_policy_attachment" "terraform_exec_dynamodb_full" {
 
 ##############################################################
 # IAM role task for container instances
-#   The Application and API contains can access the following AWS services:
-#
-#   S3
-
+# Note that other scripts will add policies to this role
+# to grant access as required.
 ##############################################################
 
 resource "aws_iam_role" "CCSDEV_task_role" {
@@ -641,28 +639,3 @@ data "aws_iam_policy_document" "CCSDEV_task_role_policy" {
   }
 }
 
-resource "aws_iam_role_policy_attachment" "CCSDEV_task_role_attachment" {
-  role       = "${aws_iam_role.CCSDEV_task_role.name}"
-  policy_arn = "${aws_iam_policy.CCSDEV_task_role_aws_policy.arn}"
-}
-
-resource "aws_iam_policy" "CCSDEV_task_role_aws_policy" {
-  name   = "CCSDEV_task_role_aws_policy"
-  path   = "/"
-  policy = "${data.aws_iam_policy_document.CCSDEV_task_role_aws_policy_doc.json}"
-}
-
-data "aws_iam_policy_document" "CCSDEV_task_role_aws_policy_doc" {
-
-  statement {
-
-    actions = [
-        "s3:*"
-    ]
-
-    resources = [
-        "*"
-    ]
-  }
-
-}
