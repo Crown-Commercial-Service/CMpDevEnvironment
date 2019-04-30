@@ -173,6 +173,15 @@ data "aws_iam_policy_document" "codepipeline_service_policy" {
 
   statement {
     actions = [
+        "iam:PassRole"
+    ]
+
+    resources = ["*"]
+  }
+
+
+  statement {
+    actions = [
       "s3:GetObject",
       "s3:GetObjectVersion",
       "s3:GetBucketVersioning",

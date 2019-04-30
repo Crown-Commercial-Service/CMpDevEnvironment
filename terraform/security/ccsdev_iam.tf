@@ -20,6 +20,7 @@ provider "aws" {
 #     CCS_Code_Build_Pipeline
 #     CCS_Cognito_Administration
 #     CCS_Terraform_Execution
+#     CCS_Developer_API_Access
 #
 #   Users?
 #
@@ -378,6 +379,26 @@ resource "aws_iam_group_policy_attachment" "api_dev_topic_subscription" {
 }
 
 
+
+##############################################################
+# Developer API Access Group
+#
+# Users in the group have access to specific AWS resources
+# via an access key.
+#
+# No specific policies are attached. Individual resources
+# will attach to this group.
+#
+# For example the Application/API S3 data bucket will attach
+# a policy to this group to allow limited API access.
+#
+##############################################################
+
+resource "aws_iam_group" "CCSDEV_iam_dev_api_access" {
+  name = "CCS_Developer_API_Access"
+}
+
+
 ##############################################################
 # CCS Code Build Pipeline Group
 #
@@ -591,3 +612,30 @@ resource "aws_iam_group_policy_attachment" "terraform_exec_dynamodb_full" {
   group      = "${aws_iam_group.CCSDEV_iam_terraform_exec.name}"
   policy_arn = "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"
 }
+
+
+##############################################################
+# IAM role task for container instances
+# Note that other scripts will add policies to this role
+# to grant access as required.
+##############################################################
+
+resource "aws_iam_role" "CCSDEV_task_role" {
+  name               = "CCSDEV-task-role"
+  description        = "Role for application/api container tasks"
+  path               = "/"
+  assume_role_policy = "${data.aws_iam_policy_document.CCSDEV_task_role_policy.json}"
+
+}
+
+data "aws_iam_policy_document" "CCSDEV_task_role_policy" {
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["ecs-tasks.amazonaws.com"]
+    }
+  }
+}
+

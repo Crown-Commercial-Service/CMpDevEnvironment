@@ -69,6 +69,10 @@ data "aws_ssm_parameter" "config_es_endpoint" {
   name = "/${var.environment_name}/config/es_endpoint"
 }
 
+data "aws_ssm_parameter" "config_s3_app_api_data_bucket" {
+  name = "/${var.environment_name}/config/app_api_data_bucket"
+}
+
 ##############################################################
 # Subdomain
 ##############################################################
@@ -173,6 +177,10 @@ locals {
       {
         name = "CCS_DEFAULT_ES_ENDPOINT",
         value = "${data.aws_ssm_parameter.config_es_endpoint.value}"
+      },
+      {
+        name = "CCS_APP_API_DATA_BUCKET",
+        value = "${data.aws_ssm_parameter.config_s3_app_api_data_bucket.value}"
       }
     ]
 }
