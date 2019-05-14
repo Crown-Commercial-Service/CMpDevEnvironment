@@ -147,6 +147,17 @@ variable "default_db_retention_period" {
 }
 
 ##############################################################
+# ElasticCache - Redis settings
+##############################################################
+variable "create_elasticache_redis" {
+  default = true
+}
+
+variable "elasticache_instance_class" {
+  default = "cache.t2.small"
+}
+
+##############################################################
 # Alarms and Dashboards
 ##############################################################
 
@@ -201,6 +212,10 @@ variable "https_port" {
 
 variable "postgres_port" {
   default = 5432
+}
+
+variable "redis_port" {
+  default = 6379
 }
 
 ##############################################################
