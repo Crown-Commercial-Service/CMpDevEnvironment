@@ -227,7 +227,7 @@ The build pipeline scripts will ensure that a number of environment variables ar
 
 The example NPM module actually contains a simple class for this purpose and is used by the example application.
 
-Database and Elastic Search connection information is also supplied as environment variables:
+Database, Redis and Elastic Search connection information is also supplied as environment variables:
 
 - CCS_DEFAULT_DB_URL
 - CCS_DEFAULT_DB_TYPE
@@ -236,6 +236,8 @@ Database and Elastic Search connection information is also supplied as environme
 - CCS_DEFAULT_DB_NAME
 - CCS_DEFAULT_DB_USER
 - CCS_DEFAULT_DB_PASSWORD
+- CCS_REDIS_HOST
+- CCS_REDIS_PORT
 - CCS_DEFAULT_ES_ENDPOINT
 
 
