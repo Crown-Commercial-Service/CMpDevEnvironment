@@ -42,6 +42,9 @@ data "aws_caller_identity" "current" {
 #   AWSCertificateManagerFullAccess
 #   AmazonS3FullAccess
 #   AmazonSSMFullAccess
+#   AmazonRDSFullAccess
+#   AmazonESFullAccess
+#   AmazonElastiCacheFullAccess
 #   KMS Full access - custom policy
 ##############################################################
 
@@ -73,6 +76,21 @@ resource "aws_iam_group_policy_attachment" "sys_ssm_full" {
 resource "aws_iam_group_policy_attachment" "sys_admin_kms_full" {
   group      = "${aws_iam_group.CCSDEV_iam_sys_admin.name}"
   policy_arn = "${aws_iam_policy.CCSDEV_policy_kms_full.arn}"
+}
+
+resource "aws_iam_group_policy_attachment" "sys_admin_rds_full" {
+  group      = "${aws_iam_group.CCSDEV_iam_sys_admin.name}"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonRDSFullAccess"
+}
+
+resource "aws_iam_group_policy_attachment" "sys_admin_es_full" {
+  group      = "${aws_iam_group.CCSDEV_iam_sys_admin.name}"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonESFullAccess"
+}
+
+resource "aws_iam_group_policy_attachment" "sys_admin_cache_full" {
+  group      = "${aws_iam_group.CCSDEV_iam_sys_admin.name}"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonElastiCacheFullAccess"
 }
 
 resource "aws_iam_policy" "CCSDEV_policy_kms_full" {
@@ -115,8 +133,6 @@ data "aws_iam_policy_document" "CCSDEV_policy_doc_kms_full" {
 #   AmazonEC2ContainerRegistryFullAccess
 #   AmazonECS_FullAccess
 #   service-role/AWSConfigRole
-#   AmazonRDSFullAccess
-#   AmazonESFullAccess
 #   CloudWatchLogsFullAccess
 #   Various custom policy settings
 #
@@ -160,16 +176,6 @@ resource "aws_iam_group_policy_attachment" "infra_admin_ecs_full" {
 resource "aws_iam_group_policy_attachment" "infra_admin_aws_config" {
   group      = "${aws_iam_group.CCSDEV_iam_infra_admin.name}"
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSConfigRole"
-}
-
-resource "aws_iam_group_policy_attachment" "infra_admin_rds_full" {
-  group      = "${aws_iam_group.CCSDEV_iam_infra_admin.name}"
-  policy_arn = "arn:aws:iam::aws:policy/AmazonRDSFullAccess"
-}
-
-resource "aws_iam_group_policy_attachment" "infra_admin_es_full" {
-  group      = "${aws_iam_group.CCSDEV_iam_infra_admin.name}"
-  policy_arn = "arn:aws:iam::aws:policy/AmazonESFullAccess"
 }
 
 resource "aws_iam_group_policy_attachment" "infra_admin_logs_full" {
