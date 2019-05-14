@@ -258,6 +258,7 @@ data "aws_iam_policy_document" "CCSDEV_policy_doc_kms_dev" {
 #   AmazonECS_FullAccess
 #   CloudWatchReadOnlyAccess
 #   AmazonSSMFullAccess
+#   AmazonElastiCacheReadOnlyAccess
 #   SNS Topic subscription (custom)
 #
 # TODO At present access NOT restricted to the app cluster
@@ -299,6 +300,11 @@ resource "aws_iam_group_policy_attachment" "app_dev_ssm_full" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMFullAccess"
 }
 
+resource "aws_iam_group_policy_attachment" "app_dev_elasticache_readonly" {
+  group      = "${aws_iam_group.CCSDEV_iam_app_dev.name}"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonElastiCacheReadOnlyAccess"
+}
+
 resource "aws_iam_group_policy_attachment" "app_dev_kms_dev" {
   group      = "${aws_iam_group.CCSDEV_iam_app_dev.name}"
   policy_arn = "${aws_iam_policy.CCSDEV_policy_kms_dev.arn}"
@@ -321,6 +327,7 @@ resource "aws_iam_group_policy_attachment" "app_dev_topic_subscription" {
 #   AmazonEC2ContainerRegistryPowerUser
 #   AmazonECS_FullAccess
 #   AmazonRDSFullAccess
+#   AmazonElastiCacheReadOnlyAccess
 #   AmazonESFullAccess
 #   CloudWatchReadOnlyAccess
 #   AmazonSSMFullAccess
@@ -372,6 +379,11 @@ resource "aws_iam_group_policy_attachment" "api_dev_logs_readonly" {
 resource "aws_iam_group_policy_attachment" "api_dev_ssm_full" {
   group      = "${aws_iam_group.CCSDEV_iam_api_dev.name}"
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMFullAccess"
+}
+
+resource "aws_iam_group_policy_attachment" "api_dev_elasticache_readonly" {
+  group      = "${aws_iam_group.CCSDEV_iam_api_dev.name}"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonElastiCacheReadOnlyAccess"
 }
 
 resource "aws_iam_group_policy_attachment" "api_dev_kms_dev" {
