@@ -27,7 +27,7 @@ resource "aws_elasticache_cluster" "ccsdev_elasticache_redis" {
 
   cluster_id           = "ccsdev-redis"
   engine               = "redis"
-  node_type            = "cache.t2.small"
+  node_type            = "${var.elasticache_instance_class}"
   num_cache_nodes      = 1
   engine_version       = "5.0.3"
   parameter_group_name = "${aws_elasticache_parameter_group.ccsdev_elasticache_redis_parameters.id}"
