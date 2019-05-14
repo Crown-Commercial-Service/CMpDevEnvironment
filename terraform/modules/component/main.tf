@@ -53,6 +53,14 @@ data "aws_ssm_parameter" "db_config_port" {
   name = "/${var.environment_name}/config/rds_port"
 }
 
+data "aws_ssm_parameter" "redis_config_host" {
+  name = "/${var.environment_name}/config/redis_host"
+}
+
+data "aws_ssm_parameter" "redis_config_port" {
+  name = "/${var.environment_name}/config/redis_port"
+}
+
 data "aws_ssm_parameter" "db_config_name" {
   name = "/${var.environment_name}/config/rds_name"
 }
@@ -161,6 +169,14 @@ locals {
       {
         name = "CCS_DEFAULT_DB_PORT",
         value = "${data.aws_ssm_parameter.db_config_port.value}"
+      }, 
+      {
+        name = "CCS_REDIS_HOST",
+        value = "${data.aws_ssm_parameter.redis_config_host.value}"
+      }, 
+      {
+        name = "CCS_REDIS_PORT",
+        value = "${data.aws_ssm_parameter.redis_config_port.value}"
       }, 
       {
         name = "CCS_DEFAULT_DB_NAME",
