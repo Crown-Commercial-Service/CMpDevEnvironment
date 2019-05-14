@@ -150,7 +150,7 @@ variable "default_db_retention_period" {
 # ElasticCache - Redis settings
 ##############################################################
 variable "create_elasticache_redis" {
-  default = false
+  default = true
 }
 
 variable "elasticache_instance_class" {
