@@ -115,7 +115,7 @@ variable "default_db_instance_class" {
 }
 
 variable "default_db_storage" {
-  default = 20
+  default = 40
 }
 
 variable "default_db_type" {
@@ -144,6 +144,17 @@ variable "default_db_password" {
 
 variable "default_db_retention_period" {
   default = "7"
+}
+
+##############################################################
+# ElasticCache - Redis settings
+##############################################################
+variable "create_elasticache_redis" {
+  default = false
+}
+
+variable "elasticache_instance_class" {
+  default = "cache.t2.small"
 }
 
 ##############################################################
@@ -203,6 +214,10 @@ variable "postgres_port" {
   default = 5432
 }
 
+variable "redis_port" {
+  default = 6379
+}
+
 ##############################################################
 # S3 Bucket name
 ##############################################################
@@ -210,4 +225,5 @@ variable "postgres_port" {
 locals {
   artifact_bucket_name = "ccs.${data.aws_caller_identity.current.account_id}.build-artifacts"
   log_bucket_name = "ccs.${data.aws_caller_identity.current.account_id}.${lower(var.environment_name)}.logs"
+  app_api_bucket_name = "ccs.${data.aws_caller_identity.current.account_id}.${lower(var.environment_name)}.app-api-data"
 }

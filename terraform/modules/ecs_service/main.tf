@@ -22,9 +22,14 @@ data "template_file" "task_definition" {
   }
 }
 
+data "aws_iam_role" "CCSDEV_task_role" {
+  name = "CCSDEV-task-role"
+}
+
 resource "aws_ecs_task_definition" "task_definition" {
   family                = "${var.task_name}"
   container_definitions = "${data.template_file.task_definition.rendered}"
+  task_role_arn         ="${data.aws_iam_role.CCSDEV_task_role.arn}"
 }
 
 resource "aws_ecs_service" "service" {
