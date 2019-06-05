@@ -115,7 +115,7 @@ variable "default_db_instance_class" {
 }
 
 variable "default_db_storage" {
-  default = 20
+  default = 40
 }
 
 variable "default_db_type" {
