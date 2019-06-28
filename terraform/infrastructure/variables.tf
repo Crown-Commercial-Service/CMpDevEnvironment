@@ -17,6 +17,11 @@ variable "environment_name" {
   default = "Development"
 }
 
+variable "shared_postcode_data_bucket" {
+  type = "string"
+  default = ""
+}
+
 ##############################################################
 # Bastion host server settings
 ##############################################################
