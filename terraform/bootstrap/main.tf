@@ -148,6 +148,15 @@ module "cmp_supply_teacher_upload_backend" {
     path      = "${path.module}"
 }
 
+module "cmp_sidekiq_backend" {
+    source    = "./backend"
+
+    bucket    = "${local.bucket_name}"
+    component = "build/crown-marketplace-sidekiq"
+    region    = "${local.region}"
+    path      = "${path.module}"
+}
+
 module "image-ruby_backend" {
     source    = "./backend"
 
