@@ -109,3 +109,22 @@ resource "aws_ssm_parameter" "cognito_user_pool_site" {
     CCSRole = "Infrastructure"
   }
 }
+
+##############################################################
+# Add custom policy to CCS_Developer_API_Access group and
+# the container task role to
+# allow access to the Cognito APIs.
+# Note that a reduced capability policy should be used
+# once all of the use-cases are determined.
+##############################################################
+
+resource "aws_iam_group_policy_attachment" "cognito_api-access" {
+  group      = "CCS_Developer_API_Access"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonCognitoPowerUser"
+
+}
+
+resource "aws_iam_role_policy_attachment" "CCSDEV_task_role_attachment_cognito_api" {
+  role       = "CCSDEV-task-role"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonCognitoPowerUser"
+}

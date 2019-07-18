@@ -86,7 +86,7 @@ resource "aws_s3_bucket" "app-api-data-bucket" {
 ##############################################################
 # Add custom policy to CCS_Developer_API_Access group and
 # the container task role to
-# allow access to this S3 bucket.
+# allow access to this S3 bucket and the shared post-code bucket
 ##############################################################
 
 resource "aws_iam_group_policy_attachment" "app-api-data-bucket-access" {
@@ -121,3 +121,38 @@ data "aws_iam_policy_document" "CCSDEV_app_api_data_bucket_policy_doc" {
   }
 
 }
+
+resource "aws_iam_group_policy_attachment" "postcode-data-bucket-access" {
+  group      = "CCS_Developer_API_Access"
+  policy_arn = "${aws_iam_policy.CCSDEV_postcode_data_bucket_policy.arn}"
+}
+
+resource "aws_iam_role_policy_attachment" "CCSDEV_task_role_attachment_postcode" {
+  role       = "CCSDEV-task-role"
+  policy_arn = "${aws_iam_policy.CCSDEV_postcode_data_bucket_policy.arn}"
+}
+
+resource "aws_iam_policy" "CCSDEV_postcode_data_bucket_policy" {
+  name   = "CCS_shared_postcode_data_bucket_policy"
+  path   = "/"
+  policy = "${data.aws_iam_policy_document.CCSDEV_postcode_data_bucket_policy_doc.json}"
+}
+
+data "aws_iam_policy_document" "CCSDEV_postcode_data_bucket_policy_doc" {
+
+  statement {
+
+    effect = "Allow",
+    actions = [
+                "s3:*",
+    ]
+
+    resources = [
+                "${var.shared_postcode_data_bucket}",
+                "${var.shared_postcode_data_bucket}/*"
+    ]
+  }
+
+}
+
+
