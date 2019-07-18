@@ -22,6 +22,18 @@ variable "shared_postcode_data_bucket" {
   default = ""
 }
 
+variable ccs_cognito_groups {
+  type    = "map"
+  default = {
+    "at_access" = "Apprenticeships user access",
+    "buyer" = "Buyer user access",
+    "ccs_employee" = "CCS Employee user access",
+    "fm_access" = "Facilities Management user access",
+    "ls_access" = "Legal Services user access",
+    "mc_access" = "Management Consultancy user access",
+    "st_access" = "Supply Teachers user access"  }
+}
+
 ##############################################################
 # Bastion host server settings
 ##############################################################

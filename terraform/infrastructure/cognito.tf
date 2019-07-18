@@ -63,6 +63,17 @@ resource "aws_cognito_user_pool" "ccs_user_pool" {
 }
 
 ##############################################################
+# Create required user pool groups
+##############################################################
+
+resource "aws_cognito_user_group" "ccs_user_pool_groups" {
+  count        = "${length(keys(var.ccs_cognito_groups))}"
+  name         = "${element(keys(var.ccs_cognito_groups), count.index)}"
+  description  = "${element(values(var.ccs_cognito_groups), count.index)}"
+  user_pool_id = "${aws_cognito_user_pool.ccs_user_pool.id}"
+}
+
+##############################################################
 # Domain using the current AWS account ID
 ##############################################################
 resource "aws_cognito_user_pool_domain" "ccs_cmp_domain" {
