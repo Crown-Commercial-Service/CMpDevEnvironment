@@ -15,9 +15,7 @@ module "component" {
     task_count = 2
     autoscaling_max_count = 4
     enable_tests = true
-    enable_cognito_support = true
-    cognito_login_callback = "auth/cognito/callback"
-    cognito_logout_callback = "supply-teachers/gateway"
+    enable_cognito_api_support = true
     environment = [
       {
         name = "RAILS_ENV",
