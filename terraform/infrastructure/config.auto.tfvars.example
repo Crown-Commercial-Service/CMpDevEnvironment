@@ -10,6 +10,9 @@ domain_internal_prefix = "internal"
 #  along with appropriate certificates
 enable_https = false
 
+# Name of the shared postcode data bucket 
+shared_postcode_data_bucket = "mybucket"
+
 # A map of external CIDR blocks that should have SSH access
 "ssh_access_cidrs" = {
     "office" = "192.0.2.0/24"

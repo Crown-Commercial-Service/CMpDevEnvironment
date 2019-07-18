@@ -1,19 +1,30 @@
+###############################################################################
+# This build pipeline is used to build and deploy a single instance of the
+# marketplace application to the API Cluster.
+#
+# It's purposes is to run sidekiq for background processing tasks
+###############################################################################
+
 module "component" {
     # source = "git::https://github.com/Crown-Commercial-Service/CMpDevEnvironment.git//terraform/modules/component"
     source = "../../modules/component"
 
-    type = "app"
+    environment_name = "Development"
+
+    type = "api"
     prefix = "ccs"
-    name = "cmp"
+    name = "cmpsidekiq"
     build_type = "custom"
     build_image = "ccs/ruby"
+
+    # Build the standard marketplace application
     github_owner = "Crown-Commercial-Service"
     github_repo = "crown-marketplace"
     github_branch = "master"
+
     github_token_alias = "ccs-build_github_token"
-    cluster_name = "CCSDEV_app_cluster"
-    task_count = 2
-    autoscaling_max_count = 4
+    cluster_name = "CCSDEV_api_cluster"
+    task_count = 1
     enable_tests = true
     enable_cognito_api_support = true
     environment = [
@@ -23,6 +34,11 @@ module "component" {
       },
       {
         name = "RAILS_SERVE_STATIC_FILES",
+        value = "true"
+      },
+      {
+        # Set to enable Sidekiq
+        name = "APP_RUN_SIDEKIQ",
         value = "true"
       }
     ]

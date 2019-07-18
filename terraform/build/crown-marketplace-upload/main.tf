@@ -26,8 +26,7 @@ module "component" {
     cluster_name = "CCSDEV_api_cluster"
     task_count = 1
     enable_tests = true
-    enable_cognito_support = true
-    cognito_login_callback = "auth/cognito/callback"
+    enable_cognito_api_support = true
     environment = [
       {
         name = "RAILS_ENV",
