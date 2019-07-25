@@ -63,6 +63,17 @@ resource "aws_cognito_user_pool" "ccs_user_pool" {
 }
 
 ##############################################################
+# Create required user pool groups
+##############################################################
+
+resource "aws_cognito_user_group" "ccs_user_pool_groups" {
+  count        = "${length(keys(var.ccs_cognito_groups))}"
+  name         = "${element(keys(var.ccs_cognito_groups), count.index)}"
+  description  = "${element(values(var.ccs_cognito_groups), count.index)}"
+  user_pool_id = "${aws_cognito_user_pool.ccs_user_pool.id}"
+}
+
+##############################################################
 # Domain using the current AWS account ID
 ##############################################################
 resource "aws_cognito_user_pool_domain" "ccs_cmp_domain" {
@@ -108,4 +119,23 @@ resource "aws_ssm_parameter" "cognito_user_pool_site" {
     Name = "Parameter Store: Infrastructure configured AWS Cognito Pool site"
     CCSRole = "Infrastructure"
   }
+}
+
+##############################################################
+# Add custom policy to CCS_Developer_API_Access group and
+# the container task role to
+# allow access to the Cognito APIs.
+# Note that a reduced capability policy should be used
+# once all of the use-cases are determined.
+##############################################################
+
+resource "aws_iam_group_policy_attachment" "cognito_api-access" {
+  group      = "CCS_Developer_API_Access"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonCognitoPowerUser"
+
+}
+
+resource "aws_iam_role_policy_attachment" "CCSDEV_task_role_attachment_cognito_api" {
+  role       = "CCSDEV-task-role"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonCognitoPowerUser"
 }

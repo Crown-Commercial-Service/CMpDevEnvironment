@@ -211,9 +211,17 @@ data "aws_security_group" "vpc-CCSDEV-internal" {
 
 ##############################################################
 # AWS Cognito support
+# Only:
+#   enable_cognito_support
+# OR
+#   enable_cognito_api_support
 ##############################################################
 
 variable "enable_cognito_support" {
+    default = false
+}
+
+variable "enable_cognito_api_support" {
     default = false
 }
 
