@@ -20,7 +20,7 @@ module "component" {
     # Build the standard marketplace application
     github_owner = "Crown-Commercial-Service"
     github_repo = "crown-marketplace"
-    github_branch = "master"
+    github_branch = "preview"
 
     github_token_alias = "ccs-build_github_token"
     cluster_name = "CCSDEV_api_cluster"
