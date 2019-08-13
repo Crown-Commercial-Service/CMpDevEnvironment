@@ -27,6 +27,66 @@ locals {
 }
 
 ##############################################################
+# Cognito user pool role for sending SMS
+# Note Random guid for external id
+##############################################################
+
+resource "random_uuid" "CCSDEV_userpool_role_external_id" {
+
+}
+
+resource "aws_iam_role" "CCSDEV_userpool_role" {
+  name               = "CCSDEV-cognito-userpool-role"
+  description        = "Role for Cognito user pool for sending SMS"
+  path               = "/"
+  assume_role_policy = "${data.aws_iam_policy_document.CCSDEV_userpool_role_trust_policy.json}"
+}
+
+data "aws_iam_policy_document" "CCSDEV_userpool_role_trust_policy" {
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["cognito-idp.amazonaws.com"]
+    }
+
+    condition {
+      test        = "StringEquals"
+      variable    = "sts:ExternalId"
+      values      = ["${random_uuid.CCSDEV_userpool_role_external_id.result}"]
+    }
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "CCSDEV_userpool_role_attachment" {
+  role       = "${aws_iam_role.CCSDEV_userpool_role.name}"
+  policy_arn = "${aws_iam_policy.CCSDEV_userpool_role_policy.arn}"
+}
+
+resource "aws_iam_policy" "CCSDEV_userpool_role_policy" {
+  name   = "CCSDEV_userpool_role_policy"
+  path   = "/"
+  policy = "${data.aws_iam_policy_document.CCSDEV_userpool_role_policy_document.json}"
+}
+
+data "aws_iam_policy_document" "CCSDEV_userpool_role_policy_document" {
+
+  statement {
+
+    actions = [
+      "sns:publish"
+    ]
+
+    resources = [
+		"*"
+    ]
+  }
+
+}
+
+
+##############################################################
 # Basic user pool using email verification. THe user name
 # must be an email address.
 ##############################################################
@@ -34,8 +94,15 @@ resource "aws_cognito_user_pool" "ccs_user_pool" {
     name = "ccs_user_pool"
     username_attributes = ["email"]
     auto_verified_attributes = ["email"]
-    email_verification_subject = "Crown Marketplace - Your Verification code"
-    email_verification_message = "Your Verification code is {####}"
+    email_verification_subject = "Crown Commercial Service Verification Code"
+    email_verification_message = "<p>Hello,</p><p>Your Crown Commercial Service verification code is: <strong>{####}</strong></p><p>You must use this code within 24 hours of receiving this email.</p><p>Kind regards,<br>Customer Services Team<br>Crown Commercial Service</p>"
+
+    # Support optional MFA via SMS
+    mfa_configuration = "OPTIONAL"
+    sms_configuration {
+       external_id = "${random_uuid.CCSDEV_userpool_role_external_id.result}" 
+       sns_caller_arn = "${aws_iam_role.CCSDEV_userpool_role.arn}" 
+    }
 
     # User self-registration enabled, set to true to prevent self-registration.
     admin_create_user_config {
