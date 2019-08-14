@@ -2,25 +2,25 @@
 # This build pipeline is used to build and deploy a single instance of the
 # marketplace application to the API Cluster.
 #
-# It's purposes is to provide an 'api' for uploading data.
+# It's purposes is to run sidekiq for background processing tasks
 ###############################################################################
 
 module "component" {
     # source = "git::https://github.com/Crown-Commercial-Service/CMpDevEnvironment.git//terraform/modules/component"
     source = "../../modules/component"
 
-    environment_name = "Production"
+    environment_name = "Development"
 
     type = "api"
     prefix = "ccs"
-    name = "cmpupload"
+    name = "cmpsidekiq"
     build_type = "custom"
     build_image = "ccs/ruby"
 
     # Build the standard marketplace application
     github_owner = "Crown-Commercial-Service"
     github_repo = "crown-marketplace"
-    github_branch = "production"
+    github_branch = "master"
 
     github_token_alias = "ccs-build_github_token"
     cluster_name = "CCSDEV_api_cluster"
@@ -37,8 +37,8 @@ module "component" {
         value = "true"
       },
       {
-        # Set to enable the ability to upload data
-        name = "APP_HAS_UPLOAD_PRIVILEGES",
+        # Set to enable Sidekiq
+        name = "APP_RUN_SIDEKIQ",
         value = "true"
       }
     ]

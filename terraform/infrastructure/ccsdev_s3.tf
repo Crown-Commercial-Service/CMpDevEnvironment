@@ -68,3 +68,91 @@ resource "aws_s3_bucket" "logs" {
     CCSEnvironment = "${var.environment_name}"
   }
 }
+
+##############################################################
+# Appliaction/API Storage
+##############################################################
+resource "aws_s3_bucket" "app-api-data-bucket" {
+  bucket = "${local.app_api_bucket_name}"
+  acl    = "private"
+
+  tags {
+    Name = "CCSDEV Application/API data bucket"
+    CCSRole = "Infrastructure"
+    CCSEnvironment = "${var.environment_name}"
+  }
+}
+
+##############################################################
+# Add custom policy to CCS_Developer_API_Access group and
+# the container task role to
+# allow access to this S3 bucket and the shared post-code bucket
+##############################################################
+
+resource "aws_iam_group_policy_attachment" "app-api-data-bucket-access" {
+  group      = "CCS_Developer_API_Access"
+  policy_arn = "${aws_iam_policy.CCSDEV_app_api_data_bucket_policy.arn}"
+}
+
+resource "aws_iam_role_policy_attachment" "CCSDEV_task_role_attachment" {
+  role       = "CCSDEV-task-role"
+  policy_arn = "${aws_iam_policy.CCSDEV_app_api_data_bucket_policy.arn}"
+}
+
+resource "aws_iam_policy" "CCSDEV_app_api_data_bucket_policy" {
+  name   = "CCSDEV_app_api_data_bucket_policy"
+  path   = "/"
+  policy = "${data.aws_iam_policy_document.CCSDEV_app_api_data_bucket_policy_doc.json}"
+}
+
+data "aws_iam_policy_document" "CCSDEV_app_api_data_bucket_policy_doc" {
+
+  statement {
+
+    effect = "Allow",
+    actions = [
+                "s3:*",
+    ]
+
+    resources = [
+                "${aws_s3_bucket.app-api-data-bucket.arn}",
+                "${aws_s3_bucket.app-api-data-bucket.arn}/*"
+    ]
+  }
+
+}
+
+resource "aws_iam_group_policy_attachment" "postcode-data-bucket-access" {
+  group      = "CCS_Developer_API_Access"
+  policy_arn = "${aws_iam_policy.CCSDEV_postcode_data_bucket_policy.arn}"
+}
+
+resource "aws_iam_role_policy_attachment" "CCSDEV_task_role_attachment_postcode" {
+  role       = "CCSDEV-task-role"
+  policy_arn = "${aws_iam_policy.CCSDEV_postcode_data_bucket_policy.arn}"
+}
+
+resource "aws_iam_policy" "CCSDEV_postcode_data_bucket_policy" {
+  name   = "CCS_shared_postcode_data_bucket_policy"
+  path   = "/"
+  policy = "${data.aws_iam_policy_document.CCSDEV_postcode_data_bucket_policy_doc.json}"
+}
+
+data "aws_iam_policy_document" "CCSDEV_postcode_data_bucket_policy_doc" {
+
+  statement {
+
+    effect = "Allow",
+    actions = [
+                "s3:*",
+    ]
+
+    resources = [
+                "${var.shared_postcode_data_bucket}",
+                "${var.shared_postcode_data_bucket}/*"
+    ]
+  }
+
+}
+
+
