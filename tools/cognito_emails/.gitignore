@@ -1,0 +1,5 @@
+# Ignore generated .bat files
+*.bat
+
+# Dependencies 
+node_modules
