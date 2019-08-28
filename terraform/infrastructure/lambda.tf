@@ -57,3 +57,13 @@ resource "aws_lambda_function" "ccsdev-pre-sign-up-function" {
   source_code_hash = "${base64sha256(file("${data.archive_file.lambda.output_path}"))}"
   publish = true
 }
+
+# Ensure the The Cognito user pool is allowed to invoke the function
+resource "aws_lambda_permission" "ccsdev-pre-sign-up-permission" {
+  statement_id  = "AllowPreSignUpAPIInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = "${aws_lambda_function.ccsdev-pre-sign-up-function.function_name}"
+  principal     = "cognito-idp.amazonaws.com"
+
+  source_arn    = "${aws_cognito_user_pool.ccs_user_pool.arn}"
+}
