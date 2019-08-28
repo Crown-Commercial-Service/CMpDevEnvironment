@@ -27,91 +27,44 @@ if (!AWS.config.region) {
 
 const cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
 
-getUserGroups()
-  .then(async groups => {
-    let promises = [];
-
-    groups.forEach(group => {
-      promises.push(
-        getAllUsers(group.GroupName)
-          .then(commands => {
-            return commands;
-          })
-          .catch(err => console.log(err, err.stack))
-      );
-    });
-
-    const commandArrays = await Promise.all(promises);
+getAllUsers()
+  .then(commands => {
     fs.writeFile(fileName, '', () => {});
     let writeStream = fs.createWriteStream(fileName);
+
     writeStream.write(
       '@echo off \n' + 'echo Converting emails to lowercase... \n'
     );
-    for (let i = 0; i < commandArrays.length; i++) {
-      let array = commandArrays[i];
-      if (array.length) {
-        for (let y = 0; y < array.length; y++) {
-          let command = array[y];
-          writeStream.write(command + '\n');
-        }
-      } else {
-        writeStream.write(
-          'echo 0 users found with uppercase characters in email! \n'
-        );
+
+    if (commands.length) {
+      for (let i = 0; i < commands.length; i++) {
+        let command = commands[i];
+        writeStream.write(command + '\n');
       }
+    } else {
+      writeStream.write('echo 0 users found with uppercase emails. \n');
     }
+
     writeStream.write('echo Done.');
     writeStream.on('finish', () => {
       console.log(`Successfully created file: ${process.cwd()} ${fileName}`);
     });
     writeStream.end();
   })
-  .catch(err => console.log(err, err.stack));
+  .catch(err => console.error(err));
 
-function getUserGroups() {
-  let concatData = [];
-
-  let params = {
-    UserPoolId,
-    Limit: 60
-  };
-
-  function recursiveUserGroups(params, resolve, reject) {
-    cognitoidentityserviceprovider.listGroups(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack);
-        return reject(err);
-      }
-
-      concatData = concatData.concat(data.Groups);
-
-      if (!data.NextToken) {
-        return resolve(concatData);
-      } else {
-        params.token = data.NextToken;
-        recursiveUserGroups(params, resolve, reject);
-      }
-    });
-  }
-
-  return new Promise((resolve, reject) => {
-    recursiveUserGroups(params, resolve, reject);
-  });
-}
-
-function getAllUsers(GroupName) {
+function getAllUsers() {
   let users = [];
 
   let params = {
-    GroupName,
     UserPoolId,
     Limit: 60
   };
 
-  function recursiveUsersInGroup(params, resolve, reject) {
+  function recursiveUsersInPool(params, resolve, reject) {
     let commands = [];
 
-    cognitoidentityserviceprovider.listUsersInGroup(params, (err, data) => {
+    cognitoidentityserviceprovider.listUsers(params, (err, data) => {
       if (err) {
         console.log(err, err.stack);
         return reject(err);
@@ -131,9 +84,7 @@ function getAllUsers(GroupName) {
 
           // If user has uppercase email add command to array
           if (email.match(/[A-Z]+/)) {
-            let command = `call aws cognito-idp admin-update-user-attributes --user-pool-id ${UserPoolId} --username ${
-              user.Username
-            } --user-attributes Name="email",Value="${email.toLowerCase()}"`;
+            let command = generateCommand(user, email);
             commands.push(command);
           }
         }
@@ -141,12 +92,18 @@ function getAllUsers(GroupName) {
         return resolve(commands);
       } else {
         params.NextToken = data.NextToken;
-        recursiveUsersInGroup(params, resolve, reject);
+        recursiveUsersInPool(params, resolve, reject);
       }
     });
   }
 
   return new Promise((resolve, reject) => {
-    recursiveUsersInGroup(params, resolve, reject);
+    recursiveUsersInPool(params, resolve, reject);
   });
+}
+
+function generateCommand(user, email) {
+  return `call aws cognito-idp admin-update-user-attributes --user-pool-id ${UserPoolId} --username ${
+    user.Username
+  } --user-attributes Name="email",Value="${email.toLowerCase()}"`;
 }
