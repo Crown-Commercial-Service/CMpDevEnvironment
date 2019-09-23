@@ -1,7 +1,7 @@
-data "archive_file" "lambda" {
+data "archive_file" "presignup-lambda" {
   type        = "zip"
-  source_file = "main.js"
-  output_path = "lambda.zip"
+  source_file = "presignup.js"
+  output_path = "presignup-lambda.zip"
 }
 
 resource "aws_iam_role" "ccsdev-lambda-exec" {
@@ -49,12 +49,12 @@ EOF
 }
 
 resource "aws_lambda_function" "ccsdev-pre-sign-up-function" {
-  filename = "${data.archive_file.lambda.output_path}"
+  filename = "${data.archive_file.presignup-lambda.output_path}"
   function_name = "ccsdev-pre-sign-up-function"
   role = "${aws_iam_role.ccsdev-lambda-exec.arn}"
-  handler = "main.handler"
+  handler = "presignup.handler"
   runtime = "nodejs10.x"
-  source_code_hash = "${base64sha256(file("${data.archive_file.lambda.output_path}"))}"
+  source_code_hash = "${base64sha256(file("${data.archive_file.presignup-lambda.output_path}"))}"
   publish = true
 }
 

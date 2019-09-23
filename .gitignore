@@ -12,4 +12,4 @@
 **/backend.tf
 
 # Generated lambda zip
-/terraform/infrastructure/lambda.zip
+/terraform/infrastructure/*.zip
