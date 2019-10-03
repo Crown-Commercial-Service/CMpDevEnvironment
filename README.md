@@ -1,4 +1,4 @@
-# Crown Commercial Environment (Development) #
+# Crown Commercial Environment (FM Preview) #
 
 This project contains [Terraform](https://www.terraform.io/) scripts that are used to generate a container hosting environment in AWS. This environment is in the eu-west-2 region.
 

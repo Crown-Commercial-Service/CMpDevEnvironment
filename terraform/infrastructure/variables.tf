@@ -14,7 +14,7 @@ variable "region" {
 data "aws_caller_identity" "current" {}
 
 variable "environment_name" {
-  default = "Development"
+  default = "FMPreview"
 }
 
 variable "shared_postcode_data_bucket" {
@@ -105,11 +105,11 @@ variable "api_cluster_ami" {
 }
 
 variable "api_cluster_instance_class" {
-  default = "m4.large"
+  default = "t2.medium"
 }
 
 variable "api_cluster_instance_count" {
-  default = "2"
+  default = "1"
 }
 
 variable "api_cluster_key_name" {
@@ -160,7 +160,7 @@ variable "default_db_password" {
 }
 
 variable "default_db_retention_period" {
-  default = "1"
+  default = "7"
 }
 
 ##############################################################
@@ -187,7 +187,7 @@ variable "create_cloudwatch_alarms" {
 ##############################################################
 
 variable "create_elasticsearch_default_domain" {
-  default = true
+  default = false
 }
 
 variable "elasticsearch_default_domain" {
