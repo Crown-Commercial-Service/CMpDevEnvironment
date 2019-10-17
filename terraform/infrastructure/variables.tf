@@ -187,7 +187,7 @@ variable "create_cloudwatch_alarms" {
 ##############################################################
 
 variable "create_elasticsearch_default_domain" {
-  default = true
+  default = false
 }
 
 variable "elasticsearch_default_domain" {
