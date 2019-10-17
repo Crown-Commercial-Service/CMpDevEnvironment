@@ -123,6 +123,10 @@ resource "aws_cognito_user_pool" "ccs_user_pool" {
         require_uppercase = true
     }
 
+    lambda_config {
+        pre_sign_up = "${aws_lambda_function.ccsdev-pre-sign-up-function.arn}"
+    }
+
     tags {
         Name = "CCSDEV Services"
         CCSRole = "Infrastructure"

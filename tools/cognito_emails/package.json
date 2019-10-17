@@ -1,0 +1,16 @@
+{
+  "name": "cognito_emails",
+  "version": "1.0.0",
+  "description": "Script to convert all user pool user emails to lowercase.",
+  "main": "run.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Adam Nicholas",
+  "license": "MIT",
+  "dependencies": {
+    "aws-sdk": "^2.518.0",
+    "fs": "0.0.1-security",
+    "minimist": "^1.2.0"
+  }
+}

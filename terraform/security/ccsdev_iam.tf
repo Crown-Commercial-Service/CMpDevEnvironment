@@ -188,6 +188,11 @@ resource "aws_iam_group_policy_attachment" "infra_admin_custom" {
   policy_arn = "${aws_iam_policy.CCSDEV_policy_infra_custom.arn}"
 }
 
+resource "aws_iam_group_policy_attachment" "infra_admin_lambda_full" {
+  group      = "${aws_iam_group.CCSDEV_iam_infra_admin.name}"
+  policy_arn = "arn:aws:iam::aws:policy/AWSLambdaFullAccess"
+}
+
 resource "aws_iam_policy" "CCSDEV_policy_infra_custom" {
   name   = "CCSDEV_policy_infra_custom"
   path   = "/"
