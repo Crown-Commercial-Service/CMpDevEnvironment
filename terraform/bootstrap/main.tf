@@ -121,6 +121,16 @@ module "cmp_backend" {
     region    = "${local.region}"
     path      = "${path.module}"
 }
+
+module "cmp_legacy_backend" {
+    source    = "./backend"
+
+    bucket    = "${local.bucket_name}"
+    component = "build/crown-marketplace-legacy"
+    region    = "${local.region}"
+    path      = "${path.module}"
+}
+
 module "cmp_upload_backend" {
     source    = "./backend"
 
