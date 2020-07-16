@@ -1,5 +1,5 @@
-module "providers" {
-    source = "../../modules/providers"
+terraform {
+  required_version = "~> 0.11"
 }
 
 module "component" {
