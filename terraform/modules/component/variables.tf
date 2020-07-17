@@ -31,6 +31,14 @@ variable hostname {
 }
 
 ##############################################################
+# Path (for routing purposes)
+##############################################################
+variable path_pattern {
+    type = "string"
+    default = ""
+}
+
+##############################################################
 # If true and additional rule will be added at the end of 
 # the routing rules with a host of *
 ##############################################################
