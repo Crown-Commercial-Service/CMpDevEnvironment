@@ -8,7 +8,12 @@
 locals {
   provision_https_certificates = "${upper(var.protocol) == "HTTPS" ? 1 : 0}"
   has_path_pattern = "${var.path_pattern == "" ? 0 : 1}"
+
+  # it seems that even though we are not applying a path pattern
+  # (via count = 0) we can't default to an empty string as the
+  # condition:path_pattern doesn't like empty values, hence the "/"
   path_pattern = "${local.has_path_pattern ? var.path_pattern : "/"}"
+  
   register_dns_record = "${local.has_path_pattern}"
 }
 

@@ -4,6 +4,9 @@
 #
 # It's purposes is to run sidekiq for background processing tasks
 ###############################################################################
+terraform {
+  required_version = "~> 0.11"
+}
 
 module "component" {
     # source = "git::https://github.com/Crown-Commercial-Service/CMpDevEnvironment.git//terraform/modules/component"

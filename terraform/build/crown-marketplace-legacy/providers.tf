@@ -1,6 +1,6 @@
 provider "aws" {
   version = "~> 2.70"
-  region = "eu-west-2"
+  region = "${var.region}"
 }
 
 provider "null" {
@@ -10,11 +10,3 @@ provider "null" {
 provider "template" {
   version = "~> 2.1"
 }
-
-#provider "archive" {
-#  version = "~> 1.3"
-#}
-
-#provider "random" {
-#  version = "~> 2.3"
-#}
