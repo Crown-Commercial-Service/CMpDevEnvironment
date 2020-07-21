@@ -9,7 +9,6 @@ module "component" {
     type = "app"
     prefix = "ccs"
     name = "cmp"
-    hostname = "cmp"
     path_pattern = "/facilitiesmanagement"
     build_type = "custom"
     build_image = "ccs/ruby"
