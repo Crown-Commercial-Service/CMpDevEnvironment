@@ -20,9 +20,12 @@ locals {
   # it seems that even though we are not applying a path pattern
   # (via count = 0) we can't default to an empty string as the
   # condition:path_pattern doesn't like empty values, hence the "/"
+  # but it could be any value as it is not used
   path_pattern = "${local.has_path_pattern ? var.path_pattern : "/"}"
   
-  register_dns_record = "${local.has_path_pattern}"
+  # only register the DNS record if this is host based routing only i.e
+  # this does not have a path_pattern
+  register_dns_record = "${local.has_path_pattern ? 0 : 1}"
 }
 
 resource "aws_alb_target_group" "component" {
