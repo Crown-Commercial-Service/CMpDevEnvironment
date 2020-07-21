@@ -18,6 +18,12 @@ resource "null_resource" "is_component_type_valid" {
 }
 
 ##############################################################
+# "Proxy" provider; provider must be passed into the module
+##############################################################
+provider "aws" {
+}
+
+##############################################################
 # Infrastructure config
 ##############################################################
 
@@ -272,4 +278,7 @@ module "routing" {
   hostname  = "${local.config_hostname}"
   port      = "${var.port}"
   path_pattern = "${var.path_pattern}"
+  providers = {
+    aws = "aws"
+  }    
 }
