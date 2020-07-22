@@ -1,3 +1,7 @@
+terraform {
+  required_version = "~> 0.11"
+}
+
 module "component" {
     # source = "git::https://github.com/Crown-Commercial-Service/CMpDevEnvironment.git//terraform/modules/component"
     source = "../../modules/component"
@@ -14,9 +18,12 @@ module "component" {
     task_count = 1
     environment = [
       {
-        name = "CCS_FEATURE_EG1",
+        name = "CCS_FEATURE_EG1"
         value = "off"
-      } 
+      }
     ]
     port = "80"
+    providers = {
+      aws = "aws"
+    }
 }

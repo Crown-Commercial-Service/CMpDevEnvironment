@@ -1,33 +1,26 @@
-###############################################################################
-# This build pipeline is used to build and deploy a single instance of the
-# marketplace application to the API Cluster.
-#
-# It's purposes is to provide an 'api' for uploading data.
-###############################################################################
 terraform {
   required_version = "~> 0.11"
 }
 
+# TODO (pillingworth, 2020-07-15) when crown-marketplace-legacy repo is
+# available then update the github_repo variable below
 module "component" {
     # source = "git::https://github.com/Crown-Commercial-Service/CMpDevEnvironment.git//terraform/modules/component"
     source = "../../modules/component"
 
-    environment_name = "Development"
-
-    type = "api"
+    type = "app"
     prefix = "ccs"
-    name = "cmpupload"
+    name = "cmp-legacy"
+    hostname = "cmp"
     build_type = "custom"
     build_image = "ccs/ruby"
-
-    # Build the standard marketplace application
     github_owner = "Crown-Commercial-Service"
     github_repo = "crown-marketplace"
     github_branch = "master"
-
     github_token_alias = "ccs-build_github_token"
-    cluster_name = "CCSDEV_api_cluster"
-    task_count = 1
+    cluster_name = "CCSDEV_app_cluster"
+    task_count = 2
+    autoscaling_max_count = 4
     enable_tests = true
     enable_cognito_api_support = true
     environment = [
@@ -37,11 +30,6 @@ module "component" {
       },
       {
         name = "RAILS_SERVE_STATIC_FILES",
-        value = "true"
-      },
-      {
-        # Set to enable the ability to upload data
-        name = "APP_HAS_UPLOAD_PRIVILEGES",
         value = "true"
       }
     ]
