@@ -163,6 +163,10 @@ variable "default_db_storage" {
   default = 20
 }
 
+variable "default_db_apply_immediately" {
+  default = true
+}
+
 variable "default_db_name" {
   default = "cmpdefault"
 }
