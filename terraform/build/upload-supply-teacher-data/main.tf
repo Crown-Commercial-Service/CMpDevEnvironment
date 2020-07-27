@@ -12,9 +12,7 @@ terraform {
 module "upload" {
   # source = "git::https://github.com/Crown-Commercial-Service/CMpDevEnvironment.git//terraform/modules/image"
   source = "../../modules/upload"
-
   environment_name = "Sandbox"
-
   prefix = "ccs"
   name = "upload-supply-teacher"
   github_owner = "Crown-Commercial-Service"
