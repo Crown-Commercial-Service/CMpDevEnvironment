@@ -273,3 +273,33 @@ resource "aws_security_group" "vpc-CCSDEV-internal-ES" {
     CCSEnvironment = "${var.environment_name}"
   }
 }
+
+##############################################################
+# ElastiCache redis security groups
+##############################################################
+
+resource "aws_security_group" "vpc-CCSDEV-internal-EC-REDIS" {
+  name        = "CCSDEV-internal-EC-REDIS"
+  description = "ElastiCache Redis from within VPC"
+  vpc_id      = "${aws_vpc.CCSDEV-Services.id}"
+
+  ingress {
+    from_port   = "${var.redis_port}"
+    to_port     = "${var.redis_port}"
+    protocol    = "tcp"
+    cidr_blocks = ["${aws_subnet.CCSDEV-AZ-a-Public-1.cidr_block}", "${aws_subnet.CCSDEV-AZ-b-Public-1.cidr_block}", "${aws_subnet.CCSDEV-AZ-c-Public-1.cidr_block}", "${aws_subnet.CCSDEV-AZ-a-Private-1.cidr_block}", "${aws_subnet.CCSDEV-AZ-b-Private-1.cidr_block}", "${aws_subnet.CCSDEV-AZ-c-Private-1.cidr_block}", "${aws_subnet.CCSDEV-AZ-a-Management.cidr_block}", "${aws_subnet.CCSDEV-AZ-b-Management.cidr_block}", "${aws_subnet.CCSDEV-AZ-c-Management.cidr_block}"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags {
+    Name = "CCSDEV-internal-EC-REDIS"
+    CCSRole = "Infrastructure"
+    CCSEnvironment = "${var.environment_name}"
+  }
+}

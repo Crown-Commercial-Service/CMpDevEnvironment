@@ -1,7 +1,3 @@
-provider "aws" {
-  region     = "${var.region}"
-}
-
 ##############################################################
 #
 # CCSDEV IAM Configuration
@@ -20,6 +16,7 @@ provider "aws" {
 #     CCS_Code_Build_Pipeline
 #     CCS_Cognito_Administration
 #     CCS_Terraform_Execution
+#     CCS_Developer_API_Access
 #
 #   Users?
 #
@@ -41,6 +38,9 @@ data "aws_caller_identity" "current" {
 #   AWSCertificateManagerFullAccess
 #   AmazonS3FullAccess
 #   AmazonSSMFullAccess
+#   AmazonRDSFullAccess
+#   AmazonESFullAccess
+#   AmazonElastiCacheFullAccess
 #   KMS Full access - custom policy
 ##############################################################
 
@@ -72,6 +72,21 @@ resource "aws_iam_group_policy_attachment" "sys_ssm_full" {
 resource "aws_iam_group_policy_attachment" "sys_admin_kms_full" {
   group      = "${aws_iam_group.CCSDEV_iam_sys_admin.name}"
   policy_arn = "${aws_iam_policy.CCSDEV_policy_kms_full.arn}"
+}
+
+resource "aws_iam_group_policy_attachment" "sys_admin_rds_full" {
+  group      = "${aws_iam_group.CCSDEV_iam_sys_admin.name}"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonRDSFullAccess"
+}
+
+resource "aws_iam_group_policy_attachment" "sys_admin_es_full" {
+  group      = "${aws_iam_group.CCSDEV_iam_sys_admin.name}"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonESFullAccess"
+}
+
+resource "aws_iam_group_policy_attachment" "sys_admin_cache_full" {
+  group      = "${aws_iam_group.CCSDEV_iam_sys_admin.name}"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonElastiCacheFullAccess"
 }
 
 resource "aws_iam_policy" "CCSDEV_policy_kms_full" {
@@ -114,8 +129,6 @@ data "aws_iam_policy_document" "CCSDEV_policy_doc_kms_full" {
 #   AmazonEC2ContainerRegistryFullAccess
 #   AmazonECS_FullAccess
 #   service-role/AWSConfigRole
-#   AmazonRDSFullAccess
-#   AmazonESFullAccess
 #   CloudWatchLogsFullAccess
 #   Various custom policy settings
 #
@@ -161,16 +174,6 @@ resource "aws_iam_group_policy_attachment" "infra_admin_aws_config" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSConfigRole"
 }
 
-resource "aws_iam_group_policy_attachment" "infra_admin_rds_full" {
-  group      = "${aws_iam_group.CCSDEV_iam_infra_admin.name}"
-  policy_arn = "arn:aws:iam::aws:policy/AmazonRDSFullAccess"
-}
-
-resource "aws_iam_group_policy_attachment" "infra_admin_es_full" {
-  group      = "${aws_iam_group.CCSDEV_iam_infra_admin.name}"
-  policy_arn = "arn:aws:iam::aws:policy/AmazonESFullAccess"
-}
-
 resource "aws_iam_group_policy_attachment" "infra_admin_logs_full" {
   group      = "${aws_iam_group.CCSDEV_iam_infra_admin.name}"
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
@@ -179,6 +182,11 @@ resource "aws_iam_group_policy_attachment" "infra_admin_logs_full" {
 resource "aws_iam_group_policy_attachment" "infra_admin_custom" {
   group      = "${aws_iam_group.CCSDEV_iam_infra_admin.name}"
   policy_arn = "${aws_iam_policy.CCSDEV_policy_infra_custom.arn}"
+}
+
+resource "aws_iam_group_policy_attachment" "infra_admin_lambda_full" {
+  group      = "${aws_iam_group.CCSDEV_iam_infra_admin.name}"
+  policy_arn = "arn:aws:iam::aws:policy/AWSLambdaFullAccess"
 }
 
 resource "aws_iam_policy" "CCSDEV_policy_infra_custom" {
@@ -251,6 +259,7 @@ data "aws_iam_policy_document" "CCSDEV_policy_doc_kms_dev" {
 #   AmazonECS_FullAccess
 #   CloudWatchReadOnlyAccess
 #   AmazonSSMFullAccess
+#   AmazonElastiCacheReadOnlyAccess
 #   SNS Topic subscription (custom)
 #
 # TODO At present access NOT restricted to the app cluster
@@ -292,6 +301,11 @@ resource "aws_iam_group_policy_attachment" "app_dev_ssm_full" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMFullAccess"
 }
 
+resource "aws_iam_group_policy_attachment" "app_dev_elasticache_readonly" {
+  group      = "${aws_iam_group.CCSDEV_iam_app_dev.name}"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonElastiCacheReadOnlyAccess"
+}
+
 resource "aws_iam_group_policy_attachment" "app_dev_kms_dev" {
   group      = "${aws_iam_group.CCSDEV_iam_app_dev.name}"
   policy_arn = "${aws_iam_policy.CCSDEV_policy_kms_dev.arn}"
@@ -314,6 +328,7 @@ resource "aws_iam_group_policy_attachment" "app_dev_topic_subscription" {
 #   AmazonEC2ContainerRegistryPowerUser
 #   AmazonECS_FullAccess
 #   AmazonRDSFullAccess
+#   AmazonElastiCacheReadOnlyAccess
 #   AmazonESFullAccess
 #   CloudWatchReadOnlyAccess
 #   AmazonSSMFullAccess
@@ -367,6 +382,11 @@ resource "aws_iam_group_policy_attachment" "api_dev_ssm_full" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMFullAccess"
 }
 
+resource "aws_iam_group_policy_attachment" "api_dev_elasticache_readonly" {
+  group      = "${aws_iam_group.CCSDEV_iam_api_dev.name}"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonElastiCacheReadOnlyAccess"
+}
+
 resource "aws_iam_group_policy_attachment" "api_dev_kms_dev" {
   group      = "${aws_iam_group.CCSDEV_iam_api_dev.name}"
   policy_arn = "${aws_iam_policy.CCSDEV_policy_kms_dev.arn}"
@@ -375,6 +395,26 @@ resource "aws_iam_group_policy_attachment" "api_dev_kms_dev" {
 resource "aws_iam_group_policy_attachment" "api_dev_topic_subscription" {
   group      = "${aws_iam_group.CCSDEV_iam_api_dev.name}"
   policy_arn = "${aws_iam_policy.CCSDEV_policy_topic_subscription.arn}"
+}
+
+
+
+##############################################################
+# Developer API Access Group
+#
+# Users in the group have access to specific AWS resources
+# via an access key.
+#
+# No specific policies are attached. Individual resources
+# will attach to this group.
+#
+# For example the Application/API S3 data bucket will attach
+# a policy to this group to allow limited API access.
+#
+##############################################################
+
+resource "aws_iam_group" "CCSDEV_iam_dev_api_access" {
+  name = "CCS_Developer_API_Access"
 }
 
 
@@ -591,3 +631,30 @@ resource "aws_iam_group_policy_attachment" "terraform_exec_dynamodb_full" {
   group      = "${aws_iam_group.CCSDEV_iam_terraform_exec.name}"
   policy_arn = "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"
 }
+
+
+##############################################################
+# IAM role task for container instances
+# Note that other scripts will add policies to this role
+# to grant access as required.
+##############################################################
+
+resource "aws_iam_role" "CCSDEV_task_role" {
+  name               = "CCSDEV-task-role"
+  description        = "Role for application/api container tasks"
+  path               = "/"
+  assume_role_policy = "${data.aws_iam_policy_document.CCSDEV_task_role_policy.json}"
+
+}
+
+data "aws_iam_policy_document" "CCSDEV_task_role_policy" {
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["ecs-tasks.amazonaws.com"]
+    }
+  }
+}
+

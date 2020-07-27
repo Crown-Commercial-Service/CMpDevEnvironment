@@ -34,6 +34,7 @@ The following groups are created:
 - CCS_Code_Build_Pipeline
 - CCS_Cognito_Administration
 - CCS_Terraform_Execution
+- CCS_Developer_API_Access
 
 Only a very small number of users should be a member of the system administration group. To have complete system administration privileges a user will need to be a member of the system administration, infrastructure administration and code build pipeline groups.
 
@@ -226,7 +227,7 @@ The build pipeline scripts will ensure that a number of environment variables ar
 
 The example NPM module actually contains a simple class for this purpose and is used by the example application.
 
-Database and Elastic Search connection information is also supplied as environment variables:
+Database, Redis and Elastic Search connection information is also supplied as environment variables:
 
 - CCS_DEFAULT_DB_URL
 - CCS_DEFAULT_DB_TYPE
@@ -235,6 +236,8 @@ Database and Elastic Search connection information is also supplied as environme
 - CCS_DEFAULT_DB_NAME
 - CCS_DEFAULT_DB_USER
 - CCS_DEFAULT_DB_PASSWORD
+- CCS_REDIS_HOST
+- CCS_REDIS_PORT
 - CCS_DEFAULT_ES_ENDPOINT
 
 
@@ -243,6 +246,9 @@ Database and Elastic Search connection information is also supplied as environme
 Var variable `CCS_VERSION` is also defined. It will contain the contents of a file called `CCS_VERSION` from the root of the application or API repository. If no file is present it will contain `0.0.1`.
 
 Environment variables can also be used to pass feature switches to containers. These variables should all be  prefixed with `CCS_FEATURE_` and contain a value of `on` or `off`. For example
+
+The Application/API data S3 bucket is passed in th environment variable: `CCS_APP_API_DATA_BUCKET`.
+
 
 `CCS_FEATURE_EG1=on`
 

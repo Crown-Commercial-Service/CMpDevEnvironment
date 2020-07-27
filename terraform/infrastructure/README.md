@@ -59,6 +59,9 @@ Controls access to the example RDS Postgres database. **Note** currently allowin
 ### CCSDEV-internal-ES ###
 Controls access to the example Elastic Search domain. **Note** currently allowing access from public and private subnets. This will be removed in a later release.
 
+### CCSDEV-internal-EC-REDIS ###
+Controls access to the ElastiCache Redis instance. **Note** currently allowing access from public and private subnets. This will be removed in a later release.
+
 ---
 
 ## S3 Buckets ##
@@ -67,6 +70,12 @@ S3 buckets are used in the build pipeline for temporary artefacts. A bucket name
 ```ccs.<account number>.build-artifacts```
 
 Note that if a ```terraform destroy` is being performed the contents of the bucket must be manually deleted first.
+
+An S3 bucket is also created for use by application and API containers. The containers execute with an IAM role that allows full access to S3. The bucket name is:
+
+```ccs.<account number>.<environment_name>.app-api-data```
+
+The name of the bucket is passed to containers in the environment variable: `CCS_APP_API_DATA_BUCKET`.
 
 ---
 
@@ -154,6 +163,10 @@ variable "default_db_storage" {
   default = 20
 }
 
+variable "default_db_apply_immediately" {
+  default = true
+}
+
 variable "default_db_name" {
   default = "cmpdefault"
 }
@@ -207,6 +220,29 @@ for example:
 `cmpdefault.es.internal.cmpdev.crowncommercial.gov.uk`
 
 Note that Elastic Search will listen on http and https. The certificate used for https is generated automatically be AWS and will **not** match the above host name.
+
+---
+
+## ElastiCache Redis Instance ##
+A set of variables in `variables.tf' is used to define the ElastiCache Redis instance. Note the flag that can be used to prevent creation of the instance:
+
+```
+variable "create_elasticache_redis" {
+  default = true
+}
+
+variable "elasticache_instance_class" {
+  default = "cache.t2.small"
+}
+```
+
+When the Redis instance is created an entry in the private Route53 zone will be created that points to the Redis end point. This will be in the form:
+
+`redis.[internal domain]`
+
+for example:
+
+`redis.internal.cmpdev.crowncommercial.gov.uk`
 
 ---
 

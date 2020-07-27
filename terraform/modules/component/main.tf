@@ -18,6 +18,12 @@ resource "null_resource" "is_component_type_valid" {
 }
 
 ##############################################################
+# "Proxy" provider; provider must be passed into the module
+##############################################################
+provider "aws" {
+}
+
+##############################################################
 # Infrastructure config
 ##############################################################
 
@@ -53,6 +59,14 @@ data "aws_ssm_parameter" "db_config_port" {
   name = "/${var.environment_name}/config/rds_port"
 }
 
+data "aws_ssm_parameter" "redis_config_host" {
+  name = "/${var.environment_name}/config/redis_host"
+}
+
+data "aws_ssm_parameter" "redis_config_port" {
+  name = "/${var.environment_name}/config/redis_port"
+}
+
 data "aws_ssm_parameter" "db_config_name" {
   name = "/${var.environment_name}/config/rds_name"
 }
@@ -67,6 +81,10 @@ data "aws_ssm_parameter" "db_config_password" {
 
 data "aws_ssm_parameter" "config_es_endpoint" {
   name = "/${var.environment_name}/config/es_endpoint"
+}
+
+data "aws_ssm_parameter" "config_s3_app_api_data_bucket" {
+  name = "/${var.environment_name}/config/app_api_data_bucket"
 }
 
 ##############################################################
@@ -159,6 +177,14 @@ locals {
         value = "${data.aws_ssm_parameter.db_config_port.value}"
       }, 
       {
+        name = "CCS_REDIS_HOST",
+        value = "${data.aws_ssm_parameter.redis_config_host.value}"
+      }, 
+      {
+        name = "CCS_REDIS_PORT",
+        value = "${data.aws_ssm_parameter.redis_config_port.value}"
+      }, 
+      {
         name = "CCS_DEFAULT_DB_NAME",
         value = "${data.aws_ssm_parameter.db_config_name.value}"
       }, 
@@ -173,6 +199,10 @@ locals {
       {
         name = "CCS_DEFAULT_ES_ENDPOINT",
         value = "${data.aws_ssm_parameter.config_es_endpoint.value}"
+      },
+      {
+        name = "CCS_APP_API_DATA_BUCKET",
+        value = "${data.aws_ssm_parameter.config_s3_app_api_data_bucket.value}"
       }
     ]
 }
@@ -240,11 +270,15 @@ module "deploy_pipeline" {
 module "routing" {
   source = "../routing"
 
-  type     = "${var.type}"
-  name     = "${var.name}"
-  domain   = "${local.config_domain}"
+  type      = "${var.type}"
+  name      = "${var.name}"
+  domain    = "${local.config_domain}"
   catch_all = "${var.catch_all}"
-  hostname = "${local.config_hostname}"
-  port     = "${var.port}"
-  protocol = "${local.config_protocol}"
+  protocol  = "${local.config_protocol}"
+  hostname  = "${local.config_hostname}"
+  port      = "${var.port}"
+  path_pattern = "${var.path_pattern}"
+  providers = {
+    aws = "aws"
+  }    
 }

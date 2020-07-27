@@ -1,3 +1,7 @@
+terraform {
+  required_version = "~> 0.11"
+}
+
 module "image" {
   # source = "git::https://github.com/Crown-Commercial-Service/CMpDevEnvironment.git//terraform/modules/image"
   source = "../../modules/image"

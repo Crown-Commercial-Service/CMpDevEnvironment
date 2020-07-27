@@ -31,6 +31,14 @@ variable hostname {
 }
 
 ##############################################################
+# Path (for routing purposes)
+##############################################################
+variable path_pattern {
+    type = "string"
+    default = ""
+}
+
+##############################################################
 # If true and additional rule will be added at the end of 
 # the routing rules with a host of *
 ##############################################################
@@ -165,13 +173,6 @@ variable port {
     type = "string"
 }
 
-##############################################################
-# AWS Provider
-##############################################################
-provider "aws" {
-  region = "eu-west-2"
-}
-
 data "aws_caller_identity" "current" {
 }
 
@@ -211,9 +212,17 @@ data "aws_security_group" "vpc-CCSDEV-internal" {
 
 ##############################################################
 # AWS Cognito support
+# Only:
+#   enable_cognito_support
+# OR
+#   enable_cognito_api_support
 ##############################################################
 
 variable "enable_cognito_support" {
+    default = false
+}
+
+variable "enable_cognito_api_support" {
     default = false
 }
 

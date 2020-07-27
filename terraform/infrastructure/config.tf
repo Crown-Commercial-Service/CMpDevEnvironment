@@ -166,3 +166,46 @@ resource "aws_ssm_parameter" "config_es_endpoint_disabled" {
     CCSEnvironment = "${var.environment_name}"
   }
 }
+
+resource "aws_ssm_parameter" "config_s3_app_api_data_bucket" {
+  name  = "/${var.environment_name}/config/app_api_data_bucket"
+  description  = "S3 bucket used for application/api data"
+  type  = "SecureString"
+  value = "${local.app_api_bucket_name}"
+
+  tags {
+    Name = "Parameter Store: S3 bucket used for application/api data"
+    CCSRole = "Infrastructure"
+    CCSEnvironment = "${var.environment_name}"
+  }
+}
+
+locals {
+  redis_host = "redis.${var.domain_internal_prefix}.${var.domain_name}"
+}
+
+resource "aws_ssm_parameter" "config_redis_host" {
+  name  = "/${var.environment_name}/config/redis_host"
+  description  = "Infrastructure configured ElastiCache Redis host"
+  type  = "SecureString"
+  value = "${var.create_elasticache_redis ? local.redis_host : "_"}"
+
+  tags {
+    Name = "Parameter Store: Infrastructure configured ElastiCache Redis host"
+    CCSRole = "Infrastructure"
+    CCSEnvironment = "${var.environment_name}"
+  }
+}
+
+resource "aws_ssm_parameter" "config_redis_port" {
+  name  = "/${var.environment_name}/config/redis_port"
+  description  = "Infrastructure configured ElastiCache Redis port"
+  type  = "SecureString"
+  value = "${var.create_elasticache_redis ? var.redis_port : "_"}"
+
+  tags {
+    Name = "Parameter Store: Infrastructure configured ElastiCache Redis port"
+    CCSRole = "Infrastructure"
+    CCSEnvironment = "${var.environment_name}"
+  }
+}
