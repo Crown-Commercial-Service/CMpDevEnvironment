@@ -18,7 +18,7 @@ module "component" {
     github_branch = "master"
     github_token_alias = "ccs-build_github_token"
     cluster_name = "CCSDEV_app_cluster"
-    task_count = 1
+    task_count = 3
     environment = [
     ]
     port = "80"
