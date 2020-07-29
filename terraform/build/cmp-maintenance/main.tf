@@ -11,6 +11,7 @@ module "component" {
     name = "maintenance"
     hostname = "unavailable"
     catch_all = true
+    routing_priority_offset = 600
     build_type = "docker"
     github_owner = "Crown-Commercial-Service"
     github_repo = "crown-marketplace-maintenance"

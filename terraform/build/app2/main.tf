@@ -9,6 +9,7 @@ module "component" {
     type = "app"
     prefix = "ccs"
     name = "app2"
+    routing_priority_offset = 930
     build_type = "ruby"
     github_owner = "Crown-Commercial-Service"
     github_repo = "CMpExampleApp2"

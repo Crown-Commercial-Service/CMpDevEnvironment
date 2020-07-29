@@ -82,11 +82,11 @@ variable "app_cluster_ami" {
 }
 
 variable "app_cluster_instance_class" {
-  default = "t2.large"
+  default = "m4.large"
 }
 
 variable "app_cluster_instance_count" {
-  default = "1"
+  default = "3"
 }
 
 variable "app_cluster_key_name" {
@@ -106,11 +106,11 @@ variable "api_cluster_ami" {
 }
 
 variable "api_cluster_instance_class" {
-  default = "t2.medium"
+  default = "m4.large"
 }
 
 variable "api_cluster_instance_count" {
-  default = "1"
+  default = "2"
 }
 
 variable "api_cluster_key_name" {
@@ -172,7 +172,7 @@ variable "default_db_retention_period" {
 # ElasticCache - Redis settings
 ##############################################################
 variable "create_elasticache_redis" {
-  default = false
+  default = true
 }
 
 variable "elasticache_instance_class" {

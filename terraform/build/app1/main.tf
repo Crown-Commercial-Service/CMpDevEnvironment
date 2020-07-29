@@ -9,6 +9,7 @@ module "component" {
     type = "app"
     prefix = "ccs"
     name = "app1"
+    routing_priority_offset = 920
     build_type = "docker"
     github_owner = "Crown-Commercial-Service"
     github_repo = "CMpExampleApp1"

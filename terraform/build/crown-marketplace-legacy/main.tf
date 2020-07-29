@@ -12,6 +12,7 @@ module "component" {
     prefix = "ccs"
     name = "cmp-legacy"
     hostname = "cmp"
+    routing_priority_offset = 200
     build_type = "custom"
     build_image = "ccs/ruby"
     github_owner = "Crown-Commercial-Service"
