@@ -39,12 +39,27 @@ variable path_pattern {
 }
 
 ##############################################################
+# Used to set the offset for routing rule numbers
+##############################################################
+variable routing_priority_offset {
+    type = "string"
+    default = "0"
+}
+##############################################################
 # If true and additional rule will be added at the end of 
 # the routing rules with a host of *
 ##############################################################
 variable catch_all {
     type = "string"
     default = false
+}
+
+##############################################################
+# Path to use for health check
+##############################################################
+variable health_check_path {
+    type = "string"
+    default = "/"
 }
 
 ##############################################################

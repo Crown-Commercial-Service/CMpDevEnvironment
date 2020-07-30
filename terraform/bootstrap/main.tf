@@ -174,3 +174,12 @@ module "image-ruby_backend" {
     region    = "${var.region}"
     path      = "${path.module}"
 }
+
+module "ssm-config_backend" {
+    source    = "./backend"
+
+    bucket    = "${local.bucket_name}"
+    component = "ssm-config"
+    region    = "${var.region}"
+    path      = "${path.module}"
+}

@@ -86,7 +86,7 @@ variable "app_cluster_instance_class" {
 }
 
 variable "app_cluster_instance_count" {
-  default = "2"
+  default = "3"
 }
 
 variable "app_cluster_key_name" {
@@ -125,7 +125,7 @@ variable "api_cluster_alb_logging_enabled" {
 # Default Databases Settings
 ##############################################################
 variable "create_default_rds_database" {
-  default = false
+  default = true
 }
 
 variable "default_db_instance_class" {
@@ -172,7 +172,7 @@ variable "default_db_retention_period" {
 # ElasticCache - Redis settings
 ##############################################################
 variable "create_elasticache_redis" {
-  default = false
+  default = true
 }
 
 variable "elasticache_instance_class" {

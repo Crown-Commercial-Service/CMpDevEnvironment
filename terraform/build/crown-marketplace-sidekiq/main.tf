@@ -17,6 +17,7 @@ module "component" {
     type = "api"
     prefix = "ccs"
     name = "cmpsidekiq"
+    routing_priority_offset = 300
     build_type = "custom"
     build_image = "ccs/ruby"
 

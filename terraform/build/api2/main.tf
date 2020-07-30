@@ -9,6 +9,7 @@ module "component" {
     type = "api"
     prefix = "ccs"
     name = "api2"
+    routing_priority_offset = 910
     build_type = "python"
     github_owner = "Crown-Commercial-Service"
     github_repo = "CMpExampleApi2"

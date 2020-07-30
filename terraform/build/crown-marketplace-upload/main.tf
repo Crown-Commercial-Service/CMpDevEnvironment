@@ -17,6 +17,7 @@ module "component" {
     type = "api"
     prefix = "ccs"
     name = "cmpupload"
+    routing_priority_offset = 400
     build_type = "custom"
     build_image = "ccs/ruby"
 

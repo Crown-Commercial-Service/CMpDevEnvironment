@@ -39,7 +39,7 @@ resource "aws_alb_target_group" "component" {
     unhealthy_threshold = "2"
     interval            = "60"
     matcher             = "200-499"
-    path                = "/"
+    path                = "${var.health_check_path}"
     port                = "traffic-port"
     protocol            = "HTTP"
     timeout             = "5"
@@ -143,7 +143,7 @@ resource "aws_alb_listener_rule" "https_subdomain_rule_hostname" {
   listener_arn = "${data.aws_alb_listener.https_listener.arn}"
 
   # just a hostname match needs to come after the more specific hostname and path matching
-  priority = 5000
+  priority = "${5000 + var.routing_priority_offset}"
 
   action {
     type             = "forward"
@@ -162,7 +162,7 @@ resource "aws_alb_listener_rule" "https_subdomain_rule_hostname_and_path" {
   listener_arn = "${data.aws_alb_listener.https_listener.arn}"
 
   # this rule comes before the other host/path/catch_all rules
-  priority = 1000
+  priority = "${1000 + var.routing_priority_offset}"
 
   action {
     type             = "forward"

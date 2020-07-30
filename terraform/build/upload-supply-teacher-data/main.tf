@@ -17,6 +17,7 @@ module "upload" {
 
   prefix = "ccs"
   name = "upload-supply-teacher"
+  routing_priority_offset = 500
   github_owner = "Crown-Commercial-Service"
   github_repo = "crown-marketplace-data"
   github_branch = "master"
