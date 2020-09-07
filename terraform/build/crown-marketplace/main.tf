@@ -1,7 +1,3 @@
-terraform {
-  required_version = "~> 0.11"
-}
-
 module "component" {
     # source = "git::https://github.com/Crown-Commercial-Service/CMpDevEnvironment.git//terraform/modules/component"
     source = "../../modules/component"
@@ -9,9 +5,6 @@ module "component" {
     type = "app"
     prefix = "ccs"
     name = "cmp"
-    path_pattern = "/facilities-management"
-    health_check_path = "/facilities-management"
-    routing_priority_offset = 100
     build_type = "custom"
     build_image = "ccs/ruby"
     github_owner = "Crown-Commercial-Service"
@@ -34,7 +27,4 @@ module "component" {
       }
     ]
     port = "80"
-    providers = {
-      aws = "aws"
-    }    
 }
