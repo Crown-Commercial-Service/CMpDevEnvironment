@@ -34,13 +34,6 @@ variable github_branch {
     default = "master"
 }
 
-##############################################################
-# AWS Provider
-##############################################################
-provider "aws" {
-  region = "eu-west-2"
-}
-
 data "aws_caller_identity" "current" {
 }
 

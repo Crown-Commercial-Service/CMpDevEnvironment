@@ -18,6 +18,12 @@ resource "null_resource" "is_component_type_valid" {
 }
 
 ##############################################################
+# "Proxy" provider; provider must be passed into the module
+##############################################################
+provider "aws" {
+}
+
+##############################################################
 # Infrastructure config
 ##############################################################
 
@@ -264,11 +270,17 @@ module "deploy_pipeline" {
 module "routing" {
   source = "../routing"
 
-  type     = "${var.type}"
-  name     = "${var.name}"
-  domain   = "${local.config_domain}"
+  type      = "${var.type}"
+  name      = "${var.name}"
+  domain    = "${local.config_domain}"
   catch_all = "${var.catch_all}"
-  hostname = "${local.config_hostname}"
-  port     = "${var.port}"
-  protocol = "${local.config_protocol}"
+  routing_priority_offset = "${var.routing_priority_offset}"
+  protocol  = "${local.config_protocol}"
+  hostname  = "${local.config_hostname}"
+  port      = "${var.port}"
+  path_pattern = "${var.path_pattern}"
+  health_check_path = "${var.health_check_path}"
+  providers = {
+    aws = "aws"
+  }    
 }

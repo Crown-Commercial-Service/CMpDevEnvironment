@@ -1,3 +1,7 @@
+terraform {
+  required_version = "~> 0.11"
+}
+
 module "component" {
     # source = "git::https://github.com/Crown-Commercial-Service/CMpDevEnvironment.git//terraform/modules/component"
     source = "../../modules/component"
@@ -5,6 +9,7 @@ module "component" {
     type = "app"
     prefix = "ccs"
     name = "app1"
+    routing_priority_offset = 920
     build_type = "docker"
     github_owner = "Crown-Commercial-Service"
     github_repo = "CMpExampleApp1"
@@ -14,9 +19,12 @@ module "component" {
     task_count = 1
     environment = [
       {
-        name = "CCS_FEATURE_EG1",
+        name = "CCS_FEATURE_EG1"
         value = "off"
-      } 
+      }
     ]
     port = "80"
+    providers = {
+      aws = "aws"
+    }
 }
