@@ -1,10 +1,11 @@
-terraform {
-  required_version = "~> 0.11"
+provider "aws" {
+  region = "${local.region}"
 }
 
 data "aws_caller_identity" "current" {}
 
 locals {
+    region = "eu-west-2"
     bucket_name = "ccs.${data.aws_caller_identity.current.account_id}.tfstate"
 }
 
@@ -54,7 +55,7 @@ module "security_backend" {
 
     bucket    = "${local.bucket_name}"
     component = "security"
-    region    = "${var.region}"
+    region    = "${local.region}"
     path      = "${path.module}"
 }
 
@@ -63,7 +64,7 @@ module "infrastructure_backend" {
 
     bucket    = "${local.bucket_name}"
     component = "infrastructure"
-    region    = "${var.region}"
+    region    = "${local.region}"
     path      = "${path.module}"
 }
 
@@ -72,7 +73,7 @@ module "api1_backend" {
 
     bucket    = "${local.bucket_name}"
     component = "build/api1"
-    region    = "${var.region}"
+    region    = "${local.region}"
     path      = "${path.module}"
 }
 
@@ -81,7 +82,7 @@ module "api2_backend" {
 
     bucket    = "${local.bucket_name}"
     component = "build/api2"
-    region    = "${var.region}"
+    region    = "${local.region}"
     path      = "${path.module}"
 }
 
@@ -90,7 +91,7 @@ module "app1_backend" {
 
     bucket    = "${local.bucket_name}"
     component = "build/app1"
-    region    = "${var.region}"
+    region    = "${local.region}"
     path      = "${path.module}"
 }
 
@@ -99,7 +100,7 @@ module "app2_backend" {
 
     bucket    = "${local.bucket_name}"
     component = "build/app2"
-    region    = "${var.region}"
+    region    = "${local.region}"
     path      = "${path.module}"
 }
 
@@ -108,7 +109,7 @@ module "npm1_backend" {
 
     bucket    = "${local.bucket_name}"
     component = "build/npm1"
-    region    = "${var.region}"
+    region    = "${local.region}"
     path      = "${path.module}"
 }
 
@@ -117,25 +118,15 @@ module "cmp_backend" {
 
     bucket    = "${local.bucket_name}"
     component = "build/crown-marketplace"
-    region    = "${var.region}"
+    region    = "${local.region}"
     path      = "${path.module}"
 }
-
-module "cmp_legacy_backend" {
-    source    = "./backend"
-
-    bucket    = "${local.bucket_name}"
-    component = "build/crown-marketplace-legacy"
-    region    = "${var.region}"
-    path      = "${path.module}"
-}
-
 module "cmp_upload_backend" {
     source    = "./backend"
 
     bucket    = "${local.bucket_name}"
     component = "build/crown-marketplace-upload"
-    region    = "${var.region}"
+    region    = "${local.region}"
     path      = "${path.module}"
 }
 
@@ -144,7 +135,7 @@ module "cmp_maintenance_backend" {
 
     bucket    = "${local.bucket_name}"
     component = "build/cmp-maintenance"
-    region    = "${var.region}"
+    region    = "${local.region}"
     path      = "${path.module}"
 }
 
@@ -153,7 +144,7 @@ module "cmp_supply_teacher_upload_backend" {
 
     bucket    = "${local.bucket_name}"
     component = "build/upload-supply-teacher-data"
-    region    = "${var.region}"
+    region    = "${local.region}"
     path      = "${path.module}"
 }
 
@@ -162,7 +153,7 @@ module "cmp_sidekiq_backend" {
 
     bucket    = "${local.bucket_name}"
     component = "build/crown-marketplace-sidekiq"
-    region    = "${var.region}"
+    region    = "${local.region}"
     path      = "${path.module}"
 }
 
@@ -171,15 +162,6 @@ module "image-ruby_backend" {
 
     bucket    = "${local.bucket_name}"
     component = "build/image-ruby"
-    region    = "${var.region}"
-    path      = "${path.module}"
-}
-
-module "ssm-config_backend" {
-    source    = "./backend"
-
-    bucket    = "${local.bucket_name}"
-    component = "ssm-config"
-    region    = "${var.region}"
+    region    = "${local.region}"
     path      = "${path.module}"
 }

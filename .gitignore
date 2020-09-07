@@ -13,7 +13,3 @@
 
 # Generated lambda zip
 /terraform/infrastructure/*.zip
-
-# Ignore Eclipse files
-.project
-.classfile

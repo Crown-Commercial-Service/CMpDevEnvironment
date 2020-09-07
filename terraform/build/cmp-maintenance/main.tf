@@ -1,7 +1,3 @@
-terraform {
-  required_version = "~> 0.11"
-}
-
 module "component" {
     # source = "git::https://github.com/Crown-Commercial-Service/CMpDevEnvironment.git//terraform/modules/component"
     source = "../../modules/component"
@@ -11,7 +7,6 @@ module "component" {
     name = "maintenance"
     hostname = "unavailable"
     catch_all = true
-    routing_priority_offset = 600
     build_type = "docker"
     github_owner = "Crown-Commercial-Service"
     github_repo = "crown-marketplace-maintenance"
@@ -22,7 +17,4 @@ module "component" {
     environment = [
     ]
     port = "80"
-    providers = {
-      aws = "aws"
-    }    
 }
