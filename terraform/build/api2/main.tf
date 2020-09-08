@@ -1,3 +1,7 @@
+terraform {
+  required_version = "~> 0.11"
+}
+
 module "component" {
     # source = "git::https://github.com/Crown-Commercial-Service/CMpDevEnvironment.git//terraform/modules/component"
     source = "../../modules/component"
@@ -5,6 +9,7 @@ module "component" {
     type = "api"
     prefix = "ccs"
     name = "api2"
+    routing_priority_offset = 910
     build_type = "python"
     github_owner = "Crown-Commercial-Service"
     github_repo = "CMpExampleApi2"
@@ -19,4 +24,7 @@ module "component" {
       } 
     ]
     port = "80"
+    providers = {
+      aws = "aws"
+    }    
 }
