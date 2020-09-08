@@ -129,6 +129,7 @@ resource "aws_db_instance" "ccsdev_default_db" {
 
   identifier                = "ccsdev-db"
   allocated_storage         = "${var.default_db_storage}"
+  apply_immediately         = "${var.default_db_apply_immediately}"
   storage_type              = "gp2"
   engine                    = "postgres"
   engine_version            = "11.2"

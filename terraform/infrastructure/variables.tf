@@ -27,6 +27,7 @@ variable ccs_cognito_groups {
   default = {
     "at_access" = "Apprenticeships user access",
     "buyer" = "Buyer user access",
+    "supplier" = "Supplier user access",
     "ccs_employee" = "CCS Employee user access",
     "fm_access" = "Facilities Management user access",
     "ls_access" = "Legal Services user access",
@@ -85,7 +86,7 @@ variable "app_cluster_instance_class" {
 }
 
 variable "app_cluster_instance_count" {
-  default = "2"
+  default = "3"
 }
 
 variable "app_cluster_key_name" {
@@ -132,7 +133,11 @@ variable "default_db_instance_class" {
 }
 
 variable "default_db_storage" {
-  default = 40
+  default = 100
+}
+
+variable "default_db_apply_immediately" {
+  default = false
 }
 
 variable "default_db_type" {

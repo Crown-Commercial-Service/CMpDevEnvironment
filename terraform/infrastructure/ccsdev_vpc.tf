@@ -1,7 +1,3 @@
-provider "aws" {
-  region = "${var.region}"
-}
-
 ##############################################################
 #
 # CCSDEV Virtual Private Cloud Definition

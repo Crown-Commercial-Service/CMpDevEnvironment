@@ -1,15 +1,15 @@
 variable "bucket" {
-    type = "string"
+  type = "string"
 }
 
 variable "component" {
-    type = "string"
+  type = "string"
 }
 
 variable "region" {
-    type = "string"
+  type = "string"
 }
 
 variable "path" {
-    type = "string"
+  type = "string"
 }
