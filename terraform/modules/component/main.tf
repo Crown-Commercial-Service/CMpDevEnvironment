@@ -87,6 +87,10 @@ data "aws_ssm_parameter" "config_s3_app_api_data_bucket" {
   name = "/${var.environment_name}/config/app_api_data_bucket"
 }
 
+data "aws_ssm_parameter" "config_s3_assets_bucket" {
+  name = "/${var.environment_name}/config/assets_bucket"
+}
+
 ##############################################################
 # Subdomain
 ##############################################################
@@ -203,6 +207,11 @@ locals {
       {
         name = "CCS_APP_API_DATA_BUCKET",
         value = "${data.aws_ssm_parameter.config_s3_app_api_data_bucket.value}"
+      },
+      # name is not consistent because this is what devs had already coded
+      {
+        name = "ASSETS_BUCKET",
+        value = "${data.aws_ssm_parameter.config_s3_assets_bucket.value}"
       }
     ]
 }
