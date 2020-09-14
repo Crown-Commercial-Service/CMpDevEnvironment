@@ -125,7 +125,7 @@ resource "aws_ssm_parameter" "cmp_app_run_postcodes_import" {
 resource "aws_ssm_parameter" "cmp_ccs_app_api_data_bucket" {
 	name = "/Environment/ccs/cmp/CCS_APP_API_DATA_BUCKET"
 	type = "SecureString"
-	value = "ccs.538094434428.sandbox.app-api-data"
+	value = "ccs.redacted.sandbox.app-api-data"
 }
 
 resource "aws_ssm_parameter" "cmp_app_update_nuts_now" {
@@ -185,7 +185,7 @@ resource "aws_ssm_parameter" "cmplegacy_app_run_postcodes_import" {
 resource "aws_ssm_parameter" "cmplegacy_ccs_app_api_data_bucket" {
 	name = "/Environment/ccs/cmp-legacy/CCS_APP_API_DATA_BUCKET"
 	type = "SecureString"
-	value = "ccs.538094434428.sandbox.app-api-data"
+	value = "ccs.redacted.sandbox.app-api-data"
 }
 
 resource "aws_ssm_parameter" "cmplegacy_app_update_nuts_now" {
@@ -252,4 +252,10 @@ resource "aws_ssm_parameter" "cmplegacy_supplier_details_data_key" {
 	name = "/Environment/ccs/cmp-legacy/SUPPLIER_DETAILS_DATA_KEY"
 	type = "SecureString"
 	value = "facilities_management/data/static/RM3830_Suppliers_Details_for_dev_and_test.xlsx"
+}
+
+resource "aws_ssm_parameter" "app_run_precompile_assets" {
+	name = "/Environment/global/APP_RUN_PRECOMPILE_ASSETS"
+	type = "SecureString"
+	value = "TRUE"
 }

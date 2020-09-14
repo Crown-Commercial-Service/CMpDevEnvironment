@@ -33,9 +33,19 @@ variable hostname {
 ##############################################################
 # Path (for routing purposes)
 ##############################################################
-variable path_pattern {
-    type = "string"
-    default = ""
+variable path_patterns {
+    type = "list"
+    default = []
+}
+
+##############################################################
+# Flag to register the DNS record, assumes it always does and
+# can then be disabled if another build process is hanlding
+# the registration
+##############################################################
+variable register_dns_record {
+  type = "string"
+  default = true
 }
 
 ##############################################################
@@ -216,6 +226,18 @@ data "aws_vpc" "CCSDEV-Services" {
 data "aws_subnet" "CCSDEV-AZ-a-Private-1" {
   tags {
     "Name" = "CCSDEV-AZ-a-Private-1"
+  }
+}
+
+data "aws_subnet" "CCSDEV-AZ-b-Private-1" {
+  tags {
+    "Name" = "CCSDEV-AZ-b-Private-1"
+  }
+}
+
+data "aws_subnet" "CCSDEV-AZ-c-Private-1" {
+  tags {
+    "Name" = "CCSDEV-AZ-c-Private-1"
   }
 }
 

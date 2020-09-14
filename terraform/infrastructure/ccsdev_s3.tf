@@ -70,7 +70,7 @@ resource "aws_s3_bucket" "logs" {
 }
 
 ##############################################################
-# Appliaction/API Storage
+# Application/API Storage
 ##############################################################
 resource "aws_s3_bucket" "app-api-data-bucket" {
   bucket = "${local.app_api_bucket_name}"
@@ -82,6 +82,59 @@ resource "aws_s3_bucket" "app-api-data-bucket" {
     CCSEnvironment = "${var.environment_name}"
   }
 }
+
+##############################################################
+# Asset Storage
+##############################################################
+resource "aws_iam_policy" "CCSDEV_assets_bucket_policy" {
+  name   = "CCSDEV_assets_bucket_policy"
+  path   = "/"
+  policy = "${data.aws_iam_policy_document.CCSDEV_assets_bucket_policy_doc.json}"
+}
+
+resource "aws_iam_group_policy_attachment" "dev-api-assets-bucket-policy-attachment" {
+  group      = "CCS_Developer_API_Access"
+  policy_arn = "${aws_iam_policy.CCSDEV_assets_bucket_policy.arn}"
+}
+
+resource "aws_iam_role_policy_attachment" "task-role-assets-bucket-policy-attachment" {
+  role       = "CCSDEV-task-role"
+  policy_arn = "${aws_iam_policy.CCSDEV_assets_bucket_policy.arn}"
+}
+
+data "aws_iam_policy_document" "CCSDEV_assets_bucket_policy_doc" {
+
+  statement {
+
+    effect = "Allow",
+    actions = [
+      "s3:*",
+    ]
+
+    resources = [
+      "${aws_s3_bucket.assets-bucket.arn}/*",
+      "${aws_s3_bucket.assets-bucket.arn}"
+    ]
+  }
+}
+
+resource "aws_s3_bucket" "assets-bucket" {
+  bucket = "${local.assets_bucket_name}"
+  
+   acl    = "public-read"
+  #grant {
+  #  type        = "Group"
+  #  uri         = "http://acs.amazonaws.com/groups/global/AllUsers"
+  #  permissions = ["READ_ACP"]
+  #}
+
+  tags {
+    Name = "CCSDEV Application/assets bucket"
+    CCSRole = "Infrastructure"
+    CCSEnvironment = "${var.environment_name}"
+  }
+}
+
 
 ##############################################################
 # Add custom policy to CCS_Developer_API_Access group and
