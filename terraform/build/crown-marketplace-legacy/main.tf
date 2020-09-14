@@ -13,7 +13,6 @@ module "component" {
     name = "cmp-legacy"
     path_patterns = ["/management-consultancy*", "/supply-teachers*", "/legal-services*"]
     register_dns_record = true
-    health_check_path = "/legal-services"
     hostname = "cmp"
     # note as part of sept2020 changes and a swapping priorities of crown-marketplace and
     # crown-marketplace-legacy over cannot simply swap numbers as when run terrafrom it
