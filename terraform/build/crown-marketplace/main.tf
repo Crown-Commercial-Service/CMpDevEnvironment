@@ -12,7 +12,7 @@ module "component" {
     path_patterns = []
     register_dns_record = false
     health_check_path = "/facilities-management"
-    routing_priority_offset = 100
+    routing_priority_offset = 200
     build_type = "custom"
     build_image = "ccs/ruby"
     github_owner = "Crown-Commercial-Service"

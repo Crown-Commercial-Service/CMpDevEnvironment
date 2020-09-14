@@ -15,7 +15,7 @@ module "component" {
     register_dns_record = true
     health_check_path = "/legal-services"
     hostname = "cmp"
-    routing_priority_offset = 200
+    routing_priority_offset = 100
     build_type = "custom"
     build_image = "ccs/ruby"
     github_owner = "Crown-Commercial-Service"
