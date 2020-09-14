@@ -14,17 +14,7 @@ provider "aws" {}
 ##############################################################
 locals {
   provision_https_certificates = "${upper(var.protocol) == "HTTPS" ? 1 : 0}"
-  has_path_pattern             = "${var.path_pattern == "" ? 0 : 1}"
-
-  # it seems that even though we are not applying a path pattern
-  # (via count = 0) we can't default to an empty string as the
-  # condition:path_pattern doesn't like empty values, hence the "/"
-  # but it could be any value as it is not used
-  path_pattern = "${local.has_path_pattern ? var.path_pattern : "/"}"
-
-  # only register the DNS record if this is host based routing only i.e
-  # this does not have a path_pattern
-  register_dns_record = "${local.has_path_pattern ? 0 : 1}"
+  has_path_patterns            = "${length(var.path_patterns) == 0 ? 0 : 1}"
 }
 
 resource "aws_alb_target_group" "component" {
@@ -139,7 +129,7 @@ data "aws_alb_listener" "https_listener" {
 }
 
 resource "aws_alb_listener_rule" "https_subdomain_rule_hostname" {
-  count        = "${local.provision_https_certificates && !local.has_path_pattern ? 1 : 0}"
+  count        = "${local.provision_https_certificates && !local.has_path_patterns ? 1 : 0}"
   listener_arn = "${data.aws_alb_listener.https_listener.arn}"
 
   # just a hostname match needs to come after the more specific hostname and path matching
@@ -158,7 +148,7 @@ resource "aws_alb_listener_rule" "https_subdomain_rule_hostname" {
 }
 
 resource "aws_alb_listener_rule" "https_subdomain_rule_hostname_and_path" {
-  count        = "${local.provision_https_certificates && local.has_path_pattern ? 1 : 0}"
+  count        = "${local.provision_https_certificates && local.has_path_patterns ? 1 : 0}"
   listener_arn = "${data.aws_alb_listener.https_listener.arn}"
 
   # this rule comes before the other host/path/catch_all rules
@@ -177,7 +167,7 @@ resource "aws_alb_listener_rule" "https_subdomain_rule_hostname_and_path" {
 
   condition {
     path_pattern {
-      values = ["${local.path_pattern}"]
+      values = "${var.path_patterns}"
     }
   }
 }
@@ -206,7 +196,7 @@ resource "aws_alb_listener_rule" "https_subdomain_catchall_rule" {
 # DNS configuration
 ##############################################################
 resource "aws_route53_record" "component" {
-  count = "${local.register_dns_record}"
+  count = "${var.register_dns_record}"
 
   zone_id = "${data.aws_route53_zone.base_domain.zone_id}"
   name    = "${var.hostname}.${var.domain}"

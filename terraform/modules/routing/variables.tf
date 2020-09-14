@@ -31,9 +31,19 @@ variable hostname {
 ##############################################################
 # Path pattern to use for routing
 ##############################################################
-variable path_pattern {
-    type = "string"
-    default = ""
+variable path_patterns {
+    type = "list"
+    default = []
+}
+
+##############################################################
+# Flag to register the DNS record, assumes it always does and
+# can then be disabled if another build process is hanlding
+# the registration
+##############################################################
+variable register_dns_record {
+  type = "string"
+  default = true
 }
 
 ##############################################################

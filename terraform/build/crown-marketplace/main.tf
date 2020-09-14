@@ -9,7 +9,8 @@ module "component" {
     type = "app"
     prefix = "ccs"
     name = "cmp"
-    path_pattern = "/facilities-management"
+    path_patterns = []
+    register_dns_record = false
     health_check_path = "/facilities-management"
     routing_priority_offset = 100
     build_type = "custom"

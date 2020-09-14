@@ -287,7 +287,8 @@ module "routing" {
   protocol  = "${local.config_protocol}"
   hostname  = "${local.config_hostname}"
   port      = "${var.port}"
-  path_pattern = "${var.path_pattern}"
+  path_patterns = "${var.path_patterns}"
+  register_dns_record = "${var.register_dns_record}"
   health_check_path = "${var.health_check_path}"
   providers = {
     aws = "aws"

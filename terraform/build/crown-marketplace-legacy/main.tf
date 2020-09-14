@@ -11,6 +11,9 @@ module "component" {
     type = "app"
     prefix = "ccs"
     name = "cmp-legacy"
+    path_patterns = ["/management-consultancy*", "/supply-teachers*", "/legal-services*"]
+    register_dns_record = true
+    health_check_path = "/legal-services"
     hostname = "cmp"
     routing_priority_offset = 200
     build_type = "custom"
