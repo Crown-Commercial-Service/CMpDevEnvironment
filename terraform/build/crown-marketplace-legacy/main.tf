@@ -15,7 +15,10 @@ module "component" {
     register_dns_record = true
     health_check_path = "/legal-services"
     hostname = "cmp"
-    routing_priority_offset = 100
+    # note as part of sept2020 changes and a swapping priorities of crown-marketplace and
+    # crown-marketplace-legacy over cannot simply swap numbers as when run terrafrom it
+    # can't swap as prioriy in use; instead increase both by one so swapping to a new number
+    routing_priority_offset = 101
     build_type = "custom"
     build_image = "ccs/ruby"
     github_owner = "Crown-Commercial-Service"
