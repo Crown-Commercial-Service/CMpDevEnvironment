@@ -275,6 +275,8 @@ Environment variables can also be used to pass feature switches to containers. T
 
 The Application/API data S3 bucket is passed in the environment variable: `CCS_APP_API_DATA_BUCKET`.
 
+The assets bucket is passed in the environment variable: `ASSETS_BUCKET`.
+
 `CCS_FEATURE_EG1=on`
 
 ### Parameter lifecycle, changes and overriding

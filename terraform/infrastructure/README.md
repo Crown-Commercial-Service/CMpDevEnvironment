@@ -77,6 +77,12 @@ An S3 bucket is also created for use by application and API containers. The cont
 
 The name of the bucket is passed to containers in the environment variable: `CCS_APP_API_DATA_BUCKET`.
 
+An S3 bucket is created with public access for storing assets to be served be the web application.
+
+```<account number>.assets```
+
+The name of the bucket is passed to containers in the environment variable: `ASSETS_BUCKET`.
+
 ---
 
 ## EC2 Instances ##

@@ -253,3 +253,9 @@ resource "aws_ssm_parameter" "cmplegacy_supplier_details_data_key" {
 	type = "SecureString"
 	value = "facilities_management/data/static/RM3830_Suppliers_Details_for_dev_and_test.xlsx"
 }
+
+resource "aws_ssm_parameter" "app_run_precompile_assets" {
+	name = "/Environment/global/APP_RUN_PRECOMPILE_ASSETS"
+	type = "SecureString"
+	value = "TRUE"
+}
