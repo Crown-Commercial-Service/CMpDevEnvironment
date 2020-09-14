@@ -110,7 +110,7 @@ variable "api_cluster_instance_class" {
 }
 
 variable "api_cluster_instance_count" {
-  default = "2"
+  default = "1"
 }
 
 variable "api_cluster_key_name" {
@@ -248,5 +248,5 @@ locals {
   artifact_bucket_name = "ccs.${data.aws_caller_identity.current.account_id}.build-artifacts"
   log_bucket_name = "ccs.${data.aws_caller_identity.current.account_id}.${lower(var.environment_name)}.logs"
   app_api_bucket_name = "ccs.${data.aws_caller_identity.current.account_id}.${lower(var.environment_name)}.app-api-data"
-  assets_bucket_name = "${data.aws_caller_identity.current.account_id}.assets"
+  assets_bucket_name = "${data.aws_caller_identity.current.account_id}-assets"
 }
