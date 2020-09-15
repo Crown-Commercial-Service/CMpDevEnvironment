@@ -14,7 +14,7 @@ variable "region" {
 data "aws_caller_identity" "current" {}
 
 variable "environment_name" {
-  default = "Development"
+  default = "Sandbox"
 }
 
 variable "shared_postcode_data_bucket" {

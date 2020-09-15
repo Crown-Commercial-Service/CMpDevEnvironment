@@ -125,7 +125,7 @@ resource "aws_ssm_parameter" "cmp_app_run_postcodes_import" {
 resource "aws_ssm_parameter" "cmp_ccs_app_api_data_bucket" {
 	name = "/Environment/ccs/cmp/CCS_APP_API_DATA_BUCKET"
 	type = "SecureString"
-	value = "ccs.redacted.development.app-api-data"
+	value = "ccs.redacted.sandbox.app-api-data"
 }
 
 resource "aws_ssm_parameter" "cmp_app_update_nuts_now" {
@@ -185,7 +185,7 @@ resource "aws_ssm_parameter" "cmplegacy_app_run_postcodes_import" {
 resource "aws_ssm_parameter" "cmplegacy_ccs_app_api_data_bucket" {
 	name = "/Environment/ccs/cmp-legacy/CCS_APP_API_DATA_BUCKET"
 	type = "SecureString"
-	value = "ccs.redacted.development.app-api-data"
+	value = "ccs.redacted.sandbox.app-api-data"
 }
 
 resource "aws_ssm_parameter" "cmplegacy_app_update_nuts_now" {
@@ -245,7 +245,7 @@ resource "aws_ssm_parameter" "cmplegacy_json_supplier_data_key" {
 resource "aws_ssm_parameter" "cmplegacy_rails_env_url" {
 	name = "/Environment/ccs/cmp-legacy/RAILS_ENV_URL"
 	type = "SecureString"
-	value = "https://cmp.cmp-development.crowncommercial.gov.uk"
+	value = "https://cmp.cmp-sandbox.crowncommercial.gov.uk"
 }
 
 resource "aws_ssm_parameter" "cmplegacy_supplier_details_data_key" {

@@ -11,9 +11,7 @@ terraform {
 module "component" {
     # source = "git::https://github.com/Crown-Commercial-Service/CMpDevEnvironment.git//terraform/modules/component"
     source = "../../modules/component"
-
-    environment_name = "Development"
-
+    environment_name = "Sandbox"
     type = "api"
     prefix = "ccs"
     name = "cmpsidekiq"
@@ -24,7 +22,7 @@ module "component" {
     # Build the standard marketplace application
     github_owner = "Crown-Commercial-Service"
     github_repo = "crown-marketplace"
-    github_branch = "master"
+    github_branch = "develop"
 
     github_token_alias = "ccs-build_github_token"
     cluster_name = "CCSDEV_api_cluster"
