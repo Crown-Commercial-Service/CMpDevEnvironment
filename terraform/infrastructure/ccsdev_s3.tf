@@ -105,17 +105,25 @@ resource "aws_iam_role_policy_attachment" "task-role-assets-bucket-policy-attach
 data "aws_iam_policy_document" "CCSDEV_assets_bucket_policy_doc" {
 
   statement {
-
     effect = "Allow",
     actions = [
-      "s3:*",
+      "s3:ListBucket",
     ]
-
     resources = [
-      "${aws_s3_bucket.assets-bucket.arn}/*",
       "${aws_s3_bucket.assets-bucket.arn}"
     ]
   }
+
+  statement {
+    effect = "Allow",
+    actions = [
+      "s3:PutObject*",
+    ]
+    resources = [
+      "${aws_s3_bucket.assets-bucket.arn}/*"
+    ]
+  }
+
 }
 
 resource "aws_s3_bucket" "assets-bucket" {
