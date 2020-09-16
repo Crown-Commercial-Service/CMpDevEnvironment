@@ -167,6 +167,19 @@ resource "aws_security_group" "vpc-CCSDEV-internal-api" {
     cidr_blocks = ["${aws_vpc.CCSDEV-Services.cidr_block}"]
   }
 
+  # Added Sept-20 in line with manual changes; a new security group
+  # "vpc-CCSDEV-internal-clamav" has also been created which is a more
+  # consistent way of adding new rules of this sort. Added here for migration
+  # purposes as the new rules do not take effect until a new EC2 instance is
+  # launched. We should find this can be removed once the new security group
+  # has been deployed and take effect. This may require scaling cluster down/up.
+  ingress {
+    from_port   = "${var.clamav_port}"
+    to_port     = "${var.clamav_port}"
+    protocol    = "tcp"
+    cidr_blocks = ["${aws_vpc.CCSDEV-Services.cidr_block}"]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -299,6 +312,36 @@ resource "aws_security_group" "vpc-CCSDEV-internal-EC-REDIS" {
 
   tags {
     Name = "CCSDEV-internal-EC-REDIS"
+    CCSRole = "Infrastructure"
+    CCSEnvironment = "${var.environment_name}"
+  }
+}
+
+##############################################################
+# Clamav  security groups
+##############################################################
+
+resource "aws_security_group" "vpc-CCSDEV-internal-clamav" {
+  name        = "CCSDEV-internal-clamav"
+  description = "Clam AV from within VPC"
+  vpc_id      = "${aws_vpc.CCSDEV-Services.id}"
+
+  ingress {
+    from_port   = "${var.clamav_port}"
+    to_port     = "${var.clamav_port}"
+    protocol    = "tcp"
+    cidr_blocks = ["${aws_vpc.CCSDEV-Services.cidr_block}"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags {
+    Name = "CCSDEV-internal-clamav"
     CCSRole = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }

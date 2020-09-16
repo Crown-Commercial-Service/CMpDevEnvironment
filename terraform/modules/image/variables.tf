@@ -74,6 +74,18 @@ data "aws_subnet" "CCSDEV-AZ-a-Private-1" {
   }
 }
 
+data "aws_subnet" "CCSDEV-AZ-b-Private-1" {
+  tags {
+    "Name" = "CCSDEV-AZ-b-Private-1"
+  }
+}
+
+data "aws_subnet" "CCSDEV-AZ-c-Private-1" {
+  tags {
+    "Name" = "CCSDEV-AZ-c-Private-1"
+  }
+}
+
 data "aws_security_group" "vpc-CCSDEV-internal" {
   tags {
     "Name" = "CCSDEV-internal-api"
