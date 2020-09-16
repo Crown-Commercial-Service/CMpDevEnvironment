@@ -209,3 +209,16 @@ resource "aws_ssm_parameter" "config_redis_port" {
     CCSEnvironment = "${var.environment_name}"
   }
 }
+
+resource "aws_ssm_parameter" "config_s3_assets_bucket" {
+  name  = "/${var.environment_name}/config/assets_bucket"
+  description  = "S3 bucket used for assets"
+  type  = "SecureString"
+  value = "${local.assets_bucket_name}"
+
+  tags {
+    Name = "Parameter Store: S3 bucket used for assets data"
+    CCSRole = "Infrastructure"
+    CCSEnvironment = "${var.environment_name}"
+  }
+}

@@ -29,12 +29,46 @@ variable hostname {
 }
 
 ##############################################################
+# Path pattern to use for routing
+##############################################################
+variable path_patterns {
+    type = "list"
+    default = []
+}
+
+##############################################################
+# Flag to register the DNS record, assumes it always does and
+# can then be disabled if another build process is hanlding
+# the registration
+##############################################################
+variable register_dns_record {
+  type = "string"
+  default = true
+}
+
+##############################################################
+# Used to set the offset for routing rule numbers
+##############################################################
+variable routing_priority_offset {
+    type = "string"
+    default = "0"
+}
+
+##############################################################
 # If true and additional rule will be added at the end of 
 # the routing rules with a host of *
 ##############################################################
 variable catch_all {
     type = "string"
     default = false
+}
+
+##############################################################
+# Path to use for health check
+##############################################################
+variable health_check_path {
+    type = "string"
+    default = "/"
 }
 
 ##############################################################
@@ -52,13 +86,6 @@ variable port {
 ##############################################################
 variable protocol {
     type = "string"
-}
-
-##############################################################
-# AWS Provider
-##############################################################
-provider "aws" {
-  region = "eu-west-2"
 }
 
 ##############################################################
