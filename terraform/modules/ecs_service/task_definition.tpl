@@ -3,7 +3,7 @@
     "name": "${name}",
     "image": "${image}",
     "cpu": 10,
-    "memory": 512,
+    "memory": 1024,
     "essential": true,
     "portMappings": [
       {
