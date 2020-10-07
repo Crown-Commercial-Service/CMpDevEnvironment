@@ -70,3 +70,10 @@ variable image {
 variable target_group_arn {
     type = "string"
 }
+
+##############################################################
+# Memory to allocate
+##############################################################
+variable "memory" {
+    type = "string"
+}
