@@ -19,6 +19,7 @@ data "template_file" "task_definition" {
     image = "${var.image}"
     environment = "${jsonencode(var.task_environment)}"
     log_group = "${var.log_group}"
+    memory = "${var.memory}"
   }
 }
 

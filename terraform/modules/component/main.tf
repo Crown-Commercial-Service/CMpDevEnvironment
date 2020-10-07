@@ -229,6 +229,7 @@ module "ecs_service" {
   image = "${module.build.image_name}"
   target_group_arn = "${module.routing.target_group_arn}"
   ecs_service_arn = "${data.aws_iam_role.codepipeline_service_role.arn}"
+  memory = "${var.memory}"
 }
 
 ##############################################################
