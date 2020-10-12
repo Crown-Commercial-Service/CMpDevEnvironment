@@ -10,7 +10,7 @@ module "component" {
     prefix = "ccs"
     name = "cmp"
     path_patterns = []
-    memory = 1024
+    memory = 2560
     register_dns_record = false
     health_check_path = "/facilities-management"
     routing_priority_offset = 201
