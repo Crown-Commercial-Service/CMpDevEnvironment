@@ -85,8 +85,16 @@ variable "app_cluster_instance_class" {
   default = "m4.large"
 }
 
-variable "app_cluster_instance_count" {
+variable "app_cluster_desired_instance_count" {
+  default = "4"
+}
+
+variable "app_cluster_min_instance_count" {
   default = "3"
+}
+
+variable "app_cluster_max_instance_count" {
+  default = "5"
 }
 
 variable "app_cluster_key_name" {
