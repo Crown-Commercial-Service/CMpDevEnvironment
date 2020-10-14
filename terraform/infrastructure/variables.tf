@@ -85,8 +85,16 @@ variable "app_cluster_instance_class" {
   default = "t2.large"
 }
 
-variable "app_cluster_instance_count" {
-  default = "3"
+variable "app_cluster_desired_instance_count" {
+  default = "1"
+}
+
+variable "app_cluster_min_instance_count" {
+  default = "1"
+}
+
+variable "app_cluster_max_instance_count" {
+  default = "2"
 }
 
 variable "app_cluster_key_name" {
@@ -109,7 +117,15 @@ variable "api_cluster_instance_class" {
   default = "t2.large"
 }
 
-variable "api_cluster_instance_count" {
+variable "api_cluster_min_instance_count" {
+  default = "1"
+}
+
+variable "api_cluster_max_instance_count" {
+  default = "1"
+}
+
+variable "api_cluster_desired_instance_count" {
   default = "1"
 }
 
