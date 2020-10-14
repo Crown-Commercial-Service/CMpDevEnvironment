@@ -131,7 +131,7 @@ resource "aws_db_instance" "ccsdev_default_db" {
   allocated_storage         = "${var.default_db_storage}"
   storage_type              = "gp2"
   engine                    = "postgres"
-  engine_version            = "11.2"
+  engine_version            = "11.8"
   instance_class            = "${var.default_db_instance_class}"
   name                      = "${var.default_db_name}"
   username                  = "${var.default_db_username}"
