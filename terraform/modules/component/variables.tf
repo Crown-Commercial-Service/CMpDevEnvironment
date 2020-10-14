@@ -238,3 +238,11 @@ variable "cognito_logout_callback" {
 variable "cognito_generate_secret" {
     default = true
 }
+
+##############################################################
+# Memory to allocate (defaults to 512)
+##############################################################
+variable "memory" {
+  type = "string"
+  default = 512
+}
