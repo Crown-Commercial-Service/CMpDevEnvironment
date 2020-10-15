@@ -85,8 +85,16 @@ variable "app_cluster_instance_class" {
   default = "m4.large"
 }
 
-variable "app_cluster_instance_count" {
-  default = "3"
+variable "app_cluster_desired_instance_count" {
+  default = "4"
+}
+
+variable "app_cluster_min_instance_count" {
+  default = "4"
+}
+
+variable "app_cluster_max_instance_count" {
+  default = "5"
 }
 
 variable "app_cluster_key_name" {
@@ -109,7 +117,15 @@ variable "api_cluster_instance_class" {
   default = "m4.large"
 }
 
-variable "api_cluster_instance_count" {
+variable "api_cluster_min_instance_count" {
+  default = "1"
+}
+
+variable "api_cluster_max_instance_count" {
+  default = "1"
+}
+
+variable "api_cluster_desired_instance_count" {
   default = "1"
 }
 
@@ -176,7 +192,7 @@ variable "create_elasticache_redis" {
 }
 
 variable "elasticache_instance_class" {
-  default = "cache.t2.small"
+  default = "cache.t2.medium"
 }
 
 ##############################################################

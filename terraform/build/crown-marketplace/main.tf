@@ -18,6 +18,7 @@ module "component" {
     routing_priority_offset = 201
     build_type = "custom"
     build_image = "ccs/ruby"
+    memory = 2560
     github_owner = "Crown-Commercial-Service"
     github_repo = "crown-marketplace"
     github_branch = "preview"
