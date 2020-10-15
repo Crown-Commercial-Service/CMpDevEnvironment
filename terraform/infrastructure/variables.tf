@@ -90,7 +90,7 @@ variable "app_cluster_desired_instance_count" {
 }
 
 variable "app_cluster_min_instance_count" {
-  default = "3"
+  default = "4"
 }
 
 variable "app_cluster_max_instance_count" {
