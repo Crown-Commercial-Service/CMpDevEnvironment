@@ -113,7 +113,7 @@ variable "api_cluster_ami" {
 }
 
 variable "api_cluster_instance_class" {
-  default = "t2.medium"
+  default = "m4.large"
 }
 
 variable "api_cluster_min_instance_count" {
