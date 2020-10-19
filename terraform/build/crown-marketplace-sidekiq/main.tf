@@ -16,6 +16,7 @@ module "component" {
     name = "cmpsidekiq"
     build_type = "custom"
     build_image = "ccs/ruby"
+    memory = 3072
 
     # Build the standard marketplace application
     github_owner = "Crown-Commercial-Service"
