@@ -175,7 +175,7 @@ resource "aws_launch_configuration" "CCSDEV_api_cluster_launch_config" {
   image_id                    = "${var.api_cluster_ami}"
   instance_type               = "${var.api_cluster_instance_class}"
   iam_instance_profile        = "${aws_iam_instance_profile.CCSDEV_api_cluster_instance_profile.arn}"
-  security_groups             = ["${aws_security_group.vpc-CCSDEV-internal-api.id}", "${aws_security_group.vpc-CCSDEV-internal-ssh.id}"]
+  security_groups             = ["${aws_security_group.vpc-CCSDEV-internal-api.id}", "${aws_security_group.vpc-CCSDEV-internal-ssh.id}", "${aws_security_group.vpc-CCSDEV-internal-clamav.id}"]
   associate_public_ip_address = "false"
   key_name                    = "${var.api_cluster_key_name}"
   user_data                   = "${data.template_file.CCSDEV_api_cluster_user_data.rendered}"

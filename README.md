@@ -4,22 +4,35 @@ This project contains [Terraform](https://www.terraform.io/) scripts that are us
 
 This environment allows the deployment of externally accessible *Application* containers and private *API* containers. Example build pipelines for an application, api and NPM module are also provided.
 
-The available scripts are divided into three areas: security, infrastructure and build pipelines. When creating a new environment scripts will need to be initially executed in that order.
+The available scripts are divided into three main areas: security, infrastructure and build pipelines. When creating a new environment scripts will need to be initially executed in that order. There is an additional area, ssm_config which is optional depending upon the type of installation and can be used to configure the parameter store prior to running th build pipelines is so desired.
 
-All of the scripts will require `terraform init` to be executed in the correct directory.
+All of the scripts will require `terraform init` to be executed in the correct directory prior to running any other terraform commands to ensure modules and plugins are brought up to date/= or more accurately in line with the terraform code.
 
----
+
+
+## Contents
+
+[TOC]
 
 ## Additional Documentation ##
 
 Some additional documentation is also available:
 
+<<<<<<< HEAD
   * [Setup Guide](https://github.com/Crown-Commercial-Service/CMpDevEnvironment/blob/production/docs/setup.md)
   * [Update Guide](https://github.com/Crown-Commercial-Service/CMpDevEnvironment/blob/production/docs/update.md)
   * [Developer Guide](https://github.com/Crown-Commercial-Service/CMpDevEnvironment/blob/production/docs/ccs_aws_v1-developer_guide.md)
 ---
+=======
+  * [Setup Guide](https://github.com/Crown-Commercial-Service/CMpDevEnvironment/blob/develop/docs/setup.md)
+  * [Update Guide](https://github.com/Crown-Commercial-Service/CMpDevEnvironment/blob/develop/docs/update.md)
+  * [Developer Guide](https://github.com/Crown-Commercial-Service/CMpDevEnvironment/blob/develop/docs/ccs_aws_v1-developer_guide.md)
+
+
+>>>>>>> develop
 
 ## IAM Security ##
+
 `/terraform/security`
 
 The security scripts generate a number of IAM user groups and policies documents. They do not create any actual users.
@@ -35,6 +48,7 @@ The following groups are created:
 - CCS_Cognito_Administration
 - CCS_Terraform_Execution
 - CCS_Developer_API_Access
+- CCS_MFA_ManageOwnDevice
 
 Only a very small number of users should be a member of the system administration group. To have complete system administration privileges a user will need to be a member of the system administration, infrastructure administration and code build pipeline groups.
 
@@ -44,9 +58,10 @@ Note that members of the user administration group are not able to add users to 
 
 More information is available in the `terraform/security` directory.
 
----
+
 
 ## Infrastructure ##
+
 `/terraform/infrastructure`
 
 The infrastructure scripts generate a complete AWS environment for deploying containers. The AWS access keys used when executing the scripts must correspond to an AWS user with permission to actually create all of the required AWS assets. Making the user a member of the `CCS_System_Administration`, `CCS_Infrastructure_Administration` and `CCS_Code_Build_Pipeline` IAM groups will ensure this.
@@ -64,7 +79,8 @@ The infrastructure scripts generate a complete AWS environment for deploying con
   - HTTP and HTTPS using AWS managed certificates.
 - Internal application load balancer for the api cluster.
   - HTTP and HTTPS using AWS managed certificates.
-- Example RDS Postgres daatbase server. 
+- Example RDS Postgres database server. 
+- Example Redis based caching
 - Example Elastic Search domain.
 - CloudWatch dashboard definition example
 - Cognito user pool
@@ -98,10 +114,9 @@ enable_https = false
 }
 ```
 
-When the infrastructure scripts are executed a number of settings are written to the `EC2 Parameter Store` as secure strings. These settings are then used to when creating the build pipelines to generate environment variables that are passed to running containers. In this way database and Elastic Search connection details are passed to the Applications and APIs.
+When the infrastructure scripts are executed a number of settings are written to the `EC2 Parameter Store` as secure strings. These settings are then used when creating the build pipelines to generate environment variables via the ECS Task Definition which is used to create the container. In this way database and Elastic Search connection details are passed to the Applications and APIs.
 
 
----
 
 ## Marketplace Build Pipelines
 `/terraform/build`
@@ -128,18 +143,22 @@ This is the main Marketplace application that will, eventually, build from the p
 ## Build Pipeline Examples
 `/terraform/build`
 
-There are examples that create AWS CodePipeline and CodeBuild configurations for an application (*app1*, *app2*), and an api (*api1*, *api2*). These will take source code from Github and, ultimately, deploy an updated container image to the correct ECS cluster. There is also an example that publishes an updated NPM module to [https://www.npmjs.com](https://www.npmjs.com).
+There are examples that create AWS CodePipeline and CodeBuild configurations for an application (*app1*, *app2*), and an api (*api1*, *api2*). These will take source code from GitHub and, ultimately, deploy an updated container image to the correct ECS cluster. There is also an example that publishes an updated NPM module to [https://www.npmjs.com](https://www.npmjs.com).
 
 Each of these examples will generate AWS CodeBuild and CodePipeline configurations. The content of these will vary with the type of build. For example, an NPM module build will not create or update any ECS task definitions.
 
+<<<<<<< HEAD
 All of these builds require access to a GitHub account for a GitHub token. This must be entered into the EC2 parameter store as a secure string called: `ccs-build_github_token`.They each use pre-defined buildspec files that are [located within the terraform build module](https://github.com/Crown-Commercial-Service/CMpDevEnvironment/tree/production/terraform/modules/build) as &lt;prefix&gt;_buildspec.yml.
+=======
+All of these builds require access to a GitHub account for a GitHub token. This must be entered into the EC2 parameter store as a secure string called: `ccs-build_github_token`. They each use pre-defined buildspec files that are [located within the terraform build module](https://github.com/Crown-Commercial-Service/CMpDevEnvironment/tree/develop/terraform/modules/build) as &lt;prefix&gt;_buildspec.yml.
+>>>>>>> develop
 
 ### Application Example 1 ###
 `/terraform/build/app1`
 
 This uses the contents of the `CMpExampleApp1` repository. It contains a minimal NodeJS/Express application and a Dockerfile for defining the container image.
 
-The file `main.tf` defines the attributes of the build and identifies the location of the source code in Github, the name of the cluster to which it will be deployed and the type of build to be performed. It also contains a variable that specifies the root domain name for the Route 53 zone to which an 'A' record will be added to make the application accessible. The name and prefix settings will be combined to form the container image name within ECR.
+The file `main.tf` defines the attributes of the build and identifies the location of the source code in GitHub, the name of the cluster to which it will be deployed and the type of build to be performed. It also contains a variable that specifies the root domain name for the Route 53 zone to which an 'A' record will be added to make the application accessible. The name and prefix settings will be combined to form the container image name within ECR.
 
 When executed the scripts will define the build pipeline and this will trigger the process of building and deploying the example application. Eventually, assuming the build succeeds, the application will be accessible as `http://app1.<domain>`.
 
@@ -148,16 +167,16 @@ When executed the scripts will define the build pipeline and this will trigger t
 
 This uses the contents of the `CMpExampleApp2` repository. It contains a minimal Ruby on Rails application and a Dockerfile for defining the container image.
 
-The file `main.tf` defines the attributes of the build and identifies the location of the source code in Github, the name of the cluster to which it will be deployed and the type of build to be performed. It also contains a variable that specifies the root domain name for the Route 53 zone to which an 'A' record will be added to make the application accessible. The name and prefix settings will be combined to form the container image name within ECR.
+The file `main.tf` defines the attributes of the build and identifies the location of the source code in GitHub, the name of the cluster to which it will be deployed and the type of build to be performed. It also contains a variable that specifies the root domain name for the Route 53 zone to which an 'A' record will be added to make the application accessible. The name and prefix settings will be combined to form the container image name within ECR.
 
 When executed the scripts will define the build pipeline and this will trigger the process of building and deploying the example application. Eventually, assuming the build succeeds, the application will be accessible as `http://app2.<domain>`.
 
 ### Api Example 1 ###
 `/terraform/build/api1`
 
-This uses the contents of the `CMpExampleApi1` repository. It contains a minimal Java/Springboot REST API and a Dockerfile for defining the container image.
+This uses the contents of the `CMpExampleApi1` repository. It contains a minimal Java/Spring Boot REST API and a Dockerfile for defining the container image.
 
-The file `main.tf` defines the attributes of the build and identifies the location of the source code in Github, the name of cluster to which it will be deployed and the type of build to be performed. It also contains a variable that specifies the root domain name for the Route 53 zone to which an 'A' record will be added to make the api accessible. The default value for this is the private zone only usable within the VPC. The name and prefix settings will be combined to form the container image name within ECR.
+The file `main.tf` defines the attributes of the build and identifies the location of the source code in GitHub, the name of cluster to which it will be deployed and the type of build to be performed. It also contains a variable that specifies the root domain name for the Route 53 zone to which an 'A' record will be added to make the api accessible. The default value for this is the private zone only usable within the VPC. The name and prefix settings will be combined to form the container image name within ECR.
 
 When executed the scripts will define the build pipeline and this will trigger the process of building and deploying the example api. Eventually, assuming the build succeeds, the api will be accessible as `http://api1.<domain>`. Note that with the settings in the example this is deployed to the api cluster within a private subnet. To test, one option is to ssh to the basiton host and execute `curl`. See the documentation within the `CMpExampleApi1` repository for details of the REST interface.
 
@@ -166,9 +185,9 @@ When executed the scripts will define the build pipeline and this will trigger t
 
 This uses the contents of the `CMpExampleApi2` repository. It contains a minimal Python + Flask REST API and a Dockerfile for defining the container image.
 
-The file `main.tf` defines the attributes of the build and identifies the location of the source code in Github, the name of cluster to which it will be deployed and the type of build to be performed. It also contains a variable that specifies the root domain name for the Route 53 zone to which an 'A' record will be added to make the api accessible. The default value for this is the private zone only usable within the VPC. The name and prefix settings will be combined to form the container image name within ECR.
+The file `main.tf` defines the attributes of the build and identifies the location of the source code in GitHub, the name of cluster to which it will be deployed and the type of build to be performed. It also contains a variable that specifies the root domain name for the Route 53 zone to which an 'A' record will be added to make the api accessible. The default value for this is the private zone only usable within the VPC. The name and prefix settings will be combined to form the container image name within ECR.
 
-When executed the scripts will define the build pipeline and this will trigger the process of building and deploying the example api. Eventually, assuming the build succeeds, the api will be accessible as `http://api2.<domain>`. Note that with the settings in the example this is deployed to the api cluster within a private subnet. To test, one option is to ssh to the basiton host and execute `curl`. See the documentation within the `CMpExampleApi2` repository for details of the REST interface.
+When executed the scripts will define the build pipeline and this will trigger the process of building and deploying the example api. Eventually, assuming the build succeeds, the api will be accessible as `http://api2.<domain>`. Note that with the settings in the example this is deployed to the api cluster within a private subnet. To test, one option is to ssh to the bastion host and execute `curl`. See the documentation within the `CMpExampleApi2` repository for details of the REST interface.
 
 
 ### NPM Module Example ###
@@ -176,7 +195,7 @@ When executed the scripts will define the build pipeline and this will trigger t
 
 This uses the contents of the `CCSExampleNPMModule` repository. It contains a minimal JavaScript module that can be built and published as an NPM module.
 
-The file `main.tf` defines the attributes of the build and identifies the location of the source code in Github. The example uses a bespoke build type of npm-publish which will install the package, run any tests and then attempt to publish the package to the npmjs registry - In order for this to be successful, there is a predefined npm auth token stored within the AWS parameter store (ccs-build_npm_token).
+The file `main.tf` defines the attributes of the build and identifies the location of the source code in GitHub. The example uses a bespoke build type of npm-publish which will install the package, run any tests and then attempt to publish the package to the npmjs registry - In order for this to be successful, there is a predefined npm auth token stored within the AWS parameter store (ccs-build_npm_token).
 
 When executed the scripts will define the build pipeline and this will trigger the process of building and publishing the example NPM module.
 
@@ -186,23 +205,39 @@ When executed the scripts will define the build pipeline and this will trigger t
 
 This uses the contents of the `CMpDevBuildImage_Ruby` repository which contains a Dockerfile and associated context that can be built and published as docker image within the AWS Container Registry for use in other builds.
 
-The file `main.tf` defines the attributes of the build and identifies the location of the source code in Github. The image build type uses a 2-stage pipeline that will build the container image and then publish it to the AWS Container Registry.
+The file `main.tf` defines the attributes of the build and identifies the location of the source code in GitHub. The image build type uses a 2-stage pipeline that will build the container image and then publish it to the AWS Container Registry.
 
 The produced image can be used in subsequent component builds by setting the `build_type` variable to `'custom'` and the `'build_image'` variable to `'{Image Prefix}/{Image Name}'` as specified when the image was built. For example:
 
 `build_image = "ccs/ruby"`
 
+
+
+## Build Pipelines
+
 ### Maintenance/Service Unavailable Application ###
+
 `/terraform/build/cmp-maintenance`
 
-This uses the contents of the `crown-marketplace-maintenance` to build and deploy a small nodeJS application that displays a static HTML page. The file `main.tf` contains a setting, `catch_all` that will configure the application load balancer to direct any request to a non-existant application to this page.
+This uses the contents of the `crown-marketplace-maintenance` to build and deploy a small nodeJS application that displays a static HTML page. The file `main.tf` contains a setting, `catch_all` that will configure the application load balancer to direct any request to a non-existent application to this page.
 
-**NOTE** : The operation of the `catch-all` settings is dependent on the ordering of rules within the application load balancer listener rules. It is not always possible for Terraform to maintain this list in the correct order.
+**NOTE** : The operation of the `catch-all` settings is dependent on the ordering of rules within the application load balancer listener rules. It is not always possible for Terraform to maintain this list in the correct order if any manual changes are made to the routing rules.
+
+### Crown Marketplace Legacy Application ###
+
+`/terraform/build/crown-marketplace-legacy`
+
+This is the actual Marketplace application taken from the `crown-marketplace-legacy` repository. It is a Ruby application and the build pipeline will use the custom Ruby build image described previously. This must be available as an image in the AWS Elastic Container Repository (ECR) before the application pipeline is created.
+
+This is configured to use just hostname based routing and because of this registers the DNS entry for the hostname/load balancer.
 
 ### Crown Marketplace Application ###
+
 `/terraform/build/crown-marketplace`
 
 This is the actual Marketplace application taken from the `crown-marketplace` repository. It is a Ruby application and the build pipeline will use the custom Ruby build image described previously. This must be available as an image in the AWS Elastic Container Repository (ECR) before the application pipeline is created.
+
+This is configured to use hostname and path based routing and does not register the DNS entry for the hostname/load balancer. As such it relies on the Crown Marketplace Legacy Application being deployed to function.
 
 ### Crown Marketplace Data Upload Application ###
 `/terraform/build/crown-marketplace-upload`
@@ -214,7 +249,7 @@ This is the actual Marketplace application taken from the `crown-marketplace` re
 
 This pipeline uses the `crown-marketplace-data` repository to detect changes to the data available for the application and, when changes are committed, will upload the supply teacher related data to the application by POSTing the data to the Marketplace  application deployed to the `API Cluster`. The data is uploaded using the same process described in the `crown-marketplace` repository documentation. 
 
----
+
 
 ## Build Pipeline Notifications
 
@@ -230,11 +265,13 @@ Notification generated when the pipeline state changes to `FAILED`.
 
 AWS Console users who are members of the `CCS_Application_Developer` and `CCS_Application_Developer` IAM groups receive permissions that allow them to subscribe to the topics.
 
----
+
 
 ## Pre-defined Environment variables passed to containers ##
 
-The build pipeline scripts will ensure that a number of environment variables are passed to the running containers. Of particular importance are those variables that allow an *app* container to determine the URL for invoking an *api*. These are:
+The build pipeline scripts will ensure that a number of environment variables are passed to the running containers. 
+
+Of particular importance are those variables that allow an *app* container to determine the URL for invoking an *api*. These are:
 
  - CCS_API_PROTOCOL
  - CCS_API_BASE_URL
@@ -269,12 +306,26 @@ Var variable `CCS_VERSION` is also defined. It will contain the contents of a fi
 
 Environment variables can also be used to pass feature switches to containers. These variables should all be  prefixed with `CCS_FEATURE_` and contain a value of `on` or `off`. For example
 
-The Application/API data S3 bucket is passed in th environment variable: `CCS_APP_API_DATA_BUCKET`.
+The Application/API data S3 bucket is passed in the environment variable: `CCS_APP_API_DATA_BUCKET`.
 
+The assets bucket is passed in the environment variable: `ASSETS_BUCKET`.
 
 `CCS_FEATURE_EG1=on`
 
+### Parameter lifecycle, changes and overriding
+
+These parameters are created by the *infrastructure* module and the values are stored in the AWS SSM Parameter Store when that module is `apply`-ed.
+
+The *build/xyz* pipelines read these values from the SSM Parameter Store and store the values in the ECS Task Definition for the containers when the *build/xyz* pipeline is `apply`-ed.
+
+This is important to note as if any of these values change or need to be changed for whatever reason then the *infrastructure* and *build* pipelines need to be re-`apply`-ed.
+
+It is also important to note that as these values are passed to the container using the AWS ECS Task Definition then they will override any environment variable values built into the container image.
+
+
+
 ## Environment variables passed to containers from the EC2 Parameter Store ##
+
 Certain entries in the EC2 Parameter store will be automatically turned into environment variables and passed to the
 running container. These entries can be *global* that will be passed to all containers or specific to an Application or API.
 
@@ -292,7 +343,7 @@ Note that these settings are handled by re-writing the Application or API `Docke
 
 For example:
 
-```
+```dockerfile
 ARG BUILD_TIME
 LABEL build_time=$BUILD_TIME
 ENV BUILD_TIME=$BUILD_TIME
@@ -309,11 +360,39 @@ ENV BUILD_PACKAGES curl-dev ruby-dev postgresql-dev build-base tzdata
 RUN apk update && apk upgrade && apk add bash $BUILD_PACKAGES nodejs-current-npm git
 ```
 
-**NOTE**: For a change to a variable defined in this way to take affect the application/API the build pipeline must executed. This will require either a change in the source repository, or more simply, the selection of the `Release change` option from the CodePipeline area of the AWS Console.
+### Parameter lifecycle, changes and overriding
+
+These additional parameters are built into the container. For a change to a variables value defined in this way to take effect the application/API build pipeline must executed. This will rebuild the container image and embed the new values. This will require either a change in the source repository, or more simply, the selection of the `Release change` option from the CodePipeline area of the AWS Console.
+
+It is also important to note that as these values are built into the Docker container image they will be overridden by values passed in via the ECS Task Definition. So environment variables defined in the code pipeline terraform will take precedent over values injected in the container image from the Parameter Store.
 
 
 
+## Application routing
+
+The *component* module used for most build pipelines has a number of parameters that can be used to configure DNS entries and load balancer routing rules for the application. The following parameters are all involved in some way. These are all optional.
+
++ hostname
++ path_pattern
++ routing_priority_offset
++ catch_all
+
+If the **hostname** parameter is set then this is used specify the sub-domain for accessing the service being deployed. If it is not set then the (mandatory) **name** parameter is used instead. This is used to create an A record entry in the Route 53 public DNS. This simply maps traffic through to the *app* application load balancer.
+
+The application load balancer has 2 listeners, one for HTTP and one for HTTPS. The HTTP listener has rules which send redirects to HTTPS to force HTTPS. The HTTPS rules are where the routing to the applications occurs.
+
+If a **path_pattern** parameter is set then a combined hostname and path based rule is added to the ruleset. In this case no DNS record is registered.
+
+If no **path_pattern** parameter is specified then then the hostname or name parameter is used as the DNS entry and a simple hostname only rule is added to the rule set.
+
+If services have "overlapping" hostnames - as the crown-marketplace and crown-marketplace-legacy applications do - then the order of the rules is important. The terraform assigns a priority to the rules with hostname/path based rules being set at 1000 + an offset and just hostname rules being set at 5000 + an offset. This ensures that the more specific path based rules come before the less specific hostname only rules. In order to avoid issues with the same priority being used for a rule which is not allowed in AWS the **routing_priority_offset** parameter is used to define an order. Each component should use a unique value for the **routing_priority_offset**. The actual value of this is largely arbitrary as the rule order is generally not important - it just needs to be unique.
 
 
+
+## Health checks
+
+Each *component* that is created has an associated AWS target group created. The target group has an associated health check.
+
+Some applications may have a specific health check endpoint. The *component* **health_check_path** parameter can be used to specify this. If not specified it defaults to the root of the application or "/".
 
 
