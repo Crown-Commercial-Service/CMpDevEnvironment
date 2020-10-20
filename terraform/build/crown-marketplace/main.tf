@@ -20,7 +20,7 @@ module "component" {
     memory = 2560
     github_owner = "Crown-Commercial-Service"
     github_repo = "crown-marketplace"
-    github_branch = "master"
+    github_branch = "fm-preview"
     github_token_alias = "ccs-build_github_token"
     cluster_name = "CCSDEV_app_cluster"
     log_retention = "3"

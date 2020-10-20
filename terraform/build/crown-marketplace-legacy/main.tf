@@ -2,11 +2,11 @@ terraform {
   required_version = "~> 0.11"
 }
 
-# TODO (pillingworth, 2020-07-15) when crown-marketplace-legacy repo is
-# available then update the github_repo variable below
 module "component" {
     # source = "git::https://github.com/Crown-Commercial-Service/CMpDevEnvironment.git//terraform/modules/component"
     source = "../../modules/component"
+
+    environment_name = "FMPreview"
 
     type = "app"
     prefix = "ccs"
@@ -22,7 +22,7 @@ module "component" {
     build_image = "ccs/ruby"
     github_owner = "Crown-Commercial-Service"
     github_repo = "crown-marketplace-legacy"
-    github_branch = "master"
+    github_branch = "fm-preview"
     github_token_alias = "ccs-build_github_token"
     cluster_name = "CCSDEV_app_cluster"
     task_count = 2

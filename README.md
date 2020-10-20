@@ -18,9 +18,9 @@ All of the scripts will require `terraform init` to be executed in the correct d
 
 Some additional documentation is also available:
 
-  * [Setup Guide](https://github.com/Crown-Commercial-Service/CMpDevEnvironment/blob/develop/docs/setup.md)
-  * [Update Guide](https://github.com/Crown-Commercial-Service/CMpDevEnvironment/blob/develop/docs/update.md)
-  * [Developer Guide](https://github.com/Crown-Commercial-Service/CMpDevEnvironment/blob/develop/docs/ccs_aws_v1-developer_guide.md)
+  * [Setup Guide](https://github.com/Crown-Commercial-Service/CMpDevEnvironment/blob/fm_preview/docs/setup.md)
+  * [Update Guide](https://github.com/Crown-Commercial-Service/CMpDevEnvironment/blob/fm_preview/docs/update.md)
+  * [Developer Guide](https://github.com/Crown-Commercial-Service/CMpDevEnvironment/blob/fm_preview/docs/ccs_aws_v1-developer_guide.md)
 
 
 
@@ -118,7 +118,7 @@ There are examples that create AWS CodePipeline and CodeBuild configurations for
 
 Each of these examples will generate AWS CodeBuild and CodePipeline configurations. The content of these will vary with the type of build. For example, an NPM module build will not create or update any ECS task definitions.
 
-All of these builds require access to a GitHub account for a GitHub token. This must be entered into the EC2 parameter store as a secure string called: `ccs-build_github_token`. They each use pre-defined buildspec files that are [located within the terraform build module](https://github.com/Crown-Commercial-Service/CMpDevEnvironment/tree/develop/terraform/modules/build) as &lt;prefix&gt;_buildspec.yml.
+All of these builds require access to a GitHub account for a GitHub token. This must be entered into the EC2 parameter store as a secure string called: `ccs-build_github_token`. They each use pre-defined buildspec files that are [located within the terraform build module](https://github.com/Crown-Commercial-Service/CMpDevEnvironment/tree/fm_preview/terraform/modules/build) as &lt;prefix&gt;_buildspec.yml.
 
 ### Application Example 1 ###
 `/terraform/build/app1`
