@@ -1,9 +1,3 @@
-###############################################################################
-# This build pipeline is used to build and deploy a single instance of the
-# marketplace application to the API Cluster.
-#
-# It's purposes is to provide an 'api' for uploading data.
-###############################################################################
 terraform {
   required_version = "~> 0.11"
 }
@@ -14,21 +8,25 @@ module "component" {
 
     environment_name = "FMPreview"
 
-    type = "api"
+    type = "app"
     prefix = "ccs"
-    name = "cmpupload"
-    routing_priority_offset = 400
+    name = "cmp-legacy"
+    path_patterns = ["/management-consultancy*", "/supply-teachers*", "/legal-services*"]
+    register_dns_record = true
+    hostname = "cmp"
+    # note as part of sept2020 changes and a swapping priorities of crown-marketplace and
+    # crown-marketplace-legacy over cannot simply swap numbers as when run terrafrom it
+    # can't swap as prioriy in use; instead increase both by one so swapping to a new number
+    routing_priority_offset = 101
     build_type = "custom"
     build_image = "ccs/ruby"
-
-    # Build the standard marketplace application
     github_owner = "Crown-Commercial-Service"
-    github_repo = "crown-marketplace"
-    github_branch = "master"
-
+    github_repo = "crown-marketplace-legacy"
+    github_branch = "fm-preview"
     github_token_alias = "ccs-build_github_token"
-    cluster_name = "CCSDEV_api_cluster"
-    task_count = 1
+    cluster_name = "CCSDEV_app_cluster"
+    task_count = 2
+    autoscaling_max_count = 4
     enable_tests = true
     enable_cognito_api_support = true
     environment = [
@@ -38,11 +36,6 @@ module "component" {
       },
       {
         name = "RAILS_SERVE_STATIC_FILES",
-        value = "true"
-      },
-      {
-        # Set to enable the ability to upload data
-        name = "APP_HAS_UPLOAD_PRIVILEGES",
         value = "true"
       }
     ]

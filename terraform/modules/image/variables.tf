@@ -43,13 +43,6 @@ variable github_token_alias {
     type = "string"
 }
 
-##############################################################
-# AWS Provider
-##############################################################
-provider "aws" {
-  region = "eu-west-2"
-}
-
 data "aws_caller_identity" "current" {
 }
 
@@ -78,6 +71,18 @@ data "aws_vpc" "CCSDEV-Services" {
 data "aws_subnet" "CCSDEV-AZ-a-Private-1" {
   tags {
     "Name" = "CCSDEV-AZ-a-Private-1"
+  }
+}
+
+data "aws_subnet" "CCSDEV-AZ-b-Private-1" {
+  tags {
+    "Name" = "CCSDEV-AZ-b-Private-1"
+  }
+}
+
+data "aws_subnet" "CCSDEV-AZ-c-Private-1" {
+  tags {
+    "Name" = "CCSDEV-AZ-c-Private-1"
   }
 }
 

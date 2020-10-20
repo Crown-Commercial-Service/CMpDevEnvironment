@@ -18,6 +18,12 @@ resource "null_resource" "is_component_type_valid" {
 }
 
 ##############################################################
+# "Proxy" provider; provider must be passed into the module
+##############################################################
+provider "aws" {
+}
+
+##############################################################
 # Infrastructure config
 ##############################################################
 
@@ -81,6 +87,10 @@ data "aws_ssm_parameter" "config_s3_app_api_data_bucket" {
   name = "/${var.environment_name}/config/app_api_data_bucket"
 }
 
+data "aws_ssm_parameter" "config_s3_assets_bucket" {
+  name = "/${var.environment_name}/config/assets_bucket"
+}
+
 ##############################################################
 # Subdomain
 ##############################################################
@@ -106,7 +116,7 @@ module "build" {
   enable_tests = "${var.enable_tests}"
   service_role_arn = "${data.aws_iam_role.codebuild_service_role.arn}"
   vpc_id = "${data.aws_vpc.CCSDEV-Services.id}"
-  subnet_ids = ["${data.aws_subnet.CCSDEV-AZ-a-Private-1.id}"]
+  subnet_ids = ["${data.aws_subnet.CCSDEV-AZ-a-Private-1.id}", "${data.aws_subnet.CCSDEV-AZ-b-Private-1.id}", "${data.aws_subnet.CCSDEV-AZ-c-Private-1.id}"]
   security_group_ids = ["${data.aws_security_group.vpc-CCSDEV-internal.id}"]
 }
 
@@ -197,6 +207,11 @@ locals {
       {
         name = "CCS_APP_API_DATA_BUCKET",
         value = "${data.aws_ssm_parameter.config_s3_app_api_data_bucket.value}"
+      },
+      # name is not consistent because this is what devs had already coded
+      {
+        name = "ASSETS_BUCKET",
+        value = "${data.aws_ssm_parameter.config_s3_assets_bucket.value}"
       }
     ]
 }
@@ -214,6 +229,7 @@ module "ecs_service" {
   image = "${module.build.image_name}"
   target_group_arn = "${module.routing.target_group_arn}"
   ecs_service_arn = "${data.aws_iam_role.codepipeline_service_role.arn}"
+  memory = "${var.memory}"
 }
 
 ##############################################################
@@ -264,11 +280,18 @@ module "deploy_pipeline" {
 module "routing" {
   source = "../routing"
 
-  type     = "${var.type}"
-  name     = "${var.name}"
-  domain   = "${local.config_domain}"
+  type      = "${var.type}"
+  name      = "${var.name}"
+  domain    = "${local.config_domain}"
   catch_all = "${var.catch_all}"
-  hostname = "${local.config_hostname}"
-  port     = "${var.port}"
-  protocol = "${local.config_protocol}"
+  routing_priority_offset = "${var.routing_priority_offset}"
+  protocol  = "${local.config_protocol}"
+  hostname  = "${local.config_hostname}"
+  port      = "${var.port}"
+  path_patterns = "${var.path_patterns}"
+  register_dns_record = "${var.register_dns_record}"
+  health_check_path = "${var.health_check_path}"
+  providers = {
+    aws = "aws"
+  }    
 }
