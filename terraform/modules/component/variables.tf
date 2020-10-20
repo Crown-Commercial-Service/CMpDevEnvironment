@@ -31,12 +31,45 @@ variable hostname {
 }
 
 ##############################################################
+# Path (for routing purposes)
+##############################################################
+variable path_patterns {
+    type = "list"
+    default = []
+}
+
+##############################################################
+# Flag to register the DNS record, assumes it always does and
+# can then be disabled if another build process is hanlding
+# the registration
+##############################################################
+variable register_dns_record {
+  type = "string"
+  default = true
+}
+
+##############################################################
+# Used to set the offset for routing rule numbers
+##############################################################
+variable routing_priority_offset {
+    type = "string"
+    default = "0"
+}
+##############################################################
 # If true and additional rule will be added at the end of 
 # the routing rules with a host of *
 ##############################################################
 variable catch_all {
     type = "string"
     default = false
+}
+
+##############################################################
+# Path to use for health check
+##############################################################
+variable health_check_path {
+    type = "string"
+    default = "/"
 }
 
 ##############################################################
@@ -165,13 +198,6 @@ variable port {
     type = "string"
 }
 
-##############################################################
-# AWS Provider
-##############################################################
-provider "aws" {
-  region = "eu-west-2"
-}
-
 data "aws_caller_identity" "current" {
 }
 
@@ -200,6 +226,18 @@ data "aws_vpc" "CCSDEV-Services" {
 data "aws_subnet" "CCSDEV-AZ-a-Private-1" {
   tags {
     "Name" = "CCSDEV-AZ-a-Private-1"
+  }
+}
+
+data "aws_subnet" "CCSDEV-AZ-b-Private-1" {
+  tags {
+    "Name" = "CCSDEV-AZ-b-Private-1"
+  }
+}
+
+data "aws_subnet" "CCSDEV-AZ-c-Private-1" {
+  tags {
+    "Name" = "CCSDEV-AZ-c-Private-1"
   }
 }
 

@@ -13,3 +13,10 @@
 
 # Generated lambda zip
 /terraform/infrastructure/*.zip
+
+# Scratch directory used for playing around
+/terraform/scratch
+
+# Ignore Eclipse files
+.project
+.classfile

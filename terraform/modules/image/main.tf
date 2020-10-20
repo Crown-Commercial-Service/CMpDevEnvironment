@@ -25,7 +25,7 @@ module "build" {
   build_type = "image"
   service_role_arn = "${data.aws_iam_role.codebuild_service_role.arn}"
   vpc_id = "${data.aws_vpc.CCSDEV-Services.id}"
-  subnet_ids = ["${data.aws_subnet.CCSDEV-AZ-a-Private-1.id}"]
+  subnet_ids = ["${data.aws_subnet.CCSDEV-AZ-a-Private-1.id}","${data.aws_subnet.CCSDEV-AZ-b-Private-1.id}","${data.aws_subnet.CCSDEV-AZ-c-Private-1.id}"]
   security_group_ids = ["${data.aws_security_group.vpc-CCSDEV-internal.id}"]
 }
 
