@@ -184,7 +184,7 @@ variable "create_elasticache_redis" {
 }
 
 variable "elasticache_instance_class" {
-  default = "cache.t2.small"
+  default = "cache.t2.medium"
 }
 
 ##############################################################
