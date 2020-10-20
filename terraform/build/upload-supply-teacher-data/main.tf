@@ -5,6 +5,10 @@
 # Note that is is triggering on ANY change in the data repository, in the future
 # either different repositories or different branches may be needed.
 ###############################################################################
+terraform {
+  required_version = "~> 0.11"
+}
+
 module "upload" {
   # source = "git::https://github.com/Crown-Commercial-Service/CMpDevEnvironment.git//terraform/modules/image"
   source = "../../modules/upload"
@@ -13,6 +17,7 @@ module "upload" {
 
   prefix = "ccs"
   name = "upload-supply-teacher"
+  routing_priority_offset = 500
   github_owner = "Crown-Commercial-Service"
   github_repo = "crown-marketplace-data"
   github_branch = "production"
