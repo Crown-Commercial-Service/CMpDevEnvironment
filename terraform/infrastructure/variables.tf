@@ -27,6 +27,7 @@ variable ccs_cognito_groups {
   default = {
     "at_access" = "Apprenticeships user access",
     "buyer" = "Buyer user access",
+    "supplier" = "Supplier user access",
     "ccs_employee" = "CCS Employee user access",
     "fm_access" = "Facilities Management user access",
     "ls_access" = "Legal Services user access",
@@ -84,8 +85,16 @@ variable "app_cluster_instance_class" {
   default = "m4.large"
 }
 
-variable "app_cluster_instance_count" {
-  default = "3"
+variable "app_cluster_desired_instance_count" {
+  default = "4"
+}
+
+variable "app_cluster_min_instance_count" {
+  default = "4"
+}
+
+variable "app_cluster_max_instance_count" {
+  default = "5"
 }
 
 variable "app_cluster_key_name" {
@@ -108,7 +117,15 @@ variable "api_cluster_instance_class" {
   default = "t2.medium"
 }
 
-variable "api_cluster_instance_count" {
+variable "api_cluster_min_instance_count" {
+  default = "1"
+}
+
+variable "api_cluster_max_instance_count" {
+  default = "1"
+}
+
+variable "api_cluster_desired_instance_count" {
   default = "1"
 }
 
@@ -132,7 +149,11 @@ variable "default_db_instance_class" {
 }
 
 variable "default_db_storage" {
-  default = 40
+  default = 100
+}
+
+variable "default_db_apply_immediately" {
+  default = false
 }
 
 variable "default_db_type" {
@@ -171,7 +192,7 @@ variable "create_elasticache_redis" {
 }
 
 variable "elasticache_instance_class" {
-  default = "cache.t2.small"
+  default = "cache.t2.medium"
 }
 
 ##############################################################
@@ -235,6 +256,10 @@ variable "redis_port" {
   default = 6379
 }
 
+variable "clamav_port" {
+  default = 3310
+}
+
 ##############################################################
 # S3 Bucket name
 ##############################################################
@@ -243,4 +268,5 @@ locals {
   artifact_bucket_name = "ccs.${data.aws_caller_identity.current.account_id}.build-artifacts"
   log_bucket_name = "ccs.${data.aws_caller_identity.current.account_id}.${lower(var.environment_name)}.logs"
   app_api_bucket_name = "ccs.${data.aws_caller_identity.current.account_id}.${lower(var.environment_name)}.app-api-data"
+  assets_bucket_name = "${data.aws_caller_identity.current.account_id}-assets"
 }

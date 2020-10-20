@@ -4,6 +4,9 @@
 #
 # It's purposes is to run sidekiq for background processing tasks
 ###############################################################################
+terraform {
+  required_version = "~> 0.11"
+}
 
 module "component" {
     # source = "git::https://github.com/Crown-Commercial-Service/CMpDevEnvironment.git//terraform/modules/component"
@@ -14,8 +17,10 @@ module "component" {
     type = "api"
     prefix = "ccs"
     name = "cmpsidekiq"
+    routing_priority_offset = 300
     build_type = "custom"
     build_image = "ccs/ruby"
+    memory = 3072
 
     # Build the standard marketplace application
     github_owner = "Crown-Commercial-Service"
@@ -43,4 +48,7 @@ module "component" {
       }
     ]
     port = "80"
+    providers = {
+      aws = "aws"
+    }    
 }

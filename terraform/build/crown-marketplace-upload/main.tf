@@ -4,6 +4,9 @@
 #
 # It's purposes is to provide an 'api' for uploading data.
 ###############################################################################
+terraform {
+  required_version = "~> 0.11"
+}
 
 module "component" {
     # source = "git::https://github.com/Crown-Commercial-Service/CMpDevEnvironment.git//terraform/modules/component"
@@ -14,6 +17,7 @@ module "component" {
     type = "api"
     prefix = "ccs"
     name = "cmpupload"
+    routing_priority_offset = 400
     build_type = "custom"
     build_image = "ccs/ruby"
 
@@ -43,4 +47,7 @@ module "component" {
       }
     ]
     port = "80"
+    providers = {
+      aws = "aws"
+    }    
 }
