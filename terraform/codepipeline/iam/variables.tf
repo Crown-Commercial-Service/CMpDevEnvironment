@@ -1,3 +1,7 @@
 variable "iam_role_name" {
-  default = "cmp_terraform_codepipeline_role"
+  default = "cmp-terraform-codepipeline-role"
+}
+
+variable "region" {
+  default = "eu-west-2"
 }
