@@ -1,0 +1,24 @@
+version: 0.2
+
+phases:
+
+  install:
+    commands:
+      # install required binary
+      - current_dir=$(pwd)
+      - cd /usr/bin
+      - curl -s -qL -o terraform.zip https://releases.hashicorp.com/terraform/0.12.24/terraform_0.12.24_linux_amd64.zip
+      - unzip -o terraform.zip
+      - cd $current_dir
+
+  build:
+    commands:
+      - terraform init -reconfigure $BOOTSTRAP_DIR && terraform plan -out=$BOOTSTRAP_TFPLAN $BOOTSTRAP_DIR
+
+  post_build:
+    commands:
+      - echo Please check the $BOOTSTRAP_TF_PLAN for the $BOOTSTRAP_DIR directory
+
+artifacts:
+  files:
+    - $BOOTSTRAP_TFPLAN
