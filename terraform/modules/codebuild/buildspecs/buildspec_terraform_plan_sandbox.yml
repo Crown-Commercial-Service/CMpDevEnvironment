@@ -7,13 +7,14 @@ phases:
       # install required binary
       - current_dir=$(pwd)
       - cd /usr/bin
-      - curl -s -qL -o terraform.zip https://releases.hashicorp.com/terraform/0.12.24/terraform_0.12.24_linux_amd64.zip
+      - curl -s -qL -o terraform.zip https://releases.hashicorp.com/terraform/0.11.11/terraform_0.11.11_linux_amd64.zip
       - unzip -o terraform.zip
       - cd $current_dir
 
   build:
     commands:
-      - terraform init -reconfigure $BOOTSTRAP_DIR && terraform plan -out=$BOOTSTRAP_TFPLAN $BOOTSTRAP_DIR
+      - cd $BOOTSTRAP_DIR && terraform init && terraform plan -out=../../$BOOTSTRAP_TFPLAN && cd ../../
+      - cd terraform/infrastructure/ && terraform init && terraform plan -out=../../infra_tfplan
 
   post_build:
     commands:
