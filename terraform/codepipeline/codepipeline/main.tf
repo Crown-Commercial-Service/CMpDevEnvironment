@@ -1,9 +1,9 @@
 data "aws_iam_role" "cmp_terraform_codepipeline_role" {
-  name = var.iam_role_name
+  name = var.codepipeline_iam_role_name
 }
 
-data "aws_iam_role" "codebuild_app_service_role" {
-  name = "codebuild-app-service-role"
+data "aws_iam_role" "cmp_terraform_codebuild_role" {
+  name = var.codebuild_iam_role_name
 }
 
 data "aws_ssm_parameter" "github_token" {
@@ -21,7 +21,7 @@ module "codebuild" {
   bootstrap_tfplan_filename  = var.bootstrap_tfplan_filename
   cloudwatch_logs_group_name = var.codebuild_terraform_plan_cloudwatch_logs_group_name
   codebuild_project_name     = var.codebuild_terraform_plan_project_name
-  codebuild_service_role     = data.aws_iam_role.codebuild_app_service_role.arn
+  codebuild_service_role     = data.aws_iam_role.cmp_terraform_codebuild_role.arn
   environment_compute_type   = var.codebuild_terraform_plan_environment_compute_type
   environment_image          = var.codebuild_terraform_plan_environment_image
   environment_type           = var.codebuild_terraform_plan_environment_type
