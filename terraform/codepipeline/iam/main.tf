@@ -36,6 +36,11 @@ resource "aws_iam_role" "cmp_terraform_codepipeline_role" {
 EOF
 }
 
+resource "aws_iam_role_policy_attachment" "cmp_terraform_codebuild_admin_attach" {
+  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+  role       = var.codebuild_iam_role_name
+}
+
 resource "aws_iam_role_policy_attachment" "cmp_terraform_codebuild_dynamodb_attach" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"
   role       = var.codebuild_iam_role_name

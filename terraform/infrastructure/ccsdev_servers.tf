@@ -35,3 +35,29 @@ resource "aws_instance" "CCSDEV_BASTION_a" {
     CCSEnvironment = "${var.environment_name}"
   }
 }
+
+resource "aws_cloudfront_distribution" "" {
+  enabled = false
+  default_cache_behavior {
+    allowed_methods = []
+    cached_methods = []
+    target_origin_id = ""
+    viewer_protocol_policy = ""
+    forwarded_values {
+      query_string = false
+      cookies {
+        forward = ""
+      }
+    }
+  }
+  origin {
+    domain_name = ""
+    origin_id = ""
+  }
+  restrictions {
+    geo_restriction {
+      restriction_type = ""
+    }
+  }
+  viewer_certificate {}
+}

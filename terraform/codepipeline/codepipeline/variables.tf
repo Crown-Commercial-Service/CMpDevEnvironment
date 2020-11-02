@@ -9,7 +9,7 @@ variable "codepipeline_name" {
 }
 
 variable "github_branch" {
-  default = "sandbox"
+  default = "sandbox-terraform-codepipeline"
 }
 
 variable "github_owner" {
