@@ -1,5 +1,5 @@
 resource "aws_iam_role" "cmp_terraform_codebuild_role" {
-  name = var.codebuild_iam_role_name
+  name = "${var.codebuild_iam_role_name}"
 
   assume_role_policy = <<EOF
 {
@@ -18,7 +18,7 @@ EOF
 }
 
 resource "aws_iam_role" "cmp_terraform_codepipeline_role" {
-  name = var.codepipeline_iam_role_name
+  name = "${var.codepipeline_iam_role_name}"
 
   assume_role_policy = <<EOF
 {
@@ -38,22 +38,22 @@ EOF
 
 resource "aws_iam_role_policy_attachment" "cmp_terraform_codebuild_admin_attach" {
   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
-  role       = var.codebuild_iam_role_name
+  role       = "${var.codebuild_iam_role_name}"
 }
 
 resource "aws_iam_role_policy_attachment" "cmp_terraform_codebuild_dynamodb_attach" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"
-  role       = var.codebuild_iam_role_name
+  role       = "${var.codebuild_iam_role_name}"
 }
 
 resource "aws_iam_role_policy_attachment" "cmp_terraform_codebuild_s3_attach" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
-  role       = var.codebuild_iam_role_name
+  role       = "${var.codebuild_iam_role_name}"
 }
 
 resource "aws_iam_role_policy_attachment" "cmp_terraform_codepipeline_s3_attach" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
-  role       = var.codepipeline_iam_role_name
+  role       = "${var.codepipeline_iam_role_name}"
 }
 
 resource "aws_iam_policy" "codebuild_cmp_policy" {
@@ -134,12 +134,12 @@ resource "aws_iam_policy" "codepipeline_cmp_policy" {
 
 resource "aws_iam_policy_attachment" "codebuild_cmp_policy_attachment" {
   name        = "codebuild_cmp_policy_attachment"
-  policy_arn  = aws_iam_policy.codepipeline_cmp_policy.arn
-  roles       = [aws_iam_role.cmp_terraform_codepipeline_role.name]
+  policy_arn  = "${aws_iam_policy.codepipeline_cmp_policy.arn}"
+  roles       = ["${aws_iam_role.cmp_terraform_codepipeline_role.name}"]
 }
 
 resource "aws_iam_policy_attachment" "codepipeline_cmp_policy_attachment" {
   name        = "codepipeline_cmp_policy_attachment"
-  policy_arn  = aws_iam_policy.codebuild_cmp_policy.arn
-  roles       = [aws_iam_role.cmp_terraform_codebuild_role.name]
+  policy_arn  = "${aws_iam_policy.codebuild_cmp_policy.arn}"
+  roles       = ["${aws_iam_role.cmp_terraform_codebuild_role.name}"]
 }
