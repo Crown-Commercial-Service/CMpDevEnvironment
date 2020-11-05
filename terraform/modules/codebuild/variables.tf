@@ -32,8 +32,6 @@ variable "build_crown_marketplace_legacy_directory" {}
 
 variable "build_crown_marketplace_legacy_tfplan_filename" {}
 
-variable "build_crown_marketplace_legacy_tfplan_filename" {}
-
 variable "build_crown_marketplace_sidekiq_directory" {}
 
 variable "build_crown_marketplace_sidekiq_tfplan_filename" {}
