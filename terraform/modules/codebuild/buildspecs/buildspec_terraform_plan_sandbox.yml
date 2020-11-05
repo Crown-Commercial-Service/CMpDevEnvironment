@@ -35,7 +35,6 @@ phases:
 
   build:
     commands:
-      - cd $BOOTSTRAP_DIR && terraform init && terraform plan -out=../../$BOOTSTRAP_TFPLAN && cd ../../
       - cd $INFRASTRUCTURE_DIR && terraform init && terraform plan -out=../../$INFRASTRUCTURE_TFPLAN && cd ../
 
   post_build:
