@@ -227,9 +227,25 @@ variable ssh_access_cidrs {
   default = {}
 }
 
+variable "ssh_access_cidr_key" {
+  default = ""
+}
+
+variable "ssh_access_cidr_value" {
+  default = ""
+}
+
 variable app_access_cidrs {
   type    = "map"
   default = {}
+}
+
+variable "app_access_cidr_key" {
+  default = ""
+}
+
+variable "app_access_cidr_value" {
+  default = ""
 }
 
 ##############################################################
