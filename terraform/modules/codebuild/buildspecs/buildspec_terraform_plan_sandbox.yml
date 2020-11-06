@@ -22,12 +22,16 @@ phases:
       - unzip -o terraform.zip
       - cd $current_dir
       # Ensure that config.auto.tfvars is populated upon each run
-      - echo app_access_cidrs = {\"APP_ACCESS_CIDR_KEY\" = \"APP_ACCESS_CIDR_VALUE\"} >> terraform/infrastructure/config.auto.tfvars
+      - echo app_access_cidr_key = \"$APP_ACCESS_CIDR_KEY\" >> terraform/infrastructure/config.auto.tfvars
+      - echo app_access_cidr_value = \"$APP_ACCESS_CIDR_VALUE\" >> terraform/infrastructure/config.auto.tfvars
+      - echo app_access_cidrs = {\"$APP_ACCESS_CIDR_KEY\" = \"$APP_ACCESS_CIDR_VALUE\"} >> terraform/infrastructure/config.auto.tfvars
       - echo domain_name = \"$DOMAIN_NAME\" >> terraform/infrastructure/config.auto.tfvars
       - echo domain_internal_prefix = \"$DOMAIN_INTERNAL_PREFIX\" >> terraform/infrastructure/config.auto.tfvars
       - echo enable_https = \"$ENABLE_HTTPS\" >> terraform/infrastructure/config.auto.tfvars
       - echo shared_postcode_data_bucket = \"$SHARED_POSTCODE_DATA_BUCKET\" >> terraform/infrastructure/config.auto.tfvars
-      - echo ssh_access_cidrs = {\"SSH_ACCESS_CIDR_KEY\" = \"SSH_ACCESS_CIDR_VALUE\"} >> terraform/infrastructure/config.auto.tfvars
+      - echo ssh_access_cidr_key = \"$SSH_ACCESS_CIDR_KEY\" >> terraform/infrastructure/config.auto.tfvars
+      - echo ssh_access_cidr_value = \"$SSH_ACCESS_CIDR_VALUE\" >> terraform/infrastructure/config.auto.tfvars
+      - echo ssh_access_cidrs = {\"$SSH_ACCESS_CIDR_KEY\" = \"$SSH_ACCESS_CIDR_VALUE\"} >> terraform/infrastructure/config.auto.tfvars
       # Terraform Apply on Bootstrap Script, Targeting Only Backend Files
       - cd $BOOTSTRAP_DIR && terraform init
       - terraform apply -auto-approve -target=module.infrastructure_backend.local_file.backend-tf
@@ -35,14 +39,9 @@ phases:
 
   build:
     commands:
-      - cd $INFRASTRUCTURE_DIR && terraform init && terraform plan -out=../../$INFRASTRUCTURE_TFPLAN && cd ../
+      - bash terraform/codepipeline/terraform_plan.sh $current_dir $INFRASTRUCTURE_DIR $INFRASTRUCTURE_TFPLAN
 
   post_build:
     commands:
       - echo Please check the $BOOTSTRAP_TF_PLAN for the $BOOTSTRAP_DIR directory
       - echo Please check the $INFRASTRUCTURE_TF_PLAN for the $INFRASTRUCTURE_DIR directory
-
-artifacts:
-  files:
-    - $BOOTSTRAP_TFPLAN
-    - $INFRASTRUCTURE_TFPLAN
