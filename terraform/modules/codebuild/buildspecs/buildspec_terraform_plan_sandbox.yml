@@ -38,7 +38,7 @@ phases:
       - terraform apply -auto-approve -target=module.infrastructure_backend.local_file.backend-tf
       - terraform apply -auto-approve -target=module.security_backend.local_file.backend-tf
       - terraform apply -auto-approve -target=module.cmp_maintenance_backend.local_file.backend-tf
-      - terraform apply -auto-approve -target=module.module.cmp_backend.local_file.backend-tf
+      - terraform apply -auto-approve -target=module.cmp_backend.local_file.backend-tf
       - terraform apply -auto-approve -target=module.cmp_legacy_backend.local_file.backend-tf
       - terraform apply -auto-approve -target=module.cmp_sidekiq_backend.local_file.backend-tf
       - terraform apply -auto-approve -target=module.cmp_upload_backend.local_file.backend-tf
@@ -57,7 +57,6 @@ phases:
       - bash terraform/codepipeline/terraform_plan.sh $current_dir $BUILD_CROWN_MARKETPLACE_UPLOAD_DIR $BUILD_CROWN_MARKETPLACE_UPLOAD_TFPLAN
       - bash terraform/codepipeline/terraform_plan.sh $current_dir $BUILD_IMAGE_RUBY_DIR $BUILD_IMAGE_RUBY_TFPLAN
       - bash terraform/codepipeline/terraform_plan.sh $current_dir $BUILD_NPM1_DIR $BUILD_NPM1_TFPLAN
-      - bash terraform/codepipeline/terraform_plan.sh $current_dir $BUILD_UPLOAD_SUPPLY_TEACHER_DATA_DIR $BUILD_UPLOAD_SUPPLY_TEACHER_DATA_TFPLAN
 
   post_build:
     commands:

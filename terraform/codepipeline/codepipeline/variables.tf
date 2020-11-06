@@ -110,7 +110,7 @@ variable "build_crown_marketplace_legacy_directory" {
 }
 
 variable "build_crown_marketplace_legacy_tfplan_filename" {
-  default = "build_crown_marketplace_legacy_tfplan"
+  default = "build_cmp_legacy_tfplan"
 }
 
 variable "build_crown_marketplace_sidekiq_directory" {
@@ -118,7 +118,7 @@ variable "build_crown_marketplace_sidekiq_directory" {
 }
 
 variable "build_crown_marketplace_sidekiq_tfplan_filename" {
-  default = "build_crown_marketplace_sidekiq_tfplan"
+  default = "build_cmp_sidekiq_tfplan"
 }
 
 variable "build_crown_marketplace_upload_directory" {
@@ -126,7 +126,7 @@ variable "build_crown_marketplace_upload_directory" {
 }
 
 variable "build_crown_marketplace_upload_tfplan_filename" {
-  default = "build_crown_marketplace_upload_tfplan"
+  default = "build_cmp_upload_tfplan"
 }
 
 variable "build_image_ruby_directory" {
