@@ -52,13 +52,21 @@ phases:
       - bash terraform/codepipeline/terraform_plan.sh $current_dir $SECURITY_DIR $SECURITY_TFPLAN
       - bash terraform/codepipeline/terraform_plan.sh $current_dir $BUILD_CMP_MAINTENANCE_DIR $BUILD_CMP_MAINTENANCE_TFPLAN
       - bash terraform/codepipeline/terraform_plan.sh $current_dir $BUILD_CROWN_MARKETPLACE_DIR $BUILD_CROWN_MARKETPLACE_TFPLAN
-      - bash terraform/codepipeline/terraform_plan.sh $current_dir $BUILD_CROWN_MARKETPLACE_LEGACY_DIR $BUILD_CROWN_MARKETPLACE_LEGACY_TFPLAN
-      - bash terraform/codepipeline/terraform_plan.sh $current_dir $BUILD_CROWN_MARKETPLACE_SIDEKIQ_DIR $BUILD_CROWN_MARKETPLACE_SIDEKIQ_TFPLAN
-      - bash terraform/codepipeline/terraform_plan.sh $current_dir $BUILD_CROWN_MARKETPLACE_UPLOAD_DIR $BUILD_CROWN_MARKETPLACE_UPLOAD_TFPLAN
+      - bash terraform/codepipeline/terraform_plan.sh $current_dir $BUILD_CROWN_MARKETPLACE_LEGACY_DIR build_cmp_legacy_tfplan
+      - bash terraform/codepipeline/terraform_plan.sh $current_dir $BUILD_CROWN_MARKETPLACE_SIDEKIQ_DIR build_cmp_sidekiq_tfplan
+      - bash terraform/codepipeline/terraform_plan.sh $current_dir $BUILD_CROWN_MARKETPLACE_UPLOAD_DIR build_cmp_upload_tfplan
       - bash terraform/codepipeline/terraform_plan.sh $current_dir $BUILD_IMAGE_RUBY_DIR $BUILD_IMAGE_RUBY_TFPLAN
       - bash terraform/codepipeline/terraform_plan.sh $current_dir $BUILD_NPM1_DIR $BUILD_NPM1_TFPLAN
 
   post_build:
     commands:
-      - echo Please check the $BOOTSTRAP_TF_PLAN for the $BOOTSTRAP_DIR directory
-      - echo Please check the $INFRASTRUCTURE_TF_PLAN for the $INFRASTRUCTURE_DIR directory
+      # Show proposed changes in a more readable format via Terraform Show
+      - bash terraform/codepipeline/terraform_show.sh $current_dir $INFRASTRUCTURE_DIR $INFRASTRUCTURE_TFPLAN
+      - bash terraform/codepipeline/terraform_show.sh $current_dir $SECURITY_DIR $SECURITY_TFPLAN
+      - bash terraform/codepipeline/terraform_show.sh $current_dir $BUILD_CMP_MAINTENANCE_DIR $BUILD_CMP_MAINTENANCE_TFPLAN
+      - bash terraform/codepipeline/terraform_show.sh $current_dir $BUILD_CROWN_MARKETPLACE_DIR $BUILD_CROWN_MARKETPLACE_TFPLAN
+      - bash terraform/codepipeline/terraform_show.sh $current_dir $BUILD_CROWN_MARKETPLACE_LEGACY_DIR build_cmp_legacy_tfplan
+      - bash terraform/codepipeline/terraform_show.sh $current_dir $BUILD_CROWN_MARKETPLACE_SIDEKIQ_DIR build_cmp_sidekiq_tfplan
+      - bash terraform/codepipeline/terraform_show.sh $current_dir $BUILD_CROWN_MARKETPLACE_UPLOAD_DIR build_cmp_upload_tfplan
+      - bash terraform/codepipeline/terraform_show.sh $current_dir $BUILD_IMAGE_RUBY_DIR $BUILD_IMAGE_RUBY_TFPLAN
+      - bash terraform/codepipeline/terraform_show.sh $current_dir $BUILD_NPM1_DIR $BUILD_NPM1_TFPLAN
