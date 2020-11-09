@@ -1,3 +1,29 @@
+resource "aws_ssm_parameter" "app_access_cidr_key" {
+  name  = "/${var.environment_name}/config/app_access_cidr_key"
+  description  = "Key for the CIDR block for app access"
+  type  = "SecureString"
+  value = "${var.app_access_cidr_key}"
+
+  tags {
+    Name = "Parameter Store: Key for the CIDR block for app access"
+    CCSRole = "Infrastructure"
+    CCSEnvironment = "${var.environment_name}"
+  }
+}
+
+resource "aws_ssm_parameter" "app_access_cidr_value" {
+  name  = "/${var.environment_name}/config/app_access_cidr_value"
+  description  = "Value for the CIDR block for app access"
+  type  = "SecureString"
+  value = "${var.app_access_cidr_value}"
+
+  tags {
+    Name = "Parameter Store: Value for the CIDR block for app access"
+    CCSRole = "Infrastructure"
+    CCSEnvironment = "${var.environment_name}"
+  }
+}
+
 resource "aws_ssm_parameter" "domain_name" {
   name  = "/${var.environment_name}/config/domain_name"
   description  = "Infrastructure configured domain name"
@@ -32,6 +58,45 @@ resource "aws_ssm_parameter" "enable_https" {
 
   tags {
     Name = "Parameter Store: Whether HTTPS should be enabled"
+    CCSRole = "Infrastructure"
+    CCSEnvironment = "${var.environment_name}"
+  }
+}
+
+resource "aws_ssm_parameter" "shared_postcode_data_bucket" {
+  name  = "/${var.environment_name}/config/shared_postcode_data_bucket"
+  description  = "S3 bucket for shared postcode data"
+  type  = "SecureString"
+  value = "${var.shared_postcode_data_bucket}"
+
+  tags {
+    Name = "Parameter Store: S3 bucket for shared postcode data"
+    CCSRole = "Infrastructure"
+    CCSEnvironment = "${var.environment_name}"
+  }
+}
+
+resource "aws_ssm_parameter" "ssh_access_cidr_key" {
+  name  = "/${var.environment_name}/config/ssh_access_cidr_key"
+  description  = "Key for the CIDR block for ssh access"
+  type  = "SecureString"
+  value = "${var.ssh_access_cidr_key}"
+
+  tags {
+    Name = "Parameter Store: Key for the CIDR block for ssh access"
+    CCSRole = "Infrastructure"
+    CCSEnvironment = "${var.environment_name}"
+  }
+}
+
+resource "aws_ssm_parameter" "ssh_access_cidr_value" {
+  name  = "/${var.environment_name}/config/ssh_access_cidr_value"
+  description  = "Value for the CIDR block for ssh access"
+  type  = "SecureString"
+  value = "${var.ssh_access_cidr_value}"
+
+  tags {
+    Name = "Parameter Store: Value for the CIDR block for ssh access"
     CCSRole = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
