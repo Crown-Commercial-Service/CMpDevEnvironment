@@ -1,0 +1,72 @@
+version: 0.2
+
+env:
+  parameter-store:
+    APP_ACCESS_CIDR_KEY: "/Sandbox/config/app_access_cidr_key"
+    APP_ACCESS_CIDR_VALUE: "/Sandbox/config/app_access_cidr_value"
+    DOMAIN_NAME: "/Sandbox/config/domain_name"
+    DOMAIN_INTERNAL_PREFIX: "/Sandbox/config/domain_prefix"
+    ENABLE_HTTPS: "/Sandbox/config/enable_https"
+    SHARED_POSTCODE_DATA_BUCKET: "/Sandbox/config/shared_postcode_data_bucket"
+    SSH_ACCESS_CIDR_KEY: "/Sandbox/config/ssh_access_cidr_key"
+    SSH_ACCESS_CIDR_VALUE: "/Sandbox/config/ssh_access_cidr_value"
+
+phases:
+
+  install:
+    commands:
+      # install required binary for terraform
+      - current_dir=$(pwd)
+      - cd /usr/bin
+      - curl -s -qL -o terraform.zip https://releases.hashicorp.com/terraform/0.11.11/terraform_0.11.11_linux_amd64.zip
+      - unzip -o terraform.zip
+      - cd $current_dir
+      # Ensure that config.auto.tfvars is populated upon each run
+      - echo app_access_cidr_key = \"$APP_ACCESS_CIDR_KEY\" >> terraform/infrastructure/config.auto.tfvars
+      - echo app_access_cidr_value = \"$APP_ACCESS_CIDR_VALUE\" >> terraform/infrastructure/config.auto.tfvars
+      - echo app_access_cidrs = {\"$APP_ACCESS_CIDR_KEY\" = \"$APP_ACCESS_CIDR_VALUE\"} >> terraform/infrastructure/config.auto.tfvars
+      - echo domain_name = \"$DOMAIN_NAME\" >> terraform/infrastructure/config.auto.tfvars
+      - echo domain_internal_prefix = \"$DOMAIN_INTERNAL_PREFIX\" >> terraform/infrastructure/config.auto.tfvars
+      - echo enable_https = \"$ENABLE_HTTPS\" >> terraform/infrastructure/config.auto.tfvars
+      - echo shared_postcode_data_bucket = \"$SHARED_POSTCODE_DATA_BUCKET\" >> terraform/infrastructure/config.auto.tfvars
+      - echo ssh_access_cidr_key = \"$SSH_ACCESS_CIDR_KEY\" >> terraform/infrastructure/config.auto.tfvars
+      - echo ssh_access_cidr_value = \"$SSH_ACCESS_CIDR_VALUE\" >> terraform/infrastructure/config.auto.tfvars
+      - echo ssh_access_cidrs = {\"$SSH_ACCESS_CIDR_KEY\" = \"$SSH_ACCESS_CIDR_VALUE\"} >> terraform/infrastructure/config.auto.tfvars
+      # Terraform Apply on Bootstrap Script, Targeting Only Backend Files
+      # Missing/For Review: build api1/2, build app 1/2, ssm_config, upload-supply-teacher-data
+      - cd $BOOTSTRAP_DIR && terraform init
+      - terraform apply -auto-approve -target=module.infrastructure_backend.local_file.backend-tf
+      - terraform apply -auto-approve -target=module.security_backend.local_file.backend-tf
+      - terraform apply -auto-approve -target=module.cmp_maintenance_backend.local_file.backend-tf
+      - terraform apply -auto-approve -target=module.cmp_backend.local_file.backend-tf
+      - terraform apply -auto-approve -target=module.cmp_legacy_backend.local_file.backend-tf
+      - terraform apply -auto-approve -target=module.cmp_sidekiq_backend.local_file.backend-tf
+      - terraform apply -auto-approve -target=module.cmp_upload_backend.local_file.backend-tf
+      - terraform apply -auto-approve -target=module.image-ruby_backend.local_file.backend-tf
+      - terraform apply -auto-approve -target=module.npm1_backend.local_file.backend-tf
+      - cd $current_dir
+
+  build:
+    commands:
+      - bash terraform/codepipeline/terraform_plan.sh $current_dir $INFRASTRUCTURE_DIR $INFRASTRUCTURE_TFPLAN
+      - bash terraform/codepipeline/terraform_plan.sh $current_dir $SECURITY_DIR $SECURITY_TFPLAN
+      - bash terraform/codepipeline/terraform_plan.sh $current_dir $BUILD_CMP_MAINTENANCE_DIR $BUILD_CMP_MAINTENANCE_TFPLAN
+      - bash terraform/codepipeline/terraform_plan.sh $current_dir $BUILD_CROWN_MARKETPLACE_DIR $BUILD_CROWN_MARKETPLACE_TFPLAN
+      - bash terraform/codepipeline/terraform_plan.sh $current_dir $BUILD_CROWN_MARKETPLACE_LEGACY_DIR build_cmp_legacy_tfplan
+      - bash terraform/codepipeline/terraform_plan.sh $current_dir $BUILD_CROWN_MARKETPLACE_SIDEKIQ_DIR build_cmp_sidekiq_tfplan
+      - bash terraform/codepipeline/terraform_plan.sh $current_dir $BUILD_CROWN_MARKETPLACE_UPLOAD_DIR build_cmp_upload_tfplan
+      - bash terraform/codepipeline/terraform_plan.sh $current_dir $BUILD_IMAGE_RUBY_DIR $BUILD_IMAGE_RUBY_TFPLAN
+      - bash terraform/codepipeline/terraform_plan.sh $current_dir $BUILD_NPM1_DIR $BUILD_NPM1_TFPLAN
+
+  post_build:
+    commands:
+      # Show proposed changes in a more readable format via Terraform Show
+      - bash terraform/codepipeline/terraform_show.sh $current_dir $INFRASTRUCTURE_DIR $INFRASTRUCTURE_TFPLAN
+      - bash terraform/codepipeline/terraform_show.sh $current_dir $SECURITY_DIR $SECURITY_TFPLAN
+      - bash terraform/codepipeline/terraform_show.sh $current_dir $BUILD_CMP_MAINTENANCE_DIR $BUILD_CMP_MAINTENANCE_TFPLAN
+      - bash terraform/codepipeline/terraform_show.sh $current_dir $BUILD_CROWN_MARKETPLACE_DIR $BUILD_CROWN_MARKETPLACE_TFPLAN
+      - bash terraform/codepipeline/terraform_show.sh $current_dir $BUILD_CROWN_MARKETPLACE_LEGACY_DIR build_cmp_legacy_tfplan
+      - bash terraform/codepipeline/terraform_show.sh $current_dir $BUILD_CROWN_MARKETPLACE_SIDEKIQ_DIR build_cmp_sidekiq_tfplan
+      - bash terraform/codepipeline/terraform_show.sh $current_dir $BUILD_CROWN_MARKETPLACE_UPLOAD_DIR build_cmp_upload_tfplan
+      - bash terraform/codepipeline/terraform_show.sh $current_dir $BUILD_IMAGE_RUBY_DIR $BUILD_IMAGE_RUBY_TFPLAN
+      - bash terraform/codepipeline/terraform_show.sh $current_dir $BUILD_NPM1_DIR $BUILD_NPM1_TFPLAN
