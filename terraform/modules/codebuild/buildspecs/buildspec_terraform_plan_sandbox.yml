@@ -36,37 +36,28 @@ phases:
       # Missing/For Review: build api1/2, build app 1/2, ssm_config, upload-supply-teacher-data
       - cd $BOOTSTRAP_DIR && terraform init
       - terraform apply -auto-approve -target=module.infrastructure_backend.local_file.backend-tf
-      - terraform apply -auto-approve -target=module.security_backend.local_file.backend-tf
       - terraform apply -auto-approve -target=module.cmp_maintenance_backend.local_file.backend-tf
       - terraform apply -auto-approve -target=module.cmp_backend.local_file.backend-tf
       - terraform apply -auto-approve -target=module.cmp_legacy_backend.local_file.backend-tf
       - terraform apply -auto-approve -target=module.cmp_sidekiq_backend.local_file.backend-tf
-      - terraform apply -auto-approve -target=module.cmp_upload_backend.local_file.backend-tf
       - terraform apply -auto-approve -target=module.image-ruby_backend.local_file.backend-tf
-      - terraform apply -auto-approve -target=module.npm1_backend.local_file.backend-tf
       - cd $current_dir
 
   build:
     commands:
       - bash terraform/codepipeline/terraform_plan.sh $current_dir $INFRASTRUCTURE_DIR $INFRASTRUCTURE_TFPLAN
-      - bash terraform/codepipeline/terraform_plan.sh $current_dir $SECURITY_DIR $SECURITY_TFPLAN
       - bash terraform/codepipeline/terraform_plan.sh $current_dir $BUILD_CMP_MAINTENANCE_DIR $BUILD_CMP_MAINTENANCE_TFPLAN
       - bash terraform/codepipeline/terraform_plan.sh $current_dir $BUILD_CROWN_MARKETPLACE_DIR $BUILD_CROWN_MARKETPLACE_TFPLAN
       - bash terraform/codepipeline/terraform_plan.sh $current_dir $BUILD_CROWN_MARKETPLACE_LEGACY_DIR build_cmp_legacy_tfplan
       - bash terraform/codepipeline/terraform_plan.sh $current_dir $BUILD_CROWN_MARKETPLACE_SIDEKIQ_DIR build_cmp_sidekiq_tfplan
-      - bash terraform/codepipeline/terraform_plan.sh $current_dir $BUILD_CROWN_MARKETPLACE_UPLOAD_DIR build_cmp_upload_tfplan
       - bash terraform/codepipeline/terraform_plan.sh $current_dir $BUILD_IMAGE_RUBY_DIR $BUILD_IMAGE_RUBY_TFPLAN
-      - bash terraform/codepipeline/terraform_plan.sh $current_dir $BUILD_NPM1_DIR $BUILD_NPM1_TFPLAN
 
   post_build:
     commands:
       # Show proposed changes in a more readable format via Terraform Show
       - bash terraform/codepipeline/terraform_show.sh $current_dir $INFRASTRUCTURE_DIR $INFRASTRUCTURE_TFPLAN
-      - bash terraform/codepipeline/terraform_show.sh $current_dir $SECURITY_DIR $SECURITY_TFPLAN
       - bash terraform/codepipeline/terraform_show.sh $current_dir $BUILD_CMP_MAINTENANCE_DIR $BUILD_CMP_MAINTENANCE_TFPLAN
       - bash terraform/codepipeline/terraform_show.sh $current_dir $BUILD_CROWN_MARKETPLACE_DIR $BUILD_CROWN_MARKETPLACE_TFPLAN
       - bash terraform/codepipeline/terraform_show.sh $current_dir $BUILD_CROWN_MARKETPLACE_LEGACY_DIR build_cmp_legacy_tfplan
       - bash terraform/codepipeline/terraform_show.sh $current_dir $BUILD_CROWN_MARKETPLACE_SIDEKIQ_DIR build_cmp_sidekiq_tfplan
-      - bash terraform/codepipeline/terraform_show.sh $current_dir $BUILD_CROWN_MARKETPLACE_UPLOAD_DIR build_cmp_upload_tfplan
       - bash terraform/codepipeline/terraform_show.sh $current_dir $BUILD_IMAGE_RUBY_DIR $BUILD_IMAGE_RUBY_TFPLAN
-      - bash terraform/codepipeline/terraform_show.sh $current_dir $BUILD_NPM1_DIR $BUILD_NPM1_TFPLAN
