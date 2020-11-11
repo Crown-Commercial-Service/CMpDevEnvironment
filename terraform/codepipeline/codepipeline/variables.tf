@@ -9,7 +9,7 @@ variable "codepipeline_name" {
 }
 
 variable "github_branch" {
-  default = "sandbox-terraform-codepipeline"
+  default = "sandbox-codepipeline"
 }
 
 variable "github_owner" {
@@ -44,8 +44,16 @@ variable "terraform_plan_artifact" {
   default = "CMpDevEnvironment_Sandbox_Terraform_Plan_Artifact"
 }
 
+variable "terraform_apply_artifact" {
+  default = "CMpDevEnvironment_Sandbox_Terraform_Apply_Artifact"
+}
+
 # Variables for the Terraform plan codebuild project
 variable "codebuild_terraform_plan_artifact_type" {
+  default = "CODEPIPELINE"
+}
+
+variable "codebuild_terraform_apply_artifact_type" {
   default = "CODEPIPELINE"
 }
 
@@ -157,11 +165,23 @@ variable "codebuild_terraform_plan_cloudwatch_logs_group_name" {
   default = "cmp-terraform-plan-cloudwatch-logs"
 }
 
+variable "codebuild_terraform_apply_cloudwatch_logs_group_name" {
+  default = "cmp-terraform-apply-cloudwatch-logs"
+}
+
 variable "codebuild_terraform_plan_project_name" {
   default = "cmp-terraform-plan"
 }
 
+variable "codebuild_terraform_apply_project_name" {
+  default = "cmp-terraform-apply"
+}
+
 variable "codebuild_terraform_plan_environment_compute_type" {
+  default = "BUILD_GENERAL1_SMALL"
+}
+
+variable "codebuild_terraform_apply_environment_compute_type" {
   default = "BUILD_GENERAL1_SMALL"
 }
 
@@ -169,7 +189,15 @@ variable "codebuild_terraform_plan_environment_image" {
   default = "aws/codebuild/standard:4.0"
 }
 
+variable "codebuild_terraform_apply_environment_image" {
+  default = "aws/codebuild/standard:4.0"
+}
+
 variable "codebuild_terraform_plan_environment_type" {
+  default = "LINUX_CONTAINER"
+}
+
+variable "codebuild_terraform_apply_environment_type" {
   default = "LINUX_CONTAINER"
 }
 
@@ -177,7 +205,15 @@ variable "codebuild_terraform_plan_source_buildspec_filepath" {
   default = "buildspecs/buildspec_terraform_plan_sandbox.yml"
 }
 
+variable "codebuild_terraform_apply_source_buildspec_filepath" {
+  default = "buildspecs/buildspec_terraform_apply_sandbox.yml"
+}
+
 variable "codebuild_terraform_plan_source_type" {
+  default = "CODEPIPELINE"
+}
+
+variable "codebuild_terraform_apply_source_type" {
   default = "CODEPIPELINE"
 }
 

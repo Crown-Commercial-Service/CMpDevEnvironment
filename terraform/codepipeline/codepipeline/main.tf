@@ -14,7 +14,7 @@ data "aws_s3_bucket" "artifact_bucket" {
   bucket = "${local.artifact_bucket_name}"
 }
 
-module "codebuild" {
+module "codebuild_terraform_plan" {
   source                                           = "../../modules/codebuild"
   artifacts_type                                   = "${var.codebuild_terraform_plan_artifact_type}"
   bootstrap_directory                              = "${var.bootstrap_directory}"
@@ -55,6 +55,51 @@ module "codebuild" {
   security_tfplan_filename                         = "${var.security_tfplan_filename}"
   source_buildspec_filepath                        = "${var.codebuild_terraform_plan_source_buildspec_filepath}"
   source_type                                      = "${var.codebuild_terraform_plan_source_type}"
+  ssm_config_directory                             = "${var.ssm_config_directory}"
+  ssm_config_tfplan_filename                       = "${var.ssm_config_tfplan_filename}"
+}
+
+module "codebuild_terraform_apply" {
+  source                                           = "../../modules/codebuild"
+  artifacts_type                                   = "${var.codebuild_terraform_apply_artifact_type}"
+  bootstrap_directory                              = "${var.bootstrap_directory}"
+  bootstrap_tfplan_filename                        = "${var.bootstrap_tfplan_filename}"
+  build_api1_directory                             = "${var.build_api1_directory}"
+  build_api1_tfplan_filename                       = "${var.build_api1_tfplan_filename}"
+  build_api2_directory                             = "${var.build_api2_directory}"
+  build_api2_tfplan_filename                       = "${var.build_api2_tfplan_filename}"
+  build_app1_directory                             = "${var.build_app1_directory}"
+  build_app1_tfplan_filename                       = "${var.build_app1_tfplan_filename}"
+  build_app2_directory                             = "${var.build_app2_directory}"
+  build_app2_tfplan_filename                       = "${var.build_app2_tfplan_filename}"
+  build_cmp_maintenance_directory                  = "${var.build_cmp_maintenance_directory}"
+  build_cmp_maintenance_tfplan_filename            = "${var.build_cmp_maintenance_tfplan_filename}"
+  build_crown_marketplace_directory                = "${var.build_crown_marketplace_directory}"
+  build_crown_marketplace_legacy_directory         = "${var.build_crown_marketplace_legacy_directory}"
+  build_crown_marketplace_legacy_tfplan_filename   = "${var.build_crown_marketplace_legacy_tfplan_filename}"
+  build_crown_marketplace_sidekiq_directory        = "${var.build_crown_marketplace_sidekiq_directory}"
+  build_crown_marketplace_sidekiq_tfplan_filename  = "${var.build_crown_marketplace_sidekiq_tfplan_filename}"
+  build_crown_marketplace_tfplan_filename          = "${var.build_crown_marketplace_tfplan_filename}"
+  build_crown_marketplace_upload_directory         = "${var.build_crown_marketplace_upload_directory}"
+  build_crown_marketplace_upload_tfplan_filename   = "${var.build_crown_marketplace_upload_tfplan_filename}"
+  build_image_ruby_directory                       = "${var.build_image_ruby_directory}"
+  build_image_ruby_tfplan_filename                 = "${var.build_image_ruby_tfplan_filename}"
+  build_npm1_directory                             = "${var.build_npm1_directory}"
+  build_npm1_tfplan_filename                       = "${var.build_npm1_tfplan_filename}"
+  build_upload_supply_teacher_data_directory       = "${var.build_upload_supply_teacher_data_directory}"
+  build_upload_supply_teacher_data_tfplan_filename = "${var.build_upload_supply_teacher_data_tfplan_filename}"
+  cloudwatch_logs_group_name                       = "${var.codebuild_terraform_apply_cloudwatch_logs_group_name}"
+  codebuild_project_name                           = "${var.codebuild_terraform_apply_project_name}"
+  codebuild_service_role                           = "${data.aws_iam_role.cmp_terraform_codebuild_role.arn}"
+  environment_compute_type                         = "${var.codebuild_terraform_apply_environment_compute_type}"
+  environment_image                                = "${var.codebuild_terraform_apply_environment_image}"
+  environment_type                                 = "${var.codebuild_terraform_apply_environment_type}"
+  infrastructure_directory                         = "${var.infrastructure_directory}"
+  infrastructure_tfplan_filename                   = "${var.infrastructure_tfplan_filename}"
+  security_directory                               = "${var.security_directory}"
+  security_tfplan_filename                         = "${var.security_tfplan_filename}"
+  source_buildspec_filepath                        = "${var.codebuild_terraform_apply_source_buildspec_filepath}"
+  source_type                                      = "${var.codebuild_terraform_apply_source_type}"
   ssm_config_directory                             = "${var.ssm_config_directory}"
   ssm_config_tfplan_filename                       = "${var.ssm_config_tfplan_filename}"
 }
@@ -102,6 +147,36 @@ resource "aws_codepipeline" "cmp_dev_environment_pipeline" {
 
       configuration = {
         ProjectName = "${var.codebuild_terraform_plan_project_name}"
+      }
+    }
+  }
+
+  stage {
+    name = "Terraform-Approve"
+
+    action {
+      category = "Approval"
+      name = "Approval"
+      owner = "AWS"
+      provider = "Manual"
+      version = "1"
+    }
+  }
+
+  stage {
+    name = "Terraform-Apply"
+
+    action {
+      name             = "Build"
+      category         = "Build"
+      owner            = "AWS"
+      provider         = "CodeBuild"
+      input_artifacts  = ["${var.source_artifact}"]
+      output_artifacts = ["${var.terraform_apply_artifact}"]
+      version          = "1"
+
+      configuration = {
+        ProjectName = "${var.codebuild_terraform_apply_project_name}"
       }
     }
   }
