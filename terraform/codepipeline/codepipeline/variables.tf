@@ -2,6 +2,7 @@ data "aws_caller_identity" "current" {}
 
 locals {
   artifact_bucket_name = "ccs.${data.aws_caller_identity.current.account_id}.build-artifacts"
+  terraform_plan_s3_bucket_name = "ccs.${data.aws_caller_identity.current.account_id}.cmpterraformpipeline.tfplan"
 }
 
 variable "codepipeline_name" {

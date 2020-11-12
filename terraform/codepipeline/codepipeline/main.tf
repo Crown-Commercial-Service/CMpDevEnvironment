@@ -39,6 +39,7 @@ module "codebuild_terraform_plan" {
   infrastructure_tfplan_filename                   = "${var.infrastructure_tfplan_filename}"
   source_buildspec_filepath                        = "${var.codebuild_terraform_plan_source_buildspec_filepath}"
   source_type                                      = "${var.codebuild_terraform_plan_source_type}"
+  terraform_plan_s3_bucket_name                    = "${local.terraform_plan_s3_bucket_name}"
 }
 
 module "codebuild_terraform_apply" {
@@ -66,6 +67,7 @@ module "codebuild_terraform_apply" {
   infrastructure_tfplan_filename                   = "${var.infrastructure_tfplan_filename}"
   source_buildspec_filepath                        = "${var.codebuild_terraform_apply_source_buildspec_filepath}"
   source_type                                      = "${var.codebuild_terraform_apply_source_type}"
+  terraform_plan_s3_bucket_name                    = "${local.terraform_plan_s3_bucket_name}"
 }
 
 resource "aws_codepipeline" "cmp_dev_environment_pipeline" {
