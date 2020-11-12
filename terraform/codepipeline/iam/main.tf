@@ -41,21 +41,12 @@ resource "aws_iam_role_policy_attachment" "cmp_terraform_codebuild_admin_attach"
   role       = "${var.codebuild_iam_role_name}"
 }
 
-resource "aws_iam_role_policy_attachment" "cmp_terraform_codebuild_dynamodb_attach" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"
-  role       = "${var.codebuild_iam_role_name}"
-}
-
-resource "aws_iam_role_policy_attachment" "cmp_terraform_codebuild_s3_attach" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
-  role       = "${var.codebuild_iam_role_name}"
-}
-
 resource "aws_iam_role_policy_attachment" "cmp_terraform_codepipeline_s3_attach" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
   role       = "${var.codepipeline_iam_role_name}"
 }
 
+/*
 resource "aws_iam_policy" "codebuild_cmp_policy" {
   name   = "codebuild-cmp-policy"
   policy = <<EOF
@@ -142,4 +133,4 @@ resource "aws_iam_policy_attachment" "codepipeline_cmp_policy_attachment" {
   name        = "codepipeline_cmp_policy_attachment"
   policy_arn  = "${aws_iam_policy.codebuild_cmp_policy.arn}"
   roles       = ["${aws_iam_role.cmp_terraform_codebuild_role.name}"]
-}
+}*/
