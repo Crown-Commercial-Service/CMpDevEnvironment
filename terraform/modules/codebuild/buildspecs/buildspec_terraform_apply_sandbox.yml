@@ -45,9 +45,9 @@ phases:
 
   build:
     commands:
+      - bash terraform/codepipeline/terraform_apply.sh $current_dir $INFRASTRUCTURE_DIR $INFRASTRUCTURE_TFPLAN
       - bash terraform/codepipeline/terraform_apply.sh $current_dir $BUILD_CMP_MAINTENANCE_DIR $BUILD_CMP_MAINTENANCE_TFPLAN
-
-  post_build:
-    commands:
-      # Show proposed changes in a more readable format via Terraform Show
-      - echo "Terraform applied for $BUILD_CMP_MAINTENANCE_DIR"
+      - bash terraform/codepipeline/terraform_apply.sh $current_dir $BUILD_CROWN_MARKETPLACE_DIR $BUILD_CROWN_MARKETPLACE_TFPLAN
+      - bash terraform/codepipeline/terraform_apply.sh $current_dir $BUILD_CROWN_MARKETPLACE_LEGACY_DIR build_cmp_legacy_tfplan
+      - bash terraform/codepipeline/terraform_apply.sh $current_dir $BUILD_CROWN_MARKETPLACE_SIDEKIQ_DIR build_cmp_sidekiq_tfplan
+      - bash terraform/codepipeline/terraform_apply.sh $current_dir $BUILD_IMAGE_RUBY_DIR $BUILD_IMAGE_RUBY_TFPLAN

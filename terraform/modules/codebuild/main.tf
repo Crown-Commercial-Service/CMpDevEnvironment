@@ -36,66 +36,6 @@ resource "aws_codebuild_project" "terraform_plan_codebuild_project" {
     }
 
     environment_variable {
-      name = "SECURITY_DIR"
-      value = "${var.security_directory}"
-    }
-
-    environment_variable {
-      name = "SECURITY_TFPLAN"
-      value = "${var.security_tfplan_filename}"
-    }
-
-    environment_variable {
-      name = "SSM_CONFIG_DIR"
-      value = "${var.ssm_config_directory}"
-    }
-
-    environment_variable {
-      name = "SSM_CONFIG_TFPLAN"
-      value = "${var.ssm_config_tfplan_filename}"
-    }
-
-    environment_variable {
-      name = "BUILD_API1_DIR"
-      value = "${var.build_api1_directory}"
-    }
-
-    environment_variable {
-      name = "BUILD_API1_TFPLAN"
-      value = "${var.build_api1_tfplan_filename}"
-    }
-
-    environment_variable {
-      name = "BUILD_API2_DIR"
-      value = "${var.build_api2_directory}"
-    }
-
-    environment_variable {
-      name = "BUILD_API2_TFPLAN"
-      value = "${var.build_api2_tfplan_filename}"
-    }
-
-    environment_variable {
-      name = "BUILD_APP1_DIR"
-      value = "${var.build_app1_directory}"
-    }
-
-    environment_variable {
-      name = "BUILD_APP1_TFPLAN"
-      value = "${var.build_app1_tfplan_filename}"
-    }
-
-    environment_variable {
-      name = "BUILD_APP2_DIR"
-      value = "${var.build_app2_directory}"
-    }
-
-    environment_variable {
-      name = "BUILD_APP2_TFPLAN"
-      value = "${var.build_app2_tfplan_filename}"
-    }
-
-    environment_variable {
       name = "BUILD_CMP_MAINTENANCE_DIR"
       value = "${var.build_cmp_maintenance_directory}"
     }
@@ -136,16 +76,6 @@ resource "aws_codebuild_project" "terraform_plan_codebuild_project" {
     }
 
     environment_variable {
-      name = "BUILD_CROWN_MARKETPLACE_UPLOAD_DIR"
-      value = "${var.build_crown_marketplace_upload_directory}"
-    }
-
-    environment_variable {
-      name = "BUILD_CROWN_MARKETPLACE_UPLOAD_TFPLAN"
-      value = "${var.build_crown_marketplace_upload_directory}"
-    }
-
-    environment_variable {
       name = "BUILD_IMAGE_RUBY_DIR"
       value = "${var.build_image_ruby_directory}"
     }
@@ -153,26 +83,6 @@ resource "aws_codebuild_project" "terraform_plan_codebuild_project" {
     environment_variable {
       name = "BUILD_IMAGE_RUBY_TFPLAN"
       value = "${var.build_image_ruby_tfplan_filename}"
-    }
-
-    environment_variable {
-      name = "BUILD_NPM1_DIR"
-      value = "${var.build_npm1_directory}"
-    }
-
-    environment_variable {
-      name = "BUILD_NPM1_TFPLAN"
-      value = "${var.build_npm1_tfplan_filename}"
-    }
-
-    environment_variable {
-      name = "BUILD_UPLOAD_SUPPLY_TEACHER_DATA_DIR"
-      value = "${var.build_upload_supply_teacher_data_directory}"
-    }
-
-    environment_variable {
-      name = "BUILD_UPLOAD_SUPPLY_TEACHER_DATA_TFPLAN"
-      value = "${var.build_upload_supply_teacher_data_tfplan_filename}"
     }
   }
 
