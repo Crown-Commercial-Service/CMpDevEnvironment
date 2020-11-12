@@ -47,3 +47,5 @@ variable "region" {
 variable "source_buildspec_filepath" {}
 
 variable "source_type" {}
+
+variable "terraform_plan_s3_bucket_name" {}

@@ -84,6 +84,11 @@ resource "aws_codebuild_project" "terraform_plan_codebuild_project" {
       name = "BUILD_IMAGE_RUBY_TFPLAN"
       value = "${var.build_image_ruby_tfplan_filename}"
     }
+
+    environment_variable {
+      name = "TERRAFORM_PLAN_S3_BUCKET_NAME"
+      value = "${var.terraform_plan_s3_bucket_name}"
+    }
   }
 
   source {
