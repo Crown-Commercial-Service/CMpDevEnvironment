@@ -35,19 +35,14 @@ phases:
       # Terraform Apply on Bootstrap Script, Targeting Only Backend Files
       # Missing/For Review: build api1/2, build app 1/2, ssm_config, upload-supply-teacher-data
       - cd $BOOTSTRAP_DIR && terraform init
-      - terraform apply -auto-approve -target=module.infrastructure_backend.local_file.backend-tf
-      - terraform apply -auto-approve -target=module.cmp_maintenance_backend.local_file.backend-tf
-      - terraform apply -auto-approve -target=module.cmp_backend.local_file.backend-tf
-      - terraform apply -auto-approve -target=module.cmp_legacy_backend.local_file.backend-tf
-      - terraform apply -auto-approve -target=module.cmp_sidekiq_backend.local_file.backend-tf
-      - terraform apply -auto-approve -target=module.image-ruby_backend.local_file.backend-tf
+      - terraform apply -auto-approve -target=module.infrastructure_backend.local_file.backend-tf -target=module.cmp_maintenance_backend.local_file.backend-tf -target=module.cmp_backend.local_file.backend-tf -target=module.cmp_legacy_backend.local_file.backend-tf -target=module.cmp_sidekiq_backend.local_file.backend-tf -target=module.image-ruby_backend.local_file.backend-tf
       - cd $current_dir
 
   build:
     commands:
-      - bash terraform/codepipeline/terraform_apply.sh $current_dir $INFRASTRUCTURE_DIR $INFRASTRUCTURE_TFPLAN $S3_BUCKET_NAME
-      - bash terraform/codepipeline/terraform_apply.sh $current_dir $BUILD_CMP_MAINTENANCE_DIR $BUILD_CMP_MAINTENANCE_TFPLAN $S3_BUCKET_NAME
-      - bash terraform/codepipeline/terraform_apply.sh $current_dir $BUILD_CROWN_MARKETPLACE_DIR $BUILD_CROWN_MARKETPLACE_TFPLAN $S3_BUCKET_NAME
-      - bash terraform/codepipeline/terraform_apply.sh $current_dir $BUILD_CROWN_MARKETPLACE_LEGACY_DIR build_cmp_legacy_tfplan $S3_BUCKET_NAME
-      - bash terraform/codepipeline/terraform_apply.sh $current_dir $BUILD_CROWN_MARKETPLACE_SIDEKIQ_DIR build_cmp_sidekiq_tfplan $S3_BUCKET_NAME
-      - bash terraform/codepipeline/terraform_apply.sh $current_dir $BUILD_IMAGE_RUBY_DIR $BUILD_IMAGE_RUBY_TFPLAN $S3_BUCKET_NAME
+      - bash terraform/codepipeline/terraform_apply.sh $current_dir $INFRASTRUCTURE_DIR $INFRASTRUCTURE_TFPLAN $TERRAFORM_PLAN_S3_BUCKET_NAME
+      - bash terraform/codepipeline/terraform_apply.sh $current_dir $BUILD_CMP_MAINTENANCE_DIR $BUILD_CMP_MAINTENANCE_TFPLAN $TERRAFORM_PLAN_S3_BUCKET_NAME
+      - bash terraform/codepipeline/terraform_apply.sh $current_dir $BUILD_CROWN_MARKETPLACE_DIR $BUILD_CROWN_MARKETPLACE_TFPLAN $TERRAFORM_PLAN_S3_BUCKET_NAME
+      - bash terraform/codepipeline/terraform_apply.sh $current_dir $BUILD_CROWN_MARKETPLACE_LEGACY_DIR build_cmp_legacy_tfplan $TERRAFORM_PLAN_S3_BUCKET_NAME
+      - bash terraform/codepipeline/terraform_apply.sh $current_dir $BUILD_CROWN_MARKETPLACE_SIDEKIQ_DIR build_cmp_sidekiq_tfplan $TERRAFORM_PLAN_S3_BUCKET_NAME
+      - bash terraform/codepipeline/terraform_apply.sh $current_dir $BUILD_IMAGE_RUBY_DIR $BUILD_IMAGE_RUBY_TFPLAN $TERRAFORM_PLAN_S3_BUCKET_NAME
