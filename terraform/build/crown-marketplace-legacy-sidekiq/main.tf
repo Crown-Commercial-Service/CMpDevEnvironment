@@ -8,8 +8,8 @@ module "component" {
     environment_name = "Sandbox"
     type = "api"
     prefix = "ccs"
-    name = "cmp-legacy-sidekiq"
-    routing_priority_offset = 300
+    name = "legacy-skiq"
+    routing_priority_offset = 301
     build_type = "custom"
     build_image = "ccs/ruby"
     github_owner = "Crown-Commercial-Service"
