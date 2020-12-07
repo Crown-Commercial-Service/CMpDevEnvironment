@@ -1,10 +1,6 @@
 ##############################################################
 # Add data resource for S3 logging bucket
 ##############################################################
-locals {
-  s3_logging_bucket_name = "ccs.${data.aws_caller_identity.current.account_id}.${var.environment}.access-logs"
-}
-
 data "aws_s3_bucket" "s3_logging_bucket" {
   bucket = "${local.s3_logging_bucket_name}"
 }
