@@ -44,7 +44,7 @@ resource "aws_s3_bucket" "build-artifacts" {
   }
 }
 
-data "aws_iam_policy_document" "secure_transport_policy" {
+data "aws_iam_policy_document" "build_artifacts_policy" {
   statement {
     effect = "Deny"
 
@@ -75,7 +75,7 @@ data "aws_iam_policy_document" "secure_transport_policy" {
 
 resource "aws_s3_bucket_policy" "attach_secure_transport_policy_to_build_artifacts_s3" {
   bucket = "${aws_s3_bucket.build-artifacts.bucket}"
-  policy = "${data.aws_iam_policy_document.secure_transport_policy.json}"
+  policy = "${data.aws_iam_policy_document.build_artifacts_policy.json}"
 }
 
 
@@ -135,12 +135,64 @@ resource "aws_s3_bucket" "app-api-data-bucket" {
   bucket = "${local.app_api_bucket_name}"
   acl    = "private"
 
+  logging {
+    target_bucket = "${data.aws_s3_bucket.s3_logging_bucket.id}"
+    target_prefix = "Logs/"
+  }
+
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        sse_algorithm = "AES256"
+      }
+    }
+  }
+
   tags {
     Name = "CCSDEV Application/API data bucket"
     CCSRole = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
+
+  versioning {
+    enabled = true
+  }
 }
+
+data "aws_iam_policy_document" "app_api_data_policy" {
+  statement {
+    effect = "Deny"
+
+    principals {
+      identifiers = ["*"]
+      type = "*"
+    }
+
+    actions = [
+      "s3:*",
+    ]
+
+    condition {
+      test = "Bool"
+
+      values = [
+        "false",
+      ]
+
+      variable = "aws:SecureTransport"
+    }
+
+    resources = [
+      "${aws_s3_bucket.app-api-data-bucket.arn}/*",
+    ]
+  }
+}
+
+resource "aws_s3_bucket_policy" "attach_secure_transport_policy_to_app_api_data_s3" {
+  bucket = "${aws_s3_bucket.app-api-data-bucket.bucket}"
+  policy = "${data.aws_iam_policy_document.app_api_data_policy.json}"
+}
+
 
 ##############################################################
 # Asset Storage
@@ -187,7 +239,7 @@ data "aws_iam_policy_document" "CCSDEV_assets_bucket_policy_doc" {
 
 resource "aws_s3_bucket" "assets-bucket" {
   bucket = "${local.assets_bucket_name}"
-  
+
    acl    = "public-read"
   #grant {
   #  type        = "Group"
