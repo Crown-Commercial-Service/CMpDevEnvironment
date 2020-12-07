@@ -35,3 +35,37 @@ resource "aws_s3_bucket" "ithc_test_bucket_name" {
     enabled = true
   }
 }
+
+data "aws_iam_policy_document" "ithc_secure_transport_policy" {
+  statement {
+    effect = "Deny"
+
+    principals {
+      identifiers = ["*"]
+      type = "*"
+    }
+
+    actions = [
+      "s3:*",
+    ]
+
+    condition {
+      test = "Bool"
+
+      values = [
+        "false",
+      ]
+
+      variable = "aws:SecureTransport"
+    }
+
+    resources = [
+      "${aws_s3_bucket.ithc_test_bucket_name.arn}/*",
+    ]
+  }
+}
+
+resource "aws_s3_bucket_policy" "this" {
+  bucket = "${aws_s3_bucket.ithc_test_bucket_name.bucket}"
+  policy = "${data.aws_iam_policy_document.ithc_secure_transport_policy.json}"
+}
