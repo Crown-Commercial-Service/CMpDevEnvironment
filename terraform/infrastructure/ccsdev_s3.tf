@@ -240,20 +240,70 @@ data "aws_iam_policy_document" "CCSDEV_assets_bucket_policy_doc" {
 resource "aws_s3_bucket" "assets-bucket" {
   bucket = "${local.assets_bucket_name}"
 
-   acl    = "public-read"
+  acl    = "public-read"
   #grant {
   #  type        = "Group"
   #  uri         = "http://acs.amazonaws.com/groups/global/AllUsers"
   #  permissions = ["READ_ACP"]
   #}
 
+  logging {
+    target_bucket = "${data.aws_s3_bucket.s3_logging_bucket.id}"
+    target_prefix = "Logs/"
+  }
+
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        sse_algorithm = "AES256"
+      }
+    }
+  }
+
   tags {
     Name = "CCSDEV Application/assets bucket"
     CCSRole = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
+
+  versioning {
+    enabled = true
+  }
 }
 
+data "aws_iam_policy_document" "assets_bucket_policy" {
+  statement {
+    effect = "Deny"
+
+    principals {
+      identifiers = ["*"]
+      type = "*"
+    }
+
+    actions = [
+      "s3:*",
+    ]
+
+    condition {
+      test = "Bool"
+
+      values = [
+        "false",
+      ]
+
+      variable = "aws:SecureTransport"
+    }
+
+    resources = [
+      "${aws_s3_bucket.assets-bucket.arn}/*",
+    ]
+  }
+}
+
+resource "aws_s3_bucket_policy" "attach_secure_transport_policy_to_assets_bucket_s3" {
+  bucket = "${aws_s3_bucket.assets-bucket.bucket}"
+  policy = "${data.aws_iam_policy_document.assets_bucket_policy.json}"
+}
 
 ##############################################################
 # Add custom policy to CCS_Developer_API_Access group and
