@@ -4,8 +4,13 @@ terraform {
 
 data "aws_caller_identity" "current" {}
 
+data "aws_s3_bucket" "s3_logging_bucket" {
+    bucket = "${local.s3_logging_bucket_name}"
+}
+
 locals {
     bucket_name = "ccs.${data.aws_caller_identity.current.account_id}.tfstate"
+    s3_logging_bucket_name = "ccs.${data.aws_caller_identity.current.account_id}.s3.access-logs"
 }
 
 resource "aws_iam_user_policy_attachment" "bootstrap-dynamodb-attach" {
@@ -21,6 +26,19 @@ resource "aws_iam_user_policy_attachment" "bootstrap-s3-attach" {
 resource "aws_s3_bucket" "terraform_state" {
   bucket = "${local.bucket_name}"
 
+  logging {
+    target_bucket = "${data.aws_s3_bucket.s3_logging_bucket.id}"
+    target_prefix = "Logs/"
+  }
+
+  server_side_encryption_configuration {
+    rule {
+        apply_server_side_encryption_by_default {
+            sse_algorithm = "AES256"
+        }
+    }
+  }
+
   versioning {
     enabled = true
   }
@@ -30,6 +48,40 @@ resource "aws_s3_bucket" "terraform_state" {
         "bucket",
         ]
   }
+}
+
+data "aws_iam_policy_document" "terraform_state_s3_policy" {
+    statement {
+        effect = "Deny"
+
+        principals {
+            identifiers = ["*"]
+            type = "*"
+        }
+
+        actions = [
+            "s3:*",
+        ]
+
+        condition {
+            test = "Bool"
+
+            values = [
+                "false",
+            ]
+
+            variable = "aws:SecureTransport"
+        }
+
+        resources = [
+            "${aws_s3_bucket.terraform_state.arn}/*",
+        ]
+    }
+}
+
+resource "aws_s3_bucket_policy" "terraform_state" {
+    bucket = "${aws_s3_bucket.terraform_state.bucket}"
+    policy = "${data.aws_iam_policy_document.terraform_state_s3_policy.json}"
 }
 
 resource "aws_dynamodb_table" "terraform_state_lock" {
