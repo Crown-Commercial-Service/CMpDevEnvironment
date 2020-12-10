@@ -41,7 +41,7 @@ resource "aws_s3_bucket" "build-artifacts" {
   }
 }
 
-data "aws_iam_policy_document" "secure_transport_policy" {
+data "aws_iam_policy_document" "build_artifacts_policy" {
   statement {
     effect = "Deny"
 
@@ -72,7 +72,7 @@ data "aws_iam_policy_document" "secure_transport_policy" {
 
 resource "aws_s3_bucket_policy" "attach_secure_transport_policy_to_build_artifacts_s3" {
   bucket = "${aws_s3_bucket.build-artifacts.bucket}"
-  policy = "${data.aws_iam_policy_document.secure_transport_policy.json}"
+  policy = "${data.aws_iam_policy_document.build_artifacts_policy.json}"
 }
 
 ##############################################################
