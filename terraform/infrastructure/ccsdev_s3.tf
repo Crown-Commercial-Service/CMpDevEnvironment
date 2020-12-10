@@ -92,6 +92,31 @@ data "aws_iam_policy_document" "log_policy_document" {
 
     resources = ["arn:aws:s3:::${local.log_bucket_name}/*"]
   }
+
+  statement {
+    effect = "Deny"
+
+    principals {
+      identifiers = ["*"]
+      type = "*"
+    }
+
+    actions = [
+      "s3:*",
+    ]
+
+    condition {
+      test = "Bool"
+
+      values = [
+        "false",
+      ]
+
+      variable = "aws:SecureTransport"
+    }
+
+    resources = ["arn:aws:s3:::${local.log_bucket_name}/*"]
+  }
 }
 
 resource "aws_s3_bucket" "logs" {
@@ -112,6 +137,19 @@ resource "aws_s3_bucket" "logs" {
 
     expiration {
       days = 1
+    }
+  }
+
+  logging {
+    target_bucket = "${data.aws_s3_bucket.s3_logging_bucket.id}"
+    target_prefix = "Logs/"
+  }
+
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        sse_algorithm = "AES256"
+      }
     }
   }
 
