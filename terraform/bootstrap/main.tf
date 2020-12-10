@@ -101,6 +101,15 @@ resource "aws_dynamodb_table" "terraform_state_lock" {
     ]
 }
 
+module "access_logs_backend" {
+    source    = "./backend"
+
+    bucket    = "${local.bucket_name}"
+    component = "access-logs"
+    region    = "${var.region}"
+    path      = "${path.module}"
+}
+
 module "security_backend" {
     source    = "./backend"
 
