@@ -1,6 +1,10 @@
 ##############################################################
 # Artifact Storage
 ##############################################################
+data "aws_s3_bucket" "s3_logging_bucket" {
+  bucket = "${local.s3_logging_bucket_name}"
+}
+
 resource "aws_s3_bucket" "build-artifacts" {
   bucket = "${local.artifact_bucket_name}"
   acl    = "private"
@@ -13,11 +17,62 @@ resource "aws_s3_bucket" "build-artifacts" {
     }
   }
 
+  logging {
+    target_bucket = "${data.aws_s3_bucket.s3_logging_bucket.id}"
+    target_prefix = "Logs/"
+  }
+
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        sse_algorithm = "AES256"
+      }
+    }
+  }
+
   tags {
     Name = "CCSDEV Build Artifacts bucket"
     CCSRole = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
+
+  versioning {
+    enabled = true
+  }
+}
+
+data "aws_iam_policy_document" "build_artifacts_policy" {
+  statement {
+    effect = "Deny"
+
+    principals {
+      identifiers = ["*"]
+      type = "*"
+    }
+
+    actions = [
+      "s3:*",
+    ]
+
+    condition {
+      test = "Bool"
+
+      values = [
+        "false",
+      ]
+
+      variable = "aws:SecureTransport"
+    }
+
+    resources = [
+      "${aws_s3_bucket.build-artifacts.arn}/*",
+    ]
+  }
+}
+
+resource "aws_s3_bucket_policy" "attach_secure_transport_policy_to_build_artifacts_s3" {
+  bucket = "${aws_s3_bucket.build-artifacts.bucket}"
+  policy = "${data.aws_iam_policy_document.build_artifacts_policy.json}"
 }
 
 ##############################################################
@@ -34,6 +89,31 @@ data "aws_iam_policy_document" "log_policy_document" {
     actions = [
       "s3:PutObject",
     ]
+
+    resources = ["arn:aws:s3:::${local.log_bucket_name}/*"]
+  }
+
+  statement {
+    effect = "Deny"
+
+    principals {
+      identifiers = ["*"]
+      type = "*"
+    }
+
+    actions = [
+      "s3:*",
+    ]
+
+    condition {
+      test = "Bool"
+
+      values = [
+        "false",
+      ]
+
+      variable = "aws:SecureTransport"
+    }
 
     resources = ["arn:aws:s3:::${local.log_bucket_name}/*"]
   }
@@ -60,6 +140,19 @@ resource "aws_s3_bucket" "logs" {
     }
   }
 
+  logging {
+    target_bucket = "${data.aws_s3_bucket.s3_logging_bucket.id}"
+    target_prefix = "Logs/"
+  }
+
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        sse_algorithm = "AES256"
+      }
+    }
+  }
+
   policy = "${data.aws_iam_policy_document.log_policy_document.json}"
 
   tags {
@@ -76,11 +169,62 @@ resource "aws_s3_bucket" "app-api-data-bucket" {
   bucket = "${local.app_api_bucket_name}"
   acl    = "private"
 
+  logging {
+    target_bucket = "${data.aws_s3_bucket.s3_logging_bucket.id}"
+    target_prefix = "Logs/"
+  }
+
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        sse_algorithm = "AES256"
+      }
+    }
+  }
+
   tags {
     Name = "CCSDEV Application/API data bucket"
     CCSRole = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
+
+  versioning {
+    enabled = true
+  }
+}
+
+data "aws_iam_policy_document" "app_api_data_policy" {
+  statement {
+    effect = "Deny"
+
+    principals {
+      identifiers = ["*"]
+      type = "*"
+    }
+
+    actions = [
+      "s3:*",
+    ]
+
+    condition {
+      test = "Bool"
+
+      values = [
+        "false",
+      ]
+
+      variable = "aws:SecureTransport"
+    }
+
+    resources = [
+      "${aws_s3_bucket.app-api-data-bucket.arn}/*",
+    ]
+  }
+}
+
+resource "aws_s3_bucket_policy" "attach_secure_transport_policy_to_app_api_data_s3" {
+  bucket = "${aws_s3_bucket.app-api-data-bucket.bucket}"
+  policy = "${data.aws_iam_policy_document.app_api_data_policy.json}"
 }
 
 ##############################################################
@@ -129,20 +273,70 @@ data "aws_iam_policy_document" "CCSDEV_assets_bucket_policy_doc" {
 resource "aws_s3_bucket" "assets-bucket" {
   bucket = "${local.assets_bucket_name}"
   
-   acl    = "public-read"
+  acl    = "public-read"
   #grant {
   #  type        = "Group"
   #  uri         = "http://acs.amazonaws.com/groups/global/AllUsers"
   #  permissions = ["READ_ACP"]
   #}
 
+  logging {
+    target_bucket = "${data.aws_s3_bucket.s3_logging_bucket.id}"
+    target_prefix = "Logs/"
+  }
+
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        sse_algorithm = "AES256"
+      }
+    }
+  }
+
   tags {
     Name = "CCSDEV Application/assets bucket"
     CCSRole = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
+
+  versioning {
+    enabled = true
+  }
 }
 
+data "aws_iam_policy_document" "assets_bucket_policy" {
+  statement {
+    effect = "Deny"
+
+    principals {
+      identifiers = ["*"]
+      type = "*"
+    }
+
+    actions = [
+      "s3:*",
+    ]
+
+    condition {
+      test = "Bool"
+
+      values = [
+        "false",
+      ]
+
+      variable = "aws:SecureTransport"
+    }
+
+    resources = [
+      "${aws_s3_bucket.assets-bucket.arn}/*",
+    ]
+  }
+}
+
+resource "aws_s3_bucket_policy" "attach_secure_transport_policy_to_assets_bucket_s3" {
+  bucket = "${aws_s3_bucket.assets-bucket.bucket}"
+  policy = "${data.aws_iam_policy_document.assets_bucket_policy.json}"
+}
 
 ##############################################################
 # Add custom policy to CCS_Developer_API_Access group and
