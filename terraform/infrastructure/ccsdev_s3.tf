@@ -1,6 +1,10 @@
 ##############################################################
 # Artifact Storage
 ##############################################################
+data "aws_s3_bucket" "s3_logging_bucket" {
+  bucket = "${local.s3_logging_bucket_name}"
+}
+
 resource "aws_s3_bucket" "build-artifacts" {
   bucket = "${local.artifact_bucket_name}"
   acl    = "private"
@@ -13,11 +17,63 @@ resource "aws_s3_bucket" "build-artifacts" {
     }
   }
 
+  logging {
+    target_bucket = "${data.aws_s3_bucket.s3_logging_bucket.id}"
+    target_prefix = "Logs/"
+  }
+
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        sse_algorithm = "AES256"
+      }
+    }
+  }
+
+
   tags {
     Name = "CCSDEV Build Artifacts bucket"
     CCSRole = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
+
+  versioning {
+    enabled = true
+  }
+}
+
+data "aws_iam_policy_document" "build_artifacts_policy" {
+  statement {
+    effect = "Deny"
+
+    principals {
+      identifiers = ["*"]
+      type = "*"
+    }
+
+    actions = [
+      "s3:*",
+    ]
+
+    condition {
+      test = "Bool"
+
+      values = [
+        "false",
+      ]
+
+      variable = "aws:SecureTransport"
+    }
+
+    resources = [
+      "${aws_s3_bucket.build-artifacts.arn}/*",
+    ]
+  }
+}
+
+resource "aws_s3_bucket_policy" "attach_secure_transport_policy_to_build_artifacts_s3" {
+  bucket = "${aws_s3_bucket.build-artifacts.bucket}"
+  policy = "${data.aws_iam_policy_document.build_artifacts_policy.json}"
 }
 
 ##############################################################
