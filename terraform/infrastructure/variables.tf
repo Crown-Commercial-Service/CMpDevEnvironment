@@ -269,4 +269,5 @@ locals {
   log_bucket_name = "ccs.${data.aws_caller_identity.current.account_id}.${lower(var.environment_name)}.logs"
   app_api_bucket_name = "ccs.${data.aws_caller_identity.current.account_id}.${lower(var.environment_name)}.app-api-data"
   assets_bucket_name = "${data.aws_caller_identity.current.account_id}-assets"
+  s3_logging_bucket_name = "ccs.${data.aws_caller_identity.current.account_id}.s3.access-logs"
 }
