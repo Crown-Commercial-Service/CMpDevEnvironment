@@ -227,6 +227,15 @@ module "cmp_sidekiq_backend" {
     path      = "${path.module}"
 }
 
+module "cmp_legacy_sidekiq_backend" {
+    source    = "./backend"
+
+    bucket    = "${local.bucket_name}"
+    component = "build/crown-marketplace-legacy-sidekiq"
+    region    = "${var.region}"
+    path      = "${path.module}"
+}
+
 module "image-ruby_backend" {
     source    = "./backend"
 
