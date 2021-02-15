@@ -13,7 +13,7 @@ module "component" {
     type = "app"
     prefix = "ccs"
     name = "cmp-legacy"
-    path_patterns = ["/management-consultancy*", "/supply-teachers*", "/legal-services*"]
+    path_patterns = ["/management-consultancy*", "/supply-teachers*", "/legal-services*", "/auth/dfe*"]
     register_dns_record = true
     hostname = "marketplace"
     # note as part of sept2020 changes and a swapping priorities of crown-marketplace and
