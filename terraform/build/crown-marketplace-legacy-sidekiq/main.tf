@@ -13,7 +13,7 @@ module "component" {
   build_type = "custom"
   build_image = "ccs/ruby"
   github_owner = "Crown-Commercial-Service"
-  github_repo = "crown-marketplace"
+  github_repo = "crown-marketplace-legacy"
   github_branch = "preview"
 
   github_token_alias = "ccs-build_github_token"
