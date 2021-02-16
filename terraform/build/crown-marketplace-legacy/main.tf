@@ -12,7 +12,7 @@ module "component" {
     prefix = "ccs"
     name = "cmp-legacy"
     hostname = "marketplace"
-    path_patterns = ["/management-consultancy*", "/supply-teachers*", "/legal-services*"]
+    path_patterns = ["/management-consultancy*", "/supply-teachers*", "/legal-services*", "/auth/dfe*"]
     register_dns_record = true
     # note as part of sept2020 changes and a swapping priorities of crown-marketplace and
     # crown-marketplace-legacy over cannot simply swap numbers as when run terrafrom it
