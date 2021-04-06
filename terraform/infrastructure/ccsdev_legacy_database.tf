@@ -189,7 +189,7 @@ resource "aws_route53_record" "CCSDev-internal-legacy-db-CNAME" {
   count = "${var.create_default_rds_database}"
 
   zone_id = "${aws_route53_zone.ccsdev-internal-org-private.zone_id}"
-  name    = "${var.default_db_name}.db.${aws_route53_zone.ccsdev-internal-org-private.name}"
+  name    = "${var.default_db_name}.legacy.db.${aws_route53_zone.ccsdev-internal-org-private.name}"
   type    = "CNAME"
   records = ["${aws_db_instance.ccsdev_legacy_default_db.address}"]
   ttl     = "300"
