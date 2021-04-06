@@ -163,3 +163,24 @@ resource "aws_cloudwatch_metric_alarm" "service_default_db_cpu_high" {
 
   alarm_actions = ["${aws_sns_topic.ccsdev_alarm_topic.arn}"]
 }
+
+resource "aws_cloudwatch_metric_alarm" "service_legacy_db_cpu_high" {
+
+  count = "${var.create_cloudwatch_alarms}"
+
+  alarm_name          = "${var.environment_name}-Legacy-DB-CPU-High"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = "1"
+  metric_name         = "CPUUtilization"
+  namespace           = "AWS/RDS"
+  period              = "60"
+  statistic           = "Average"
+  threshold           = "50"
+  treat_missing_data  = "notBreaching"
+
+  dimensions {
+    DBInstanceIdentifier = "${aws_db_instance.ccsdev_legacy_default_db.id}"
+  }
+
+  alarm_actions = ["${aws_sns_topic.ccsdev_alarm_topic.arn}"]
+}

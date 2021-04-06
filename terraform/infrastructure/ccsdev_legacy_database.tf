@@ -184,7 +184,7 @@ resource "aws_db_instance" "ccsdev_legacy_default_db" {
 #
 ##############################################################
 
-resource "aws_route53_record" "CCSDEV-internal-default-db-CNAME" {
+resource "aws_route53_record" "CCSDev-internal-legacy-db-CNAME" {
   # Only create if create_rds_database is true (1) 
   count = "${var.create_default_rds_database}"
 
