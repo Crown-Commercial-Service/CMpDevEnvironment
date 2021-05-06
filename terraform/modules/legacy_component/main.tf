@@ -76,7 +76,7 @@ data "aws_ssm_parameter" "legacy_db_config_username" {
 }
 
 data "aws_ssm_parameter" "legacy_db_config_password" {
-  name = "/${var.environment_name}/config/rds_password"
+  name = "/${var.environment_name}/config/legacy_rds_password"
 }
 
 data "aws_ssm_parameter" "legacy_config_es_endpoint" {
@@ -144,15 +144,15 @@ locals {
   config_domain = "${var.type == "app" ? local.legacy_config_app_domain : local.legacy_config_api_domain}"
   config_environment = [
     {
-      name = "CCS_LEGACY_HOSTNAME",
+      name = "CCS_HOSTNAME",
       value = "${local.legacy_config_hostname}"
     },
     {
-      name = "CCS_LEGACY_APP_BASE_URL",
+      name = "CCS_APP_BASE_URL",
       value = "${local.legacy_config_app_domain}"
     },
     {
-      name = "CCS_LEGACY_APP_PROTOCOL",
+      name = "CCS_APP_PROTOCOL",
       value = "${local.legacy_config_protocol}"
     },
     {
@@ -160,47 +160,47 @@ locals {
       value = "${local.legacy_config_api_domain}"
     },
     {
-      name = "CCS_LEGACY_API_PROTOCOL",
+      name = "CCS_API_PROTOCOL",
       value = "${local.legacy_config_protocol}"
     },
     {
-      name = "CCS_LEGACY_DB_URL",
+      name = "CCS_DEFAULT_DB_URL",
       value = "${data.aws_ssm_parameter.legacy_db_config_url.value}"
     },
     {
-      name = "CCS_LEGACY_DB_TYPE",
+      name = "CCS_DEFAULT_DB_TYPE",
       value = "${data.aws_ssm_parameter.legacy_db_config_type.value}"
     },
     {
-      name = "CCS_LEGACY_DB_HOST",
+      name = "CCS_DEFAULT_DB_HOST",
       value = "${data.aws_ssm_parameter.legacy_db_config_host.value}"
     },
     {
-      name = "CCS_LEGACY_DB_PORT",
+      name = "CCS_DEFAULT_DB_PORT",
       value = "${data.aws_ssm_parameter.legacy_db_config_port.value}"
     },
     {
-      name = "CCS_LEGACY_REDIS_HOST",
+      name = "CCS_REDIS_HOST",
       value = "${data.aws_ssm_parameter.legacy_redis_config_host.value}"
     },
     {
-      name = "CCS_LEGACY_REDIS_PORT",
+      name = "CCS_REDIS_PORT",
       value = "${data.aws_ssm_parameter.legacy_redis_config_port.value}"
     },
     {
-      name = "CCS_LEGACY_DB_NAME",
+      name = "CCS_DEFAULT_DB_NAME",
       value = "${data.aws_ssm_parameter.legacy_db_config_name.value}"
     },
     {
-      name = "CCS_LEGACY_DB_USER",
+      name = "CCS_DEFAULT_DB_USER",
       value = "${data.aws_ssm_parameter.legacy_db_config_username.value}"
     },
     {
-      name = "CCS_LEGACY_DB_PASSWORD",
+      name = "CCS_DEFAULT_DB_PASSWORD",
       value = "${data.aws_ssm_parameter.legacy_db_config_password.value}"
     },
     {
-      name = "CCS_LEGACY_ES_ENDPOINT",
+      name = "CCS_DEFAULT_ES_ENDPOINT",
       value = "${data.aws_ssm_parameter.legacy_config_es_endpoint.value}"
     },
     {
