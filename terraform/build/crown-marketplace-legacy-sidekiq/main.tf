@@ -3,8 +3,8 @@ terraform {
 }
 
 module "component" {
-    # source = "git::https://github.com/Crown-Commercial-Service/CMpDevEnvironment.git//terraform/modules/component"
-    source = "../../modules/component"
+    # source = "git::https://github.com/Crown-Commercial-Service/CMpDevEnvironment.git//terraform/modules/legacy_component"
+    source = "../../modules/legacy_component"
     environment_name = "Sandbox"
     type = "api"
     prefix = "ccs"
@@ -39,5 +39,5 @@ module "component" {
     port = "80"
     providers = {
       aws = "aws"
-    }    
+    }
 }
