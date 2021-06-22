@@ -6,10 +6,8 @@ terraform {
 # available then update the github_repo variable below
 module "component" {
     # source = "git::https://github.com/Crown-Commercial-Service/CMpDevEnvironment.git//terraform/modules/component"
-    source = "../../modules/component"
-
+    source = "../../modules/legacy_component"
     environment_name = "Preview"
-
     type = "app"
     prefix = "ccs"
     name = "cmp-legacy"
@@ -44,5 +42,5 @@ module "component" {
     port = "80"
     providers = {
       aws = "aws"
-    }    
+    }
 }
