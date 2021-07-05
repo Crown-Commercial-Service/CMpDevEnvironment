@@ -4,7 +4,7 @@ terraform {
 
 module "component" {
     # source = "git::https://github.com/Crown-Commercial-Service/CMpDevEnvironment.git//terraform/modules/legacy_component"
-    source = "../../modules/legacy_component"
+    source = "../../modules/component"
     environment_name = "Sandbox"
     type = "api"
     prefix = "ccs"

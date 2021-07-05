@@ -6,7 +6,7 @@ terraform {
 # available then update the github_repo variable below
 module "component" {
     # source = "git::https://github.com/Crown-Commercial-Service/CMpDevEnvironment.git//terraform/modules/component"
-    source = "../../modules/legacy_component"
+    source = "../../modules/component"
     environment_name = "Sandbox"
     type = "app"
     prefix = "ccs"
