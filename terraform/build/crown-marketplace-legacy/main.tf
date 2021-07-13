@@ -6,12 +6,13 @@ terraform {
 # available then update the github_repo variable below
 module "component" {
     # source = "git::https://github.com/Crown-Commercial-Service/CMpDevEnvironment.git//terraform/modules/component"
-    source = "../../modules/component"
-
+    source = "../../modules/legacy_component"
+    environment_name = "Development"
+#   environment_name = "Sandbox"
     type = "app"
     prefix = "ccs"
     name = "cmp-legacy"
-    path_patterns = ["/management-consultancy*", "/supply-teachers*", "/legal-services*", "/auth/dfe*"]
+    path_patterns = ["/management-consultancy*", "/supply-teachers*", "/legal-services*"]
     register_dns_record = true
     hostname = "cmp"
     # note as part of sept2020 changes and a swapping priorities of crown-marketplace and
@@ -23,6 +24,7 @@ module "component" {
     github_owner = "Crown-Commercial-Service"
     github_repo = "crown-marketplace-legacy"
     github_branch = "master"
+#   github_branch = "develop"
     github_token_alias = "ccs-build_github_token"
     cluster_name = "CCSDEV_app_cluster"
     task_count = 2
@@ -44,3 +46,4 @@ module "component" {
       aws = "aws"
     }    
 }
+
