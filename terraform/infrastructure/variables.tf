@@ -55,6 +55,8 @@ variable "bastion_storage" {
   default = 8
 }
 
+variable "bastion_ssh_ciphers" {}
+
 ##############################################################
 # cluster domain
 ##############################################################
@@ -73,6 +75,7 @@ variable enable_https {
   type = "string"
   default = true
 }
+
 ##############################################################
 # cluster settings - Application
 ##############################################################
