@@ -24,6 +24,63 @@ data "template_file" "CCSDEV_bastion_cluster_user_data" {
   }
 }
 
+resource "aws_autoscaling_group" "CCSDEV_bastion_cluster_autoscaling_group" {
+  desired_capacity      = "${var.bastion_desired_instance_count}"
+  max_size              = "${var.bastion_max_instance_count}"
+  min_size              = "${var.bastion_min_instance_count}"
+
+  name                  = "CCSDEV_app_cluster_scaling"
+  protect_from_scale_in = true
+  vpc_zone_identifier   = ["${aws_subnet.CCSDEV-AZ-a-Public-1.id}"]
+
+  launch_template {
+    id      = "${aws_launch_template.CCSDEV_bastion_cluster_launch_template.id}"
+    version = "$Latest"
+  }
+
+  tags = [
+    {
+      key                 = "Name"
+      value               = "CCSDEV_bastion_cluster_host"
+      propagate_at_launch = true
+    },
+    {
+      key                 = "CCSRole"
+      value               = "Bastion"
+      propagate_at_launch = true
+    },
+    {
+      key                 = "CCSEnvironment"
+      value               = "${var.environment_name}"
+      propagate_at_launch = true
+    },
+  ]
+
+  enabled_metrics = [
+    "GroupAndWarmPoolDesiredCapacity",
+    "GroupAndWarmPoolTotalCapacity",
+    "GroupDesiredCapacity",
+    "GroupInServiceCapacity",
+    "GroupInServiceInstances",
+    "GroupMaxSize",
+    "GroupMinSize",
+    "GroupPendingCapacity",
+    "GroupPendingInstances",
+    "GroupStandbyCapacity",
+    "GroupStandbyInstances",
+    "GroupTerminatingCapacity",
+    "GroupTerminatingInstances",
+    "GroupTotalCapacity",
+    "GroupTotalInstances",
+    "WarmPoolDesiredCapacity",
+    "WarmPoolMinSize",
+    "WarmPoolPendingCapacity",
+    "WarmPoolTerminatingCapacity",
+    "WarmPoolTotalCapacity",
+    "WarmPoolWarmedCapacity",
+  ]
+}
+
 resource "aws_iam_instance_profile" "CCSDEV_bastion_cluster_instance_profile" {
   name = "CCSDEV-bastion-cluster-instance-profile"
   role = "${aws_iam_role.CCSDEV_app_cluster_instance_role.name}"

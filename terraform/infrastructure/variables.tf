@@ -43,12 +43,24 @@ variable "bastion_ami" {
   default = "ami-0307e8ce88a8245d4"
 }
 
+variable "bastion_desired_instance_count" {
+  default = 1
+}
+
 variable "bastion_instance_class" {
   default = "t2.micro"
 }
 
 variable "bastion_key_name" {
   default = "ccs_bastion"
+}
+
+variable "bastion_max_instance_count" {
+  default = 1
+}
+
+variable "bastion_min_instance_count" {
+  default = 1
 }
 
 variable "bastion_storage" {
