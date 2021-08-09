@@ -12,6 +12,26 @@ data "aws_iam_policy_document" "CCSDEV_bastion_cluster_instance_policy" {
   }
 }
 
+data "aws_iam_policy_document" "CCSDEV_bastion_cluster_secrets_manager_policy" {
+  version = "2012-10-17"
+  statement {
+    sid = ""
+    actions = [
+      "secretsmanager:GetSecretValue"
+    ]
+
+    effect = "Allow"
+
+    resources = [
+      "*"
+    ]
+  }
+}
+
+data "aws_secretsmanager_secret_version" "ssh_ciphers" {
+  secret_id = "${aws_secretsmanager_secret.ssh_ciphers.id}"
+}
+
 data "aws_security_group" "CCSDEV_external_ssh" {
   name = "CCSDEV-external-ssh"
 }
@@ -20,7 +40,7 @@ data "template_file" "CCSDEV_bastion_cluster_user_data" {
   template = "${file("./bastion_userdata.tpl")}"
 
   vars {
-    ssh_ciphers = "${var.bastion_ssh_ciphers}"
+    ssh_ciphers = "${data.aws_secretsmanager_secret_version.ssh_ciphers.secret_string}"
   }
 }
 
@@ -86,9 +106,19 @@ resource "aws_iam_instance_profile" "CCSDEV_bastion_cluster_instance_profile" {
   role = "${aws_iam_role.CCSDEV_app_cluster_instance_role.name}"
 }
 
+resource "aws_iam_policy" "CCSDEV_bastion_cluster_secrets_manager_policy" {
+  name   = "CCSDEV_bastion_cluster_secrets_manager_policy"
+  policy = "${data.aws_iam_policy_document.CCSDEV_bastion_cluster_secrets_manager_policy.json}"
+}
+
 resource "aws_iam_role" "CCSDEV_bastion_cluster_instance_role" {
   name               = "CCSDEV-bastion-cluster-instance-role"
   assume_role_policy = "${data.aws_iam_policy_document.CCSDEV_bastion_cluster_instance_policy.json}"
+}
+
+resource "aws_iam_role_policy_attachment" "CCSDEV_bastion_cluster_secrets_manager_policy" {
+  policy_arn = "${aws_iam_policy.CCSDEV_bastion_cluster_secrets_manager_policy.arn}"
+  role       = "${aws_iam_role.CCSDEV_bastion_cluster_instance_role.name}"
 }
 
 resource "aws_launch_template" "CCSDEV_bastion_cluster_launch_template" {
@@ -96,7 +126,7 @@ resource "aws_launch_template" "CCSDEV_bastion_cluster_launch_template" {
   instance_type = "${var.bastion_instance_class}"
   key_name      = "${var.bastion_key_name}"
   name          = "CCSDEV_bastion_launch_config_"
-  user_data     = "${data.template_file.CCSDEV_bastion_cluster_user_data.rendered}"
+  user_data     = "${base64encode(data.template_file.CCSDEV_bastion_cluster_user_data.rendered)}"
 
   block_device_mappings {
     device_name = "/dev/xvda"
@@ -117,4 +147,9 @@ resource "aws_launch_template" "CCSDEV_bastion_cluster_launch_template" {
     associate_public_ip_address = true
     security_groups             = ["${data.aws_security_group.CCSDEV_external_ssh.id}"]
   }
+}
+
+resource "aws_secretsmanager_secret" "ssh_ciphers" {
+  name                      = "ssh_ciphers"
+  recovery_window_in_days   = 7
 }
