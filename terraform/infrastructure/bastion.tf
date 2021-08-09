@@ -1,5 +1,6 @@
 data "aws_iam_policy_document" "CCSDEV_bastion_cluster_instance_policy" {
   version = "2012-10-17"
+
   statement {
     actions = ["sts:AssumeRole"]
 
@@ -14,16 +15,18 @@ data "aws_iam_policy_document" "CCSDEV_bastion_cluster_instance_policy" {
 
 data "aws_iam_policy_document" "CCSDEV_bastion_cluster_secrets_manager_policy" {
   version = "2012-10-17"
+
   statement {
     sid = ""
+
     actions = [
-      "secretsmanager:GetSecretValue"
+      "secretsmanager:GetSecretValue",
     ]
 
     effect = "Allow"
 
     resources = [
-      "*"
+      "*",
     ]
   }
 }
@@ -45,9 +48,9 @@ data "template_file" "CCSDEV_bastion_cluster_user_data" {
 }
 
 resource "aws_autoscaling_group" "CCSDEV_bastion_cluster_autoscaling_group" {
-  desired_capacity      = "${var.bastion_desired_instance_count}"
-  max_size              = "${var.bastion_max_instance_count}"
-  min_size              = "${var.bastion_min_instance_count}"
+  desired_capacity = "${var.bastion_desired_instance_count}"
+  max_size         = "${var.bastion_max_instance_count}"
+  min_size         = "${var.bastion_min_instance_count}"
 
   name                  = "CCSDEV_app_cluster_scaling"
   protect_from_scale_in = true
@@ -150,6 +153,6 @@ resource "aws_launch_template" "CCSDEV_bastion_cluster_launch_template" {
 }
 
 resource "aws_secretsmanager_secret" "ssh_ciphers" {
-  name                      = "ssh_ciphers"
-  recovery_window_in_days   = 7
+  name                    = "ssh_ciphers"
+  recovery_window_in_days = 7
 }
