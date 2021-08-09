@@ -52,7 +52,7 @@ resource "aws_autoscaling_group" "CCSDEV_bastion_cluster_autoscaling_group" {
   max_size         = "${var.bastion_max_instance_count}"
   min_size         = "${var.bastion_min_instance_count}"
 
-  name                  = "CCSDEV_app_cluster_scaling"
+  name                  = "CCSDEV_bastion_cluster_scaling"
   protect_from_scale_in = true
   vpc_zone_identifier   = ["${aws_subnet.CCSDEV-AZ-a-Public-1.id}"]
 
