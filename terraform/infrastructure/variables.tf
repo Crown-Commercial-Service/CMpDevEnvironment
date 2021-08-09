@@ -40,7 +40,7 @@ variable ccs_cognito_groups {
 ##############################################################
 
 variable "bastion_ami" {
-  default = "ami-0307e8ce88a8245d4"
+  default = "ami-06dc09bb8854cbde3"
 }
 
 variable "bastion_desired_instance_count" {
@@ -61,6 +61,11 @@ variable "bastion_max_instance_count" {
 
 variable "bastion_min_instance_count" {
   default = 1
+}
+
+variable "bastion_ssh_ciphers" {
+  type = "string"
+  default = ""
 }
 
 variable "bastion_storage" {
