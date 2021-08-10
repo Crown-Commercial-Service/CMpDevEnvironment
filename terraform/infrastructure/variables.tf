@@ -40,7 +40,11 @@ variable ccs_cognito_groups {
 ##############################################################
 
 variable "bastion_ami" {
-  default = "ami-0307e8ce88a8245d4"
+  default = "ami-06dc09bb8854cbde3"
+}
+
+variable "bastion_desired_instance_count" {
+  default = 1
 }
 
 variable "bastion_instance_class" {
@@ -49,6 +53,19 @@ variable "bastion_instance_class" {
 
 variable "bastion_key_name" {
   default = "ccs_bastion"
+}
+
+variable "bastion_max_instance_count" {
+  default = 1
+}
+
+variable "bastion_min_instance_count" {
+  default = 1
+}
+
+variable "bastion_ssh_ciphers" {
+  type = "string"
+  default = ""
 }
 
 variable "bastion_storage" {
@@ -73,12 +90,13 @@ variable enable_https {
   type = "string"
   default = true
 }
+
 ##############################################################
 # cluster settings - Application
 ##############################################################
 
 variable "app_cluster_ami" {
-   default = "ami-01bee3897bba49d78"
+   default = "ami-079ce1ec8fac4f8b0"
 }
 
 variable "app_cluster_instance_class" {
@@ -110,7 +128,7 @@ variable "app_cluster_alb_logging_enabled" {
 ##############################################################
 
 variable "api_cluster_ami" {
-  default = "ami-01bee3897bba49d78"
+  default = "ami-079ce1ec8fac4f8b0"
 }
 
 variable "api_cluster_instance_class" {
