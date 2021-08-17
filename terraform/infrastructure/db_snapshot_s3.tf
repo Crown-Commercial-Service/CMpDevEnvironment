@@ -48,11 +48,6 @@ data "aws_iam_policy_document" "db_snapshot_s3" {
   }
 }
 
-resource "aws_s3_bucket_policy" "config_bucket_s3" {
-  bucket = "${aws_s3_bucket.db_snapshot_s3.bucket}"
-  policy = "${data.aws_iam_policy_document.db_snapshot_s3.json}"
-}
-
 resource "aws_s3_bucket_public_access_block" "db_snapshot_public_access_block" {
   bucket = "${aws_s3_bucket.db_snapshot_s3.id}"
 
