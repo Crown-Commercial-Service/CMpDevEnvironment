@@ -78,7 +78,7 @@ variable enable_https {
 ##############################################################
 
 variable "app_cluster_ami" {
-   default = "ami-01bee3897bba49d78"
+   default = "ami-079ce1ec8fac4f8b0"
 }
 
 variable "app_cluster_instance_class" {
@@ -110,7 +110,7 @@ variable "app_cluster_alb_logging_enabled" {
 ##############################################################
 
 variable "api_cluster_ami" {
-  default = "ami-01bee3897bba49d78"
+  default = "ami-079ce1ec8fac4f8b0"
 }
 
 variable "api_cluster_instance_class" {
