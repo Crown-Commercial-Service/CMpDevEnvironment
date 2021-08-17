@@ -173,10 +173,15 @@ data "aws_iam_policy_document" "codepipeline_service_policy" {
 
   statement {
     actions = [
-        "iam:PassRole"
+      "iam:PassRole"
     ]
 
     resources = ["*"]
+    condition {
+      test      = "StringEquals"
+      values    = ["ecs-tasks.amazonaws.com"]
+      variable  = "iam:PassedToService"
+    }
   }
 
 
