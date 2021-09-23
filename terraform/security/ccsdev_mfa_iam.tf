@@ -62,7 +62,7 @@ data "aws_iam_policy_document" "CCS_manageown_mfa_device" {
 
     effect = "Deny"
 
-    actions = [
+    notaction = [
       "iam:CreateVirtualMFADevice",
       "iam:DeleteVirtualMFADevice",
       "iam:ListVirtualMFADevices",
