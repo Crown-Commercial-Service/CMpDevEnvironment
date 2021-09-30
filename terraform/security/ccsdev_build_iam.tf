@@ -169,6 +169,7 @@ data "aws_iam_policy_document" "codepipeline_service_policy" {
     ]
 
     resources = ["*"]
+    
   }
 
   statement {
@@ -177,6 +178,12 @@ data "aws_iam_policy_document" "codepipeline_service_policy" {
     ]
 
     resources = ["*"]
+
+    condition {
+      test = "StringEquals"
+      values = ["ecs-tasks.amazonaws.com"]
+      variable = "iam:PassedToService"
+    }
   }
 
 
