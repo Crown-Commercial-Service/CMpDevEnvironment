@@ -348,13 +348,7 @@ variable "clamav_volume_type" {
   default = "gp2"
 }
 
-
-
-
-
-
-
-
-
-
-
+variable "clamav_name_tag" {
+  type = string
+  default = "CLAM_AV"
+}
