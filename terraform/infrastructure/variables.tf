@@ -288,3 +288,73 @@ locals {
   assets_bucket_name = "${data.aws_caller_identity.current.account_id}-assets"
   s3_logging_bucket_name = "ccs.${data.aws_caller_identity.current.account_id}.s3.access-logs"
 }
+
+
+########################
+# ClamAV Variables
+########################
+variable "clamav_desired_capacity" {
+  type = string
+  default = "1"
+}
+
+variable "clamav_maximum_capacity" {
+  type = string
+  default = "1"
+}
+
+variable "clamav_minimum_capacity" {
+  type = string
+  default = "1"
+}
+
+variable "clamav_asg_name" {
+  type = string
+  default = "CCSDEV_clamav_instance_autoscaling"
+}
+
+variable "clamav_ami_id" {
+  type = string
+  default = "ami-00bed1ddbf69376d1"
+}
+
+variable "clamav_instance_type" {
+  type = string
+  default = "t2.medium"
+}
+
+variable "clamav_key_name" {
+  type = string
+  default = "ccs_bastion"
+}
+
+variable "clamav_launch_template_name" {
+  type = string
+  default = "CCSDEV_clamav_launch_template"
+}
+
+variable "clamav_device_name" {
+  type = string
+  default = "/dev/xvda"
+}
+
+variable "clamav_volume_size" {
+  type = string
+  default = "15"
+}
+
+variable "clamav_volume_type" {
+  type = string
+  default = "gp2"
+}
+
+
+
+
+
+
+
+
+
+
+
