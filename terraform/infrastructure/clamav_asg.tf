@@ -105,7 +105,7 @@ data "aws_iam_policy_document" "CCSDEV_clamav_policy_document" {
 
 resource "aws_iam_role_policy_attachment" "CCSDEV_clamav_role_attachment" {
     role = "${data.aws_iam_role.CCSDEV_clamav_instance_role.name}"
-    policy_arn = "${aws_iam_policy.CCSDEV_clamav_policy.arn}"
+    policy_arn = "${aws_iam_role_policy.CCSDEV_clamav_policy.arn}"
 }
 
 resource "aws_launch_template" "CLAMAV_launch_template" {
