@@ -80,7 +80,7 @@ resource "aws_autoscaling_group" "CLAMAV_autoscaling_group" {
 
 resource "aws_iam_instance_profile" "CCSDEV_clamav_instance_profile" {
     name = "${var.clamav_instance_profile_name}"
-    role = "${var.aws_iam_role.CCSDEV_clamav_instance_role_name.name}"
+    role = "${var.aws_iam_role.CCSDEV_clamav_instance_role.name}"
 }
 
 # resource "aws_iam_role" "CCSDEV_clamav_instance_role" {

@@ -368,7 +368,7 @@ variable "clamav_instance_profile_name" {
   default = "CCSDEV_clamav_instance_profile"
 }
 
-variable "clamav_instance_role_name" {
+variable "clamav_instance_role" {
   type = "string"
   default = "CCSDEV-clamav-instance-role"
 }
