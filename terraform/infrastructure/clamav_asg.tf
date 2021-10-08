@@ -49,7 +49,8 @@ resource "aws_autoscaling_group" "CLAMAV_autoscaling_group" {
         version = "$Latest"
     }
     tags = {
-        Name = "${var.clamav_name_tag}"
+        key = "Name" 
+        value = "${var.clamav_name_tag}"
         propagate_at_launch = true
     }
     enabled_metrics = [
