@@ -1,5 +1,5 @@
 data "aws_iam_role" "CCSDEV_clamav_instance_role" {
-  name = "${var.CCSDEV_clamav_instance_role}"
+  name = "${var.clamav_instance_role}"
 }
 
 data "aws_subnet" "CCSDEV_clamav_subnet" {
