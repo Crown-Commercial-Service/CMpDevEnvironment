@@ -370,7 +370,7 @@ variable "clamav_instance_profile_name" {
 
 variable "clamav_instance_role_name" {
   type = "string"
-  default = "CCSDEV_clamav_instance_role"
+  default = "CCSDEV-clamav-instance-role"
 }
 
 variable "CCSDEV_clamv_subnet_id" {

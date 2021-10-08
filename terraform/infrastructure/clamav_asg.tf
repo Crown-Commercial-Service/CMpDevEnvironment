@@ -83,32 +83,32 @@ resource "aws_iam_instance_profile" "CCSDEV_clamav_instance_profile" {
     role = "${aws_iam_role.CCSDEV_clamav_instance_role.name}"
 }
 
-resource "aws_iam_role" "CCSDEV_clamav_instance_role" {
-    name = "${var.clamav_instance_role_name}"
-    assume_role_policy = "${data.aws_iam_policy_document.CCSDEV_clamav_instance_policy.json}"
-}
+# resource "aws_iam_role" "CCSDEV_clamav_instance_role" {
+#     name = "${var.clamav_instance_role_name}"
+#     assume_role_policy = "${data.aws_iam_policy_document.CCSDEV_clamav_instance_policy.json}"
+# }
 
-resource "aws_iam_policy" "CCSDEV_clamav_policy" {
-    name = "${var.clamav_iam_policy}"
+# resource "aws_iam_policy" "CCSDEV_clamav_policy" {
+#     name = "${var.clamav_iam_policy}"
     
-    policy = <<EOF
-    {
-        "Version": "2012-10-17",
-        "Statement": [
-            {
-                "Action": ["ssm:PutParameter"],
-                "Effect": "Allow",
-                "Resource": "arn:aws:ssm:eu-west-2:268234928295:parameter/*"
-            }
-        ]
-    }
-    EOF
-}
+#     policy = <<EOF
+#     {
+#         "Version": "2012-10-17",
+#         "Statement": [
+#             {
+#                 "Action": ["ssm:PutParameter"],
+#                 "Effect": "Allow",
+#                 "Resource": "arn:aws:ssm:eu-west-2:268234928295:parameter/*"
+#             }
+#         ]
+#     }
+#     EOF
+# }
 
-resource "aws_iam_role_policy_attachment" "CCSDEV_clamav_role_attachment" {
-    role = "${aws_iam_role.CCSDEV_clamav_instance_role.name}"
-    policy_arn = "${aws_iam_policy.CCSDEV_clamav_policy.arn}"
-}
+# resource "aws_iam_role_policy_attachment" "CCSDEV_clamav_role_attachment" {
+#     role = "${aws_iam_role.CCSDEV_clamav_instance_role.name}"
+#     policy_arn = "${aws_iam_policy.CCSDEV_clamav_policy.arn}"
+# }
 
 resource "aws_launch_template" "CLAMAV_launch_template" {
     image_id = "${var.clamav_ami_id}"
