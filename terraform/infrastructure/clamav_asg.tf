@@ -54,12 +54,12 @@ resource "aws_autoscaling_group" "CLAMAV_autoscaling_group" {
 }
 
 resource "aws_iam_instance_profile" "CCSDEV_clamav_instance_profile" {
-    name = var.clamav_instance_profile_name
+    name = "${var.clamav_instance_profile_name}"
     role = "${aws_iam_role.CCSDEV_clamav_instance_role.name}"
 }
 
 resource "aws_iam_role" "CCSDEV_clamav_instance_role" {
-    name = var.clamav_instance_role_name
+    name = "${var.clamav_instance_role_name}"
     assume_role_policy = jsonencode({
         Version = "2012-10-17"
         Statement = [
