@@ -6,12 +6,12 @@ data "aws_iam_policy_document" "CCSDEV_clamav_instance_policy" {
     version = "2012-10-17"
 
     statement {
+        effect = "Allow"
         actions = [
             "ssm:PutParameter",
-            "ssm:GetParameters"
+            "ssm:GetParameters",
         ]
-        resources = ["arn:aws:ssm:eu-west-2:268234928295:parameter/*"]
-        effect = "Allow"
+        resources = ["arn:aws:ssm:eu-west-2:268234928295:parameter/*",]
     }
 }
 
