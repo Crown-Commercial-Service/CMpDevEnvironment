@@ -3,15 +3,11 @@ data "aws_subnet" "CCSDEV_clamav_subnet" {
 }
 
 data "aws_iam_policy_document" "CCSDEV_clamav_instance_policy" {
-    version = "2012-10-17"
 
     statement {
         effect = "Allow"
-        actions = [
-            "ssm:PutParameter",
-            "ssm:GetParameters",
-        ]
-        resources = ["arn:aws:ssm:eu-west-2:268234928295:parameter/*",]
+        actions = ["ssm:PutParameter"]
+        resources = ["arn:aws:ssm:eu-west-2:268234928295:parameter/*"]
     }
 }
 
