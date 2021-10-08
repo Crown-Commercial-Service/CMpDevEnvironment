@@ -89,6 +89,10 @@ resource "aws_launch_template" "CLAMAV_launch_template" {
         }
     }
 
+    iam_instance_profile {
+        name = "${aws_iam_instance_profile.CCSDEV_clamav_instance_profile.name}"
+    }
+
     network_interfaces {
         associate_public_ip_address = false
         security_groups = ["${data.aws_security_group.CCSDEV-internal-ssh.id}", "${data.aws_security_group.CCSDEV-internal-api.id}"]
