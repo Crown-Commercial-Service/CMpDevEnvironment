@@ -89,7 +89,7 @@ resource "aws_iam_role" "CCSDEV_clamav_instance_role" {
 }
 
 resource "aws_iam_policy" "CCSDEV_clamav_policy" {
-    name = var.clamav_iam_policy
+    name = "${var.clamav_iam_policy}"
     
     policy = <<EOF
     {
