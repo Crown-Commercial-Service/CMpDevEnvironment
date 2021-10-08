@@ -315,7 +315,7 @@ variable "clamav_asg_name" {
 
 variable "clamav_ami_id" {
   type = "string"
-  default = "ami-00bed1ddbf69376d1"
+  default = "ami-04436baf9a2c37d59"
 }
 
 variable "clamav_instance_type" {
@@ -375,5 +375,5 @@ variable "clamav_instance_role_name" {
 
 variable "CCSDEV_clamv_subnet_id" {
   type = "string"
-  default = "subnet-03e88540a70b20d24"
+  default = "subnet-0b81753ef6381574a"
 }
