@@ -1,17 +1,3 @@
-data "aws_iam_policy_document" "CCSDEV_clamav_instance_policy" {
-    version = "2012-10-17"
-
-    statement {
-        actions = ["sts:AssumeRole"]
-
-        principals {
-            identifiers = ["ssm.amazonaws.com"]
-        }
-
-        effect = "Allow"
-    }
-}
-
 data "aws_security_group" "CCSDEV-internal-ssh" {
   name = "${var.clamav_internal_ssh_sg_name}"
 }
