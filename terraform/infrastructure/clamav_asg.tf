@@ -1,3 +1,7 @@
+data "aws_subnet" "CCSDEV_clamav_subnet" {
+    id = "${var.CCSDEV_clamv_subnet_id}"
+}
+
 data "aws_iam_policy_document" "CCSDEV_clamav_instance_policy" {
     version = "2012-10-17"
 
