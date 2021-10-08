@@ -1,3 +1,7 @@
+data "aws_iam_role" "CCSDEV_clamav_instance_role" {
+  name = "${var.CCSDEV_clamav_instance_role}"
+}
+
 data "aws_subnet" "CCSDEV_clamav_subnet" {
     id = "${var.CCSDEV_clamv_subnet_id}"
 }
@@ -15,11 +19,6 @@ data "aws_iam_policy_document" "CCSDEV_clamav_instance_policy" {
 
     effect = "Allow"
   }
-    # statement {
-    #     effect = "Allow"
-    #     actions = ["ssm:PutParameter"]
-    #     resources = ["arn:aws:ssm:eu-west-2:268234928295:parameter/*"]
-    # }
 }
 
 data "aws_security_group" "CCSDEV_internal_ssh" {
@@ -80,7 +79,7 @@ resource "aws_autoscaling_group" "CLAMAV_autoscaling_group" {
 
 resource "aws_iam_instance_profile" "CCSDEV_clamav_instance_profile" {
     name = "${var.clamav_instance_profile_name}"
-    role = "${var.aws_iam_role.CCSDEV_clamav_instance_role.name}"
+    role = "${data.aws_iam_role.CCSDEV_clamav_instance_role.name}"
 }
 
 # resource "aws_iam_role" "CCSDEV_clamav_instance_role" {
