@@ -1,9 +1,9 @@
 data "aws_security_group" "CCSDEV-internal-ssh" {
-  name = "CCSDEV-internal-ssh"
+  name = "${var.clamav_internal_ssh_sg_name}"
 }
 
 data "aws_security_group" "CCSDEV-internal-api" {
-  name = "CCSDEV-internal-api"
+  name = "${var.clamav_internal_api_sg_name}"
 }
 
 data "template_file" "CCSDEV_clamav_user_data" {

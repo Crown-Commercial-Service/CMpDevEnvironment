@@ -352,3 +352,13 @@ variable "clamav_name_tag" {
   type = string
   default = "CLAM_AV"
 }
+
+variable "clamav_internal_ssh_sg_name" {
+  type = string
+  default = "CCSDEV-internal-ssh"
+}
+
+variable "clamav_internal_api_sg_name" {
+  type = string
+  default = "CCSDEV-internal-api"
+}
