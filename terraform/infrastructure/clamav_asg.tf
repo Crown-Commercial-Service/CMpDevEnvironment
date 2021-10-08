@@ -83,31 +83,6 @@ resource "aws_iam_instance_profile" "CCSDEV_clamav_instance_profile" {
     role = "${data.aws_iam_role.CCSDEV_clamav_instance_role.name}"
 }
 
-resource "aws_iam_role_policy" "CCSDEV_clamav_policy" {
-  name   = "CCSDEV_clamav_policy"
-  role = "${data.aws_iam_role.CCSDEV_clamav_instance_role.name}"
-  policy = "${data.aws_iam_policy_document.CCSDEV_clamav_policy_document.json}"
-}
-
-data "aws_iam_policy_document" "CCSDEV_clamav_policy_document" {
-
-  statement {
-
-    effect = "Allow",
-    actions = ["ssm:PutParameter"]
-
-    resources = [
-		"arn:aws:ssm:eu-west-2:268234928295:parameter/*"
-    ]
-  }
-
-}
-
-resource "aws_iam_role_policy_attachment" "CCSDEV_clamav_role_attachment" {
-    role = "${data.aws_iam_role.CCSDEV_clamav_instance_role.name}"
-    policy_arn = "${aws_iam_role_policy.CCSDEV_clamav_policy.arn}"
-}
-
 resource "aws_launch_template" "CLAMAV_launch_template" {
     image_id = "${var.clamav_ami_id}"
     instance_type = "${var.clamav_instance_type}"
