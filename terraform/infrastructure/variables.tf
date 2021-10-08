@@ -362,3 +362,13 @@ variable "clamav_internal_api_sg_name" {
   type = string
   default = "CCSDEV-internal-api"
 }
+
+variable "clamav_instance_profile_name" {
+  type = string
+  default = "CCSDEV_clamav_instance_profile"
+}
+
+variable "clamav_instance_role_name" {
+  type = string
+  default = "CCSDEV_clamav_instance_role"
+}

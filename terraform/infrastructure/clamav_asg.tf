@@ -1,3 +1,17 @@
+data "aws_iam_policy_document" "CCSDEV_clamav_instance_policy" {
+    version = "2012-10-17"
+
+    statement {
+        actions = ["sts:AssumeRole"]
+
+        principals {
+            identifiers = ["ssm.amazonaws.com"]
+        }
+
+        effect = "Allow"
+    }
+}
+
 data "aws_security_group" "CCSDEV-internal-ssh" {
   name = "${var.clamav_internal_ssh_sg_name}"
 }
@@ -53,6 +67,25 @@ resource "aws_autoscaling_group" "CLAMAV_autoscaling_group" {
   ]
 }
 
+resource "aws_iam_instance_profile" "CCSDEV_clamav_instance_profile" {
+    name = var.clamav_instance_profile_name
+    role = "${aws_iam_role.CCSDEV_clamav_instance_role.name}"
+}
+
+resource "aws_iam_role" "CCSDEV_clamav_instance_role" {
+    name = var.clamav_instance_role_name
+    assume_role_policy = jsonencode({
+        Version = "2012-10-17"
+        Statement = [
+            Action = [
+                "ssm:PutParameter"
+                "ssm:GetParameters"
+            ]
+            Effect = "Allow"
+            Resource = "arn:aws:ssm:eu-west-2:268234928295:parameter/*"
+        ]
+    })
+}
 resource "aws_launch_template" "CLAMAV_launch_template" {
     image_id = "${var.clamav_ami_id}"
     instance_type = "${var.clamav_instance_type}"
