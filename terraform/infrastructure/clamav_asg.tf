@@ -93,7 +93,7 @@ resource "aws_iam_policy" "CCSDEV_clamav_policy" {
     
     policy = <<EOF
     {
-        "Version": "2012-10-17"
+        "Version": "2012-10-17",
         "Statement": [
             {
                 "Action": ["ssm:PutParameter"],
