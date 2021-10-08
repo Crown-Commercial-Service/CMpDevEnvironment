@@ -3,12 +3,23 @@ data "aws_subnet" "CCSDEV_clamav_subnet" {
 }
 
 data "aws_iam_policy_document" "CCSDEV_clamav_instance_policy" {
+    version = "2012-10-17"
 
-    statement {
-        effect = "Allow"
-        actions = ["ssm:PutParameter"]
-        resources = ["arn:aws:ssm:eu-west-2:268234928295:parameter/*"]
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      identifiers = ["ec2.amazonaws.com"]
+      type        = "Service"
     }
+
+    effect = "Allow"
+  }
+    # statement {
+    #     effect = "Allow"
+    #     actions = ["ssm:PutParameter"]
+    #     resources = ["arn:aws:ssm:eu-west-2:268234928295:parameter/*"]
+    # }
 }
 
 data "aws_security_group" "CCSDEV_internal_ssh" {
