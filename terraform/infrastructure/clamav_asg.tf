@@ -38,6 +38,7 @@ resource "aws_autoscaling_group" "CLAMAV_autoscaling_group" {
     desired_capacity = "${var.clamav_desired_capacity}"
     max_size = "${var.clamav_maximum_capacity}"
     min_size = "${var.clamav_minimum_capacity}"
+    termination_policies = "OldestInstance"
 
     name = "${var.clamav_asg_name}"
     protect_from_scale_in = false
