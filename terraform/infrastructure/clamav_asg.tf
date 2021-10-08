@@ -83,7 +83,7 @@ resource "aws_iam_instance_profile" "CCSDEV_clamav_instance_profile" {
     role = "${data.aws_iam_role.CCSDEV_clamav_instance_role.name}"
 }
 
-resource "aws_iam_policy" "CCSDEV_clamav_policy" {
+resource "aws_iam_role_policy" "CCSDEV_clamav_policy" {
   name   = "CCSDEV_clamav_policy"
   role = "${data.aws_iam_role.CCSDEV_clamav_instance_role.name}"
   policy = "${data.aws_iam_policy_document.CCSDEV_clamav_policy_document.json}"
