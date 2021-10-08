@@ -15,11 +15,11 @@ data "aws_iam_policy_document" "CCSDEV_clamav_instance_policy" {
     }
 }
 
-data "aws_security_group" "CCSDEV-internal-ssh" {
+data "aws_security_group" "CCSDEV_internal_ssh" {
   name = "${var.clamav_internal_ssh_sg_name}"
 }
 
-data "aws_security_group" "CCSDEV-internal-api" {
+data "aws_security_group" "CCSDEV_internal_api" {
   name = "${var.clamav_internal_api_sg_name}"
 }
 
@@ -102,6 +102,6 @@ resource "aws_launch_template" "CLAMAV_launch_template" {
 
     network_interfaces {
         associate_public_ip_address = false
-        security_groups = ["${data.aws_security_group.CCSDEV-internal-ssh.id}", "${data.aws_security_group.CCSDEV-internal-api.id}"]
+        security_groups = ["${data.aws_security_group.CCSDEV_internal_ssh.id}", "${data.aws_security_group.CCSDEV_internal_api.id}"]
     }
 }
