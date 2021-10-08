@@ -6,6 +6,10 @@ data "aws_security_group" "CCSDEV-internal-api" {
   name = "CCSDEV-internal-api"
 }
 
+data "template_file" "CCSDEV_clamav_user_data" {
+    template = "${file("./clamav_userdata.sh")}"
+}
+
 
 resource "aws_autoscaling_group" "CLAMAV_autoscaling_group" {
     desired_capacity = "${var.clamav_desired_capacity}"
@@ -54,6 +58,7 @@ resource "aws_launch_template" "CLAMAV_launch_template" {
     instance_type = "${var.clamav_instance_type}"
     key_name = "${var.clamav_key_name}"
     name = "${var.clamav_launch_template_name}"
+    user_data = "${base64encode(data.template_file.CCSDEV_clamav_user_data.rendered)}"
     
     block_device_mappings {
         device_name = "${var.clamav_device_name}"
