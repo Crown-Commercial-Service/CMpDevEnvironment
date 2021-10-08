@@ -35,7 +35,7 @@ resource "aws_autoscaling_group" "CLAMAV_autoscaling_group" {
 
     name = "${var.clamav_asg_name}"
     protect_from_scale_in = false
-    vpc_zone_identifier = ["${aws_subnet.CCSDEV-AZ-b-Private-1.id}"]
+    vpc_zone_identifier = ["${data.aws_subnet.CCSDEV_clamav_subnet.id}"]
 
     launch_template {
         id = "${aws_launch_template.CLAMAV_launch_template.id}"
