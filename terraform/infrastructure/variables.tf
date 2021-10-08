@@ -294,81 +294,81 @@ locals {
 # ClamAV Variables
 ########################
 variable "clamav_desired_capacity" {
-  type = string
+  type = "string"
   default = "1"
 }
 
 variable "clamav_maximum_capacity" {
-  type = string
+  type = "string"
   default = "1"
 }
 
 variable "clamav_minimum_capacity" {
-  type = string
+  type = "string"
   default = "1"
 }
 
 variable "clamav_asg_name" {
-  type = string
+  type = "string"
   default = "CCSDEV_clamav_instance_autoscaling"
 }
 
 variable "clamav_ami_id" {
-  type = string
+  type = "string"
   default = "ami-00bed1ddbf69376d1"
 }
 
 variable "clamav_instance_type" {
-  type = string
+  type = "string"
   default = "t2.medium"
 }
 
 variable "clamav_key_name" {
-  type = string
+  type = "string"
   default = "ccs_bastion"
 }
 
 variable "clamav_launch_template_name" {
-  type = string
+  type = "string"
   default = "CCSDEV_clamav_launch_template"
 }
 
 variable "clamav_device_name" {
-  type = string
+  type = "string"
   default = "/dev/xvda"
 }
 
 variable "clamav_volume_size" {
-  type = string
+  type = "string"
   default = "15"
 }
 
 variable "clamav_volume_type" {
-  type = string
+  type = "string"
   default = "gp2"
 }
 
 variable "clamav_name_tag" {
-  type = string
+  type = "string"
   default = "CLAM_AV"
 }
 
 variable "clamav_internal_ssh_sg_name" {
-  type = string
+  type = "string"
   default = "CCSDEV-internal-ssh"
 }
 
 variable "clamav_internal_api_sg_name" {
-  type = string
+  type = "string"
   default = "CCSDEV-internal-api"
 }
 
 variable "clamav_instance_profile_name" {
-  type = string
+  type = "string"
   default = "CCSDEV_clamav_instance_profile"
 }
 
 variable "clamav_instance_role_name" {
-  type = string
+  type = "string"
   default = "CCSDEV_clamav_instance_role"
 }
