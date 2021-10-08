@@ -61,14 +61,16 @@ resource "aws_iam_instance_profile" "CCSDEV_clamav_instance_profile" {
 resource "aws_iam_role" "CCSDEV_clamav_instance_role" {
     name = "${var.clamav_instance_role_name}"
     assume_role_policy = jsonencode({
-        Version = "2012-10-17"
+        Version = "2012-10-17",
         Statement = [
-            Action = [
-                "ssm:PutParameter"
-                "ssm:GetParameters"
-            ]
-            Effect = "Allow"
-            Resource = "arn:aws:ssm:eu-west-2:268234928295:parameter/*"
+            {
+                Action = [
+                    "ssm:PutParameter",
+                    "ssm:GetParameters"
+                ]
+                Effect = "Allow"
+                Resource = "arn:aws:ssm:eu-west-2:268234928295:parameter/*"
+            },
         ]
     })
 }
