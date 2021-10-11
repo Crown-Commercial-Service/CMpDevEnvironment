@@ -25,7 +25,7 @@ data "aws_security_group" "CCSDEV_internal_ssh" {
   name = "${var.clamav_internal_ssh_sg_name}"
 }
 
-data "aws_security_group" "CCSDEV_internal_api" {
+data "aws_security_group" "CCSDEV_internal_app" {
   name = "${var.clamav_internal_api_sg_name}"
 }
 
