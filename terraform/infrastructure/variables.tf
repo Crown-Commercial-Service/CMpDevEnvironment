@@ -314,7 +314,7 @@ variable "clamav_asg_name" {
 
 variable "clamav_ami_id" {
   type = "string"
-  default = "ami-01a6e31ac994bbc09"
+  default = "ami-00bed1ddbf69376d1"
 }
 
 variable "clamav_instance_type" {
