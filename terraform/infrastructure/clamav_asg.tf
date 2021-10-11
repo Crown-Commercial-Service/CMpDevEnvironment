@@ -106,6 +106,6 @@ resource "aws_launch_template" "CLAMAV_launch_template" {
 
     network_interfaces {
         associate_public_ip_address = false
-        security_groups = ["${data.aws_security_group.CCSDEV_internal_ssh.id}", "${data.aws_security_group.CCSDEV_internal_api.id}"]
+        security_groups = ["${data.aws_security_group.CCSDEV_internal_ssh.id}", "${data.aws_security_group.CCSDEV_internal_app.id}"]
     }
 }
