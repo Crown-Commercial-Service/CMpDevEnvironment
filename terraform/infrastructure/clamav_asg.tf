@@ -26,7 +26,7 @@ data "aws_security_group" "CCSDEV_internal_ssh" {
 }
 
 data "aws_security_group" "CCSDEV_internal_app" {
-  name = "${var.clamav_internal_api_sg_name}"
+  name = "${var.clamav_internal_app_sg_name}"
 }
 
 data "template_file" "CCSDEV_clamav_user_data" {
