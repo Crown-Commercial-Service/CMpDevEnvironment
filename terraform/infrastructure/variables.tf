@@ -359,7 +359,7 @@ variable "clamav_internal_ssh_sg_name" {
 
 variable "clamav_internal_api_sg_name" {
   type = "string"
-  default = "CCSDEV-internal-api"
+  default = "CCSDEV-internal-app"
 }
 
 variable "clamav_instance_profile_name" {
