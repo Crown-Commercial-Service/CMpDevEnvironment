@@ -56,6 +56,40 @@ data "aws_iam_policy_document" "CCS_manageown_mfa_device" {
       "arn:aws:iam::*:user/&{aws:username}",
     ]
   }
+  
+  statement {
+    sid = "BlockMostAccessUnlessSignedInWithMFA"
+
+    effect = "Deny"
+
+    not_actions = [
+      "iam:CreateVirtualMFADevice",
+      "iam:DeleteVirtualMFADevice",
+      "iam:ListVirtualMFADevices",
+      "iam:EnableMFADevice",
+      "iam:ResyncMFADevice",
+      "iam:ListAccountAliases",
+      "iam:ListUsers",
+      "iam:ListSSHPublicKeys",
+      "iam:ListAccessKeys",
+      "iam:ListServiceSpecificCredentials",
+      "iam:ListMFADevices",
+      "iam:GetAccountSummary",
+      "sts:GetSessionToken"
+    ]
+
+    resources = [
+      "*",
+    ]
+
+    condition {
+      test = "Bool"
+      variable = "aws:MultiFactorAuthPresent"
+      values = [
+          "false",
+        ]
+    }
+  }
 }
 
 resource "aws_iam_group_policy_attachment" "CCS_manageown_mfa_device" {
