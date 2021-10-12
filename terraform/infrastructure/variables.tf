@@ -3,7 +3,7 @@
 # AWS Details
 #
 # NOTE: Access Key and Secret Key will be pulled from the local
-# credentials 
+# credentials
 #
 # ##############################################################
 
@@ -287,4 +287,92 @@ locals {
   app_api_bucket_name = "ccs.${data.aws_caller_identity.current.account_id}.${lower(var.environment_name)}.app-api-data"
   assets_bucket_name = "${data.aws_caller_identity.current.account_id}-assets"
   s3_logging_bucket_name = "ccs.${data.aws_caller_identity.current.account_id}.s3.access-logs"
+}
+
+########################
+# ClamAV Variables
+########################
+variable "clamav_desired_capacity" {
+  type = "string"
+  default = "1"
+}
+
+variable "clamav_maximum_capacity" {
+  type = "string"
+  default = "1"
+}
+
+variable "clamav_minimum_capacity" {
+  type = "string"
+  default = "1"
+}
+
+variable "clamav_asg_name" {
+  type = "string"
+  default = "CCSDEV_clamav_instance_autoscaling"
+}
+
+variable "clamav_ami_id" {
+  type = "string"
+  default = "ami-04436baf9a2c37d59"
+}
+
+variable "clamav_instance_type" {
+  type = "string"
+  default = "t2.medium"
+}
+
+variable "clamav_key_name" {
+  type = "string"
+  default = "ccs_bastion"
+}
+
+variable "clamav_launch_template_name" {
+  type = "string"
+  default = "CCSDEV_clamav_launch_template"
+}
+
+variable "clamav_device_name" {
+  type = "string"
+  default = "/dev/xvda"
+}
+
+variable "clamav_volume_size" {
+  type = "string"
+  default = "15"
+}
+
+variable "clamav_volume_type" {
+  type = "string"
+  default = "gp2"
+}
+
+variable "clamav_name_tag" {
+  type = "string"
+  default = "CLAM_AV"
+}
+
+variable "clamav_internal_ssh_sg_name" {
+  type = "string"
+  default = "CCSDEV-internal-ssh"
+}
+
+variable "clamav_internal_api_sg_name" {
+  type = "string"
+  default = "CCSDEV-internal-api"
+}
+
+variable "clamav_instance_profile_name" {
+  type = "string"
+  default = "CCSDEV_clamav_instance_profile"
+}
+
+variable "clamav_instance_role" {
+  type = "string"
+  default = "CCSDEV-clamav-instance-role"
+}
+
+variable "CCSDEV_clamv_subnet_id" {
+  type = "string"
+  default = "subnet-0c33ace378704ef2c"
 }
