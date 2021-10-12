@@ -376,8 +376,3 @@ variable "CCSDEV_clamv_subnet_id" {
   type = "string"
   default = "subnet-09fe3e1109b9a89b6"
 }
-
-variable "clamav_iam_policy" {
-  type = "string"
-  default = "CCSDEV_clamav_iam_policy"
-}
