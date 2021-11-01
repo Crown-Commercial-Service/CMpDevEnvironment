@@ -192,6 +192,36 @@ resource "aws_alb_listener_rule" "https_subdomain_catchall_rule" {
   }
 }
 
+
+##############################################################
+# adding Legacy Storage LB rule
+##############################################################
+
+
+resource "aws_alb_listener_rule" "https_legacy_storage_rule" {
+#  count        = "${local.provision_https_certificates && !local.has_path_patterns ? 1 : 0}"
+  listener_arn = "${data.aws_alb_listener.https_listener.arn}"
+
+  priority = 1102
+
+  action {
+    type             = "forward"
+    target_group_arn = "${aws_alb_target_group.component.arn}"
+  }
+
+  condition {
+    host_header {
+      values = ["${var.hostname}.${var.domain}"]
+    }
+  }
+
+  condition {
+    path_pattern {
+      values = ["/legacy-storage*"]
+    }
+  }
+}
+
 ##############################################################
 # DNS configuration
 ##############################################################
