@@ -7,7 +7,7 @@
   "author": "Adam Nicholas",
   "license": "MIT",
   "dependencies": {
-    "aws-sdk": "^2.498.0",
+    "aws-sdk": "^2.1036.0",
     "fs": "0.0.1-security",
     "https": "^1.0.0",
     "minimist": "^1.2.0"
