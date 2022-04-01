@@ -21,10 +21,35 @@ resource "aws_security_group" "vpc-CCSDEV-internal-ssh" {
   }
 
   egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
+    description = "Outbound HTTPS"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "Outbound HTTP"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "Any TCP within VPC"
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    cidr_blocks = ["192.168.0.0/16"]
+  }
+
+  egress {
+    description = "Any UDP within VPC"
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "udp"
+    cidr_blocks = ["192.168.0.0/16"]
   }
 
   tags {
@@ -38,6 +63,38 @@ resource "aws_security_group" "vpc-CCSDEV-external-ssh" {
   name        = "CCSDEV-external-ssh"
   description = "ssh from external hosts"
   vpc_id      = "${aws_vpc.CCSDEV-Services.id}"
+
+  egress {
+    description = "Outbound HTTPS"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "Outbound HTTP"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "Any TCP within VPC"
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    cidr_blocks = ["192.168.0.0/16"]
+  }
+
+  egress {
+    description = "Any UDP within VPC"
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "udp"
+    cidr_blocks = ["192.168.0.0/16"]
+  }
 
   tags {
     Name = "CCSDEV-external-ssh"
@@ -57,15 +114,6 @@ resource "aws_security_group_rule" "vpc-CCSDEV-external-ssh-ingress" {
   security_group_id = "${aws_security_group.vpc-CCSDEV-external-ssh.id}"
 }
 
-resource "aws_security_group_rule" "vpc-CCSDEV-external-ssh-egress" {
-  type              = "egress"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = "${aws_security_group.vpc-CCSDEV-external-ssh.id}"
-}
-
 ##############################################################
 # App cluster security groups
 ##############################################################
@@ -82,11 +130,44 @@ resource "aws_security_group" "vpc-CCSDEV-internal-app" {
     cidr_blocks = ["${aws_vpc.CCSDEV-Services.cidr_block}"]
   }
 
+  ingress {
+    from_port   = "3310"
+    to_port     = "3310"
+    protocol    = "tcp"
+    description = "ClamAV"
+    cidr_blocks = ["${aws_vpc.CCSDEV-Services.cidr_block}"]
+  }
+
   egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
+    description = "Outbound HTTPS"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "Outbound HTTP"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "Any TCP within VPC"
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    cidr_blocks = ["192.168.0.0/16"]
+  }
+
+  egress {
+    description = "Any UDP within VPC"
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "udp"
+    cidr_blocks = ["192.168.0.0/16"]
   }
 
   tags {
@@ -112,6 +193,38 @@ resource "aws_security_group" "vpc-CCSDEV-external-app-alb" {
   name        = "CCSDEV-external-app-alb"
   description = "Application access external via alb"
   vpc_id      = "${aws_vpc.CCSDEV-Services.id}"
+
+  egress {
+    description = "Outbound HTTPS"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "Outbound HTTP"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "Any TCP within VPC"
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    cidr_blocks = ["192.168.0.0/16"]
+  }
+
+  egress {
+    description = "Any UDP within VPC"
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "udp"
+    cidr_blocks = ["192.168.0.0/16"]
+  }
 
   tags {
     Name = "CCSDEV-external-app-alb"
@@ -142,15 +255,6 @@ resource "aws_security_group_rule" "vpc-CCSDEV-external-app-alb-ingress-https" {
   security_group_id = "${aws_security_group.vpc-CCSDEV-external-app-alb.id}"
 }
 
-resource "aws_security_group_rule" "vpc-CCSDEV-external-app-alb-egress" {
-  type              = "egress"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = "${aws_security_group.vpc-CCSDEV-external-app-alb.id}"
-}
-
 ##############################################################
 # Api cluster security groups
 ##############################################################
@@ -167,6 +271,38 @@ resource "aws_security_group" "vpc-CCSDEV-internal-api" {
     cidr_blocks = ["${aws_vpc.CCSDEV-Services.cidr_block}"]
   }
 
+  egress {
+    description = "Outbound HTTPS"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "Outbound HTTP"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "Any TCP within VPC"
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    cidr_blocks = ["192.168.0.0/16"]
+  }
+
+  egress {
+    description = "Any UDP within VPC"
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "udp"
+    cidr_blocks = ["192.168.0.0/16"]
+  }
+
   # Added Sept-20 in line with manual changes; a new security group
   # "vpc-CCSDEV-internal-clamav" has also been created which is a more
   # consistent way of adding new rules of this sort. Added here for migration
@@ -178,13 +314,6 @@ resource "aws_security_group" "vpc-CCSDEV-internal-api" {
     to_port     = "${var.clamav_port}"
     protocol    = "tcp"
     cidr_blocks = ["${aws_vpc.CCSDEV-Services.cidr_block}"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
   }
 
   tags {
@@ -214,10 +343,35 @@ resource "aws_security_group" "vpc-CCSDEV-internal-api-alb" {
   }
 
   egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
+    description = "Outbound HTTPS"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "Outbound HTTP"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "Any TCP within VPC"
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    cidr_blocks = ["192.168.0.0/16"]
+  }
+
+  egress {
+    description = "Any UDP within VPC"
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "udp"
+    cidr_blocks = ["192.168.0.0/16"]
   }
 
   tags {
@@ -244,10 +398,35 @@ resource "aws_security_group" "vpc-CCSDEV-internal-PG-DB" {
   }
 
   egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
+    description = "Outbound HTTPS"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "Outbound HTTP"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "Any TCP within VPC"
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    cidr_blocks = ["192.168.0.0/16"]
+  }
+
+  egress {
+    description = "Any UDP within VPC"
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "udp"
+    cidr_blocks = ["192.168.0.0/16"]
   }
 
   tags {
@@ -274,10 +453,35 @@ resource "aws_security_group" "vpc-CCSDEV-internal-ES" {
   }
 
   egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
+    description = "Outbound HTTPS"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "Outbound HTTP"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "Any TCP within VPC"
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    cidr_blocks = ["192.168.0.0/16"]
+  }
+
+  egress {
+    description = "Any UDP within VPC"
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "udp"
+    cidr_blocks = ["192.168.0.0/16"]
   }
 
   tags {
@@ -304,10 +508,35 @@ resource "aws_security_group" "vpc-CCSDEV-internal-EC-REDIS" {
   }
 
   egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
+    description = "Outbound HTTPS"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "Outbound HTTP"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "Any TCP within VPC"
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    cidr_blocks = ["192.168.0.0/16"]
+  }
+
+  egress {
+    description = "Any UDP within VPC"
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "udp"
+    cidr_blocks = ["192.168.0.0/16"]
   }
 
   tags {
@@ -334,10 +563,35 @@ resource "aws_security_group" "vpc-CCSDEV-internal-clamav" {
   }
 
   egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
+    description = "Outbound HTTPS"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "Outbound HTTP"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "Any TCP within VPC"
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    cidr_blocks = ["192.168.0.0/16"]
+  }
+
+  egress {
+    description = "Any UDP within VPC"
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "udp"
+    cidr_blocks = ["192.168.0.0/16"]
   }
 
   tags {
