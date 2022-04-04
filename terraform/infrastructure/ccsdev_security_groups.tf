@@ -174,6 +174,38 @@ resource "aws_security_group" "vpc-CCSDEV-external-app" {
   description = "App access external hosts"
   vpc_id      = "${aws_vpc.CCSDEV-Services.id}"
 
+  egress {
+    description = "Outbound HTTPS"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "Outbound HTTP"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "Any TCP within VPC"
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    cidr_blocks = ["192.168.0.0/16"]
+  }
+
+  egress {
+    description = "Any UDP within VPC"
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "udp"
+    cidr_blocks = ["192.168.0.0/16"]
+  }
+
   tags {
     Name = "CCSDEV-external-app"
     CCSRole = "Infrastructure"
