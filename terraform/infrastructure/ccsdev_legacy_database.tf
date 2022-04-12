@@ -78,6 +78,24 @@ resource "aws_db_parameter_group" "ccsdev-legacy-db-parameters11" {
   }
 }
 
+resource "aws_db_parameter_group" "ccsdev-legacy-db-parameters14" {
+  name        = "ccsdev-legacy-db-parameters14"
+  family      = "postgres14"
+  description = "PostgreSQL 14 parameters for CCSDEV"
+
+  parameter {
+    name         = "rds.force_ssl"
+    value        = "1"
+    apply_method = "pending-reboot"
+  }
+
+  tags {
+    Name = "CCSDEV legacy database parameters 14"
+    CCSRole = "Infrastructure"
+    CCSEnvironment = "${var.environment_name}"
+  }
+}
+
 ##############################################################
 # PostgreSQL Database Encryption key
 ##############################################################
@@ -150,7 +168,7 @@ resource "aws_db_instance" "ccsdev_legacy_default_db" {
   apply_immediately         = "${var.default_db_apply_immediately}"
   storage_type              = "gp2"
   engine                    = "postgres"
-  engine_version            = "11.2"
+  engine_version            = "14.1"
   instance_class            = "${var.default_db_instance_class}"
   name                      = "${var.default_db_name}"
   username                  = "${var.default_db_username}"
