@@ -78,6 +78,24 @@ resource "aws_db_parameter_group" "ccsdev-db-parameters11" {
   }
 }
 
+resource "aws_db_parameter_group" "ccsdev-db-parameters14" {
+  name        = "ccsdev-db-parameters14"
+  family      = "postgres14"
+  description = "PostgreSQL 14 parameters for CCSDEV"
+
+  parameter {
+    name         = "rds.force_ssl"
+    value        = "1"
+    apply_method = "pending-reboot"
+  }
+
+  tags {
+    Name = "CCSDEV database parameters 14"
+    CCSRole = "Infrastructure"
+    CCSEnvironment = "${var.environment_name}"
+  }
+}
+
 ##############################################################
 # PostgreSQL Database Encryption key
 ##############################################################
@@ -132,7 +150,7 @@ resource "aws_db_instance" "ccsdev_default_db" {
   apply_immediately         = "${var.default_db_apply_immediately}"
   storage_type              = "gp2"
   engine                    = "postgres"
-  engine_version            = "11.8"
+  engine_version            = "14.1"
   instance_class            = "${var.default_db_instance_class}"
   name                      = "${var.default_db_name}"
   username                  = "${var.default_db_username}"
@@ -143,7 +161,7 @@ resource "aws_db_instance" "ccsdev_default_db" {
   availability_zone         = "eu-west-2a"
   vpc_security_group_ids    = ["${aws_security_group.vpc-CCSDEV-internal-PG-DB.id}"]
   db_subnet_group_name      = "${aws_db_subnet_group.ccsdev-database-subnets.id}"
-  parameter_group_name      = "${aws_db_parameter_group.ccsdev-db-parameters11.id}"
+  parameter_group_name      = "${aws_db_parameter_group.ccsdev-db-parameters14.id}"
   backup_retention_period   = "${var.default_db_retention_period}"
   backup_window             = "22:45-23:15"
   maintenance_window        = "sat:04:03-sat:04:33"

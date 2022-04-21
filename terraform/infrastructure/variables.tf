@@ -162,7 +162,7 @@ variable "create_default_rds_database" {
 }
 
 variable "default_db_instance_class" {
-  default = "db.t2.medium"
+  default = "db.t3.medium"
 }
 
 variable "default_db_storage" {
