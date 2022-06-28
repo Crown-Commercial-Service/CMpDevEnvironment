@@ -15,7 +15,6 @@
 ##############################################################
 
 resource "aws_sns_topic" "ccsdev_alarm_topic" {
-
   count = "${var.create_cloudwatch_alarms}"
 
   name = "ccsdev_${var.environment_name}_alarm"
@@ -60,7 +59,6 @@ resource "aws_sns_topic" "ccsdev_alarm_topic" {
     ]
   }
   EOF
-
 }
 
 ########################################################
@@ -68,7 +66,6 @@ resource "aws_sns_topic" "ccsdev_alarm_topic" {
 #  App Cluster CPU usage >50% for 1 minute
 ########################################################
 resource "aws_cloudwatch_metric_alarm" "service_app_cluster_cpu_high" {
-
   count = "${var.create_cloudwatch_alarms}"
 
   alarm_name          = "${var.environment_name}-APP-Cluster-CPU-High"
@@ -93,7 +90,6 @@ resource "aws_cloudwatch_metric_alarm" "service_app_cluster_cpu_high" {
 #  App Cluster response time >0.5s for 1 minute
 ########################################################
 resource "aws_cloudwatch_metric_alarm" "service_app_cluster_resp_time_high" {
-
   count = "${var.create_cloudwatch_alarms}"
 
   alarm_name          = "${var.environment_name}-APP-Cluster-Response-Time-High"
@@ -118,7 +114,6 @@ resource "aws_cloudwatch_metric_alarm" "service_app_cluster_resp_time_high" {
 #  App ALB  50x errors average > 2 for 1 minute
 ########################################################
 resource "aws_cloudwatch_metric_alarm" "service_app_cluster_50x_high" {
-
   count = "${var.create_cloudwatch_alarms}"
 
   alarm_name          = "${var.environment_name}-APP-Cluster-High-50x-Errors"
@@ -138,13 +133,11 @@ resource "aws_cloudwatch_metric_alarm" "service_app_cluster_50x_high" {
   alarm_actions = ["${aws_sns_topic.ccsdev_alarm_topic.arn}"]
 }
 
-
 ########################################################
 # Alaram:
 #  Database CPU usage > 50% for 1 minutes
 ########################################################
 resource "aws_cloudwatch_metric_alarm" "service_default_db_cpu_high" {
-
   count = "${var.create_cloudwatch_alarms}"
 
   alarm_name          = "${var.environment_name}-Default-DB-CPU-High"
@@ -165,7 +158,6 @@ resource "aws_cloudwatch_metric_alarm" "service_default_db_cpu_high" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "service_legacy_db_cpu_high" {
-
   count = "${var.create_cloudwatch_alarms}"
 
   alarm_name          = "${var.environment_name}-Legacy-DB-CPU-High"
