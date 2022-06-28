@@ -18,21 +18,23 @@ variable "environment_name" {
 }
 
 variable "shared_postcode_data_bucket" {
-  type = "string"
+  type    = "string"
   default = ""
 }
 
 variable ccs_cognito_groups {
-  type    = "map"
+  type = "map"
+
   default = {
-    "at_access" = "Apprenticeships user access",
-    "buyer" = "Buyer user access",
-    "supplier" = "Supplier user access",
-    "ccs_employee" = "CCS Employee user access",
-    "fm_access" = "Facilities Management user access",
-    "ls_access" = "Legal Services user access",
-    "mc_access" = "Management Consultancy user access",
-    "st_access" = "Supply Teachers user access"  }
+    "at_access"    = "Apprenticeships user access"
+    "buyer"        = "Buyer user access"
+    "supplier"     = "Supplier user access"
+    "ccs_employee" = "CCS Employee user access"
+    "fm_access"    = "Facilities Management user access"
+    "ls_access"    = "Legal Services user access"
+    "mc_access"    = "Management Consultancy user access"
+    "st_access"    = "Supply Teachers user access"
+  }
 }
 
 ##############################################################
@@ -64,7 +66,7 @@ variable "bastion_min_instance_count" {
 }
 
 variable "bastion_ssh_ciphers" {
-  type = "string"
+  type    = "string"
   default = ""
 }
 
@@ -77,25 +79,26 @@ variable "bastion_storage" {
 ##############################################################
 
 variable domain_name {
-  type = "string"
+  type    = "string"
   default = ""
 }
 
 variable domain_internal_prefix {
-  type = "string"
+  type    = "string"
   default = "internal"
 }
 
 variable enable_https {
-  type = "string"
+  type    = "string"
   default = true
 }
+
 ##############################################################
 # cluster settings - Application
 ##############################################################
 
 variable "app_cluster_ami" {
-   default = "ami-079ce1ec8fac4f8b0"
+  default = "ami-079ce1ec8fac4f8b0"
 }
 
 variable "app_cluster_instance_class" {
@@ -282,10 +285,10 @@ variable "clamav_port" {
 ##############################################################
 
 locals {
-  artifact_bucket_name = "ccs.${data.aws_caller_identity.current.account_id}.build-artifacts"
-  log_bucket_name = "ccs.${data.aws_caller_identity.current.account_id}.${lower(var.environment_name)}.logs"
-  app_api_bucket_name = "ccs.${data.aws_caller_identity.current.account_id}.${lower(var.environment_name)}.app-api-data"
-  assets_bucket_name = "${data.aws_caller_identity.current.account_id}-assets"
+  artifact_bucket_name   = "ccs.${data.aws_caller_identity.current.account_id}.build-artifacts"
+  log_bucket_name        = "ccs.${data.aws_caller_identity.current.account_id}.${lower(var.environment_name)}.logs"
+  app_api_bucket_name    = "ccs.${data.aws_caller_identity.current.account_id}.${lower(var.environment_name)}.app-api-data"
+  assets_bucket_name     = "${data.aws_caller_identity.current.account_id}-assets"
   s3_logging_bucket_name = "ccs.${data.aws_caller_identity.current.account_id}.s3.access-logs"
 }
 
@@ -293,86 +296,101 @@ locals {
 # ClamAV Variables
 ########################
 variable "clamav_desired_capacity" {
-  type = "string"
+  type    = "string"
   default = "1"
 }
 
 variable "clamav_maximum_capacity" {
-  type = "string"
+  type    = "string"
   default = "1"
 }
 
 variable "clamav_minimum_capacity" {
-  type = "string"
+  type    = "string"
   default = "1"
 }
 
 variable "clamav_asg_name" {
-  type = "string"
+  type    = "string"
   default = "CCSDEV_clamav_instance_autoscaling"
 }
 
 variable "clamav_ami_id" {
-  type = "string"
+  type    = "string"
   default = "ami-04436baf9a2c37d59"
 }
 
 variable "clamav_instance_type" {
-  type = "string"
+  type    = "string"
   default = "t2.medium"
 }
 
 variable "clamav_key_name" {
-  type = "string"
+  type    = "string"
   default = "ccs_bastion"
 }
 
 variable "clamav_launch_template_name" {
-  type = "string"
+  type    = "string"
   default = "CCSDEV_clamav_launch_template"
 }
 
 variable "clamav_device_name" {
-  type = "string"
+  type    = "string"
   default = "/dev/xvda"
 }
 
 variable "clamav_volume_size" {
-  type = "string"
+  type    = "string"
   default = "15"
 }
 
 variable "clamav_volume_type" {
-  type = "string"
+  type    = "string"
   default = "gp2"
 }
 
 variable "clamav_name_tag" {
-  type = "string"
+  type    = "string"
   default = "CLAM_AV"
 }
 
 variable "clamav_internal_ssh_sg_name" {
-  type = "string"
+  type    = "string"
   default = "CCSDEV-internal-ssh"
 }
 
 variable "clamav_internal_api_sg_name" {
-  type = "string"
+  type    = "string"
   default = "CCSDEV-internal-api"
 }
 
 variable "clamav_instance_profile_name" {
-  type = "string"
+  type    = "string"
   default = "CCSDEV_clamav_instance_profile"
 }
 
 variable "clamav_instance_role" {
-  type = "string"
+  type    = "string"
   default = "CCSDEV-clamav-instance-role"
 }
 
 variable "CCSDEV_clamv_subnet_id" {
-  type = "string"
+  type    = "string"
   default = "subnet-0c33ace378704ef2c"
+}
+
+####################################
+# ASG scheduled scaling variable(s)
+####################################
+variable "scale_up_cron" {
+  type        = "string"
+  description = "The time when the recurring scale up action start.Cron format"
+  default     = "00 07 * * *"
+}
+
+variable "scale_down_cron" {
+  type        = "string"
+  description = "The time when the recurring scale down action start.Cron format"
+  default     = "00 17 * * *"
 }

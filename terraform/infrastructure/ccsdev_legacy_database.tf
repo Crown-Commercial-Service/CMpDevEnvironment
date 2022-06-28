@@ -26,11 +26,11 @@
 resource "aws_db_subnet_group" "ccsdev-legacy-database-subnet-group" {
   name        = "ccsdev-legacy-database-subnet-group"
   description = "Access to CCSDEV legacy databases from private and management subnets"
-  subnet_ids  = ["${aws_subnet.CCSDEV-AZ-a-Public-1.id}","${aws_subnet.CCSDEV-AZ-b-Public-1.id}","${aws_subnet.CCSDEV-AZ-c-Public-1.id}","${aws_subnet.CCSDEV-AZ-a-Private-1.id}", "${aws_subnet.CCSDEV-AZ-b-Private-1.id}", "${aws_subnet.CCSDEV-AZ-c-Private-1.id}", "${aws_subnet.CCSDEV-AZ-a-Management.id}", "${aws_subnet.CCSDEV-AZ-b-Management.id}", "${aws_subnet.CCSDEV-AZ-c-Management.id}"]
-  
+  subnet_ids  = ["${aws_subnet.CCSDEV-AZ-a-Public-1.id}", "${aws_subnet.CCSDEV-AZ-b-Public-1.id}", "${aws_subnet.CCSDEV-AZ-c-Public-1.id}", "${aws_subnet.CCSDEV-AZ-a-Private-1.id}", "${aws_subnet.CCSDEV-AZ-b-Private-1.id}", "${aws_subnet.CCSDEV-AZ-c-Private-1.id}", "${aws_subnet.CCSDEV-AZ-a-Management.id}", "${aws_subnet.CCSDEV-AZ-b-Management.id}", "${aws_subnet.CCSDEV-AZ-c-Management.id}"]
+
   tags {
-    Name = "CCSDEV legacy database subnets"
-    CCSRole = "Infrastructure"
+    Name           = "CCSDEV legacy database subnets"
+    CCSRole        = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
 }
@@ -54,8 +54,8 @@ resource "aws_db_parameter_group" "ccsdev-legacy-db-parameters" {
   }
 
   tags {
-    Name = "CCSDEV legacy database parameters"
-    CCSRole = "Infrastructure"
+    Name           = "CCSDEV legacy database parameters"
+    CCSRole        = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
 }
@@ -72,8 +72,8 @@ resource "aws_db_parameter_group" "ccsdev-legacy-db-parameters11" {
   }
 
   tags {
-    Name = "CCSDEV legacy database parameters 11"
-    CCSRole = "Infrastructure"
+    Name           = "CCSDEV legacy database parameters 11"
+    CCSRole        = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
 }
@@ -90,8 +90,8 @@ resource "aws_db_parameter_group" "ccsdev-legacy-db-parameters14" {
   }
 
   tags {
-    Name = "CCSDEV legacy database parameters 14"
-    CCSRole = "Infrastructure"
+    Name           = "CCSDEV legacy database parameters 14"
+    CCSRole        = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
 }
@@ -121,8 +121,8 @@ resource "aws_kms_key" "ccsdev_legacy_db_key" {
   deletion_window_in_days = 10
 
   tags {
-    Name = "CCSDEV legacy database KMS key"
-    CCSRole = "Infrastructure"
+    Name           = "CCSDEV legacy database KMS key"
+    CCSRole        = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
 }
@@ -131,7 +131,6 @@ resource "aws_kms_alias" "ccsdev_legacy_db_key_alias" {
   name          = "alias/ccsdevlegacydb"
   target_key_id = "${aws_kms_key.ccsdev_legacy_db_key.key_id}"
 }
-
 
 ##############################################################
 # PostgreSQL Default Database instance
@@ -147,11 +146,11 @@ locals {
 }
 
 resource "random_string" "ccsdev_legacy_default_db_password" {
-  length = 30
+  length  = 30
   special = false
-  number = true
-  lower = true
-  upper = true
+  number  = true
+  lower   = true
+  upper   = true
 }
 
 resource "aws_db_instance" "ccsdev_legacy_default_db" {
@@ -162,7 +161,7 @@ resource "aws_db_instance" "ccsdev_legacy_default_db" {
     ignore_changes = ["final_snapshot_identifier"]
   }
 
-#  identifier                = "ccsdev-db"
+  #  identifier                = "ccsdev-db"
   identifier                = "ccsdev-legacy-db"
   allocated_storage         = "${var.default_db_storage}"
   apply_immediately         = "${var.default_db_apply_immediately}"
@@ -184,15 +183,17 @@ resource "aws_db_instance" "ccsdev_legacy_default_db" {
   backup_window             = "22:45-23:15"
   maintenance_window        = "sat:04:03-sat:04:33"
   final_snapshot_identifier = "${format("ccsdev-legacy-db-final-%s", md5(timestamp()))}"
+
   #final_snapshot_identifier = "${format("ccsdev-db-final-%s", md5(timestamp()))}"
-  storage_encrypted         = true
-  kms_key_id                = "${aws_kms_key.ccsdev_legacy_db_key.arn}"
+  storage_encrypted = true
+  kms_key_id        = "${aws_kms_key.ccsdev_legacy_db_key.arn}"
+
   #kms_key_id                = "${aws_kms_key.ccsdev_db_key.arn}"
 
   tags {
-  #  Name = "CCSDEV database"
-    Name = "CCSDEV legacy database"
-    CCSRole = "Infrastructure"
+    #  Name = "CCSDEV database"
+    Name           = "CCSDEV legacy database"
+    CCSRole        = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
 }
@@ -212,4 +213,3 @@ resource "aws_route53_record" "CCSDev-internal-legacy-db-CNAME" {
   records = ["${aws_db_instance.ccsdev_legacy_default_db.address}"]
   ttl     = "300"
 }
-

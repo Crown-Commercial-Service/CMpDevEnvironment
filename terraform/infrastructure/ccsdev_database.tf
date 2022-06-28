@@ -26,11 +26,11 @@
 resource "aws_db_subnet_group" "ccsdev-database-subnets" {
   name        = "ccsdev-database-subnets"
   description = "Access to CCSDEV databases from private and management subnets"
-  subnet_ids  = ["${aws_subnet.CCSDEV-AZ-a-Public-1.id}","${aws_subnet.CCSDEV-AZ-b-Public-1.id}","${aws_subnet.CCSDEV-AZ-c-Public-1.id}","${aws_subnet.CCSDEV-AZ-a-Private-1.id}", "${aws_subnet.CCSDEV-AZ-b-Private-1.id}", "${aws_subnet.CCSDEV-AZ-c-Private-1.id}", "${aws_subnet.CCSDEV-AZ-a-Management.id}", "${aws_subnet.CCSDEV-AZ-b-Management.id}", "${aws_subnet.CCSDEV-AZ-c-Management.id}"]
-  
+  subnet_ids  = ["${aws_subnet.CCSDEV-AZ-a-Public-1.id}", "${aws_subnet.CCSDEV-AZ-b-Public-1.id}", "${aws_subnet.CCSDEV-AZ-c-Public-1.id}", "${aws_subnet.CCSDEV-AZ-a-Private-1.id}", "${aws_subnet.CCSDEV-AZ-b-Private-1.id}", "${aws_subnet.CCSDEV-AZ-c-Private-1.id}", "${aws_subnet.CCSDEV-AZ-a-Management.id}", "${aws_subnet.CCSDEV-AZ-b-Management.id}", "${aws_subnet.CCSDEV-AZ-c-Management.id}"]
+
   tags {
-    Name = "CCSDEV database subnets"
-    CCSRole = "Infrastructure"
+    Name           = "CCSDEV database subnets"
+    CCSRole        = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
 }
@@ -54,8 +54,8 @@ resource "aws_db_parameter_group" "ccsdev-db-parameters" {
   }
 
   tags {
-    Name = "CCSDEV database parameters"
-    CCSRole = "Infrastructure"
+    Name           = "CCSDEV database parameters"
+    CCSRole        = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
 }
@@ -72,8 +72,8 @@ resource "aws_db_parameter_group" "ccsdev-db-parameters11" {
   }
 
   tags {
-    Name = "CCSDEV database parameters 11"
-    CCSRole = "Infrastructure"
+    Name           = "CCSDEV database parameters 11"
+    CCSRole        = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
 }
@@ -90,8 +90,8 @@ resource "aws_db_parameter_group" "ccsdev-db-parameters14" {
   }
 
   tags {
-    Name = "CCSDEV database parameters 14"
-    CCSRole = "Infrastructure"
+    Name           = "CCSDEV database parameters 14"
+    CCSRole        = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
 }
@@ -105,8 +105,8 @@ resource "aws_kms_key" "ccsdev_db_key" {
   deletion_window_in_days = 10
 
   tags {
-    Name = "CCSDEV database KMS key"
-    CCSRole = "Infrastructure"
+    Name           = "CCSDEV database KMS key"
+    CCSRole        = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
 }
@@ -130,11 +130,11 @@ locals {
 }
 
 resource "random_string" "ccsdev_default_db_password" {
-  length = 30
+  length  = 30
   special = false
-  number = true
-  lower = true
-  upper = true
+  number  = true
+  lower   = true
+  upper   = true
 }
 
 resource "aws_db_instance" "ccsdev_default_db" {
@@ -170,8 +170,8 @@ resource "aws_db_instance" "ccsdev_default_db" {
   kms_key_id                = "${aws_kms_key.ccsdev_db_key.arn}"
 
   tags {
-    Name = "CCSDEV database"
-    CCSRole = "Infrastructure"
+    Name           = "CCSDEV database"
+    CCSRole        = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
 }

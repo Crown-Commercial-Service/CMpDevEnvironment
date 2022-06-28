@@ -21,8 +21,8 @@ resource "aws_vpc" "CCSDEV-Services" {
   instance_tenancy     = "default"
 
   tags {
-    Name = "CCSDEV Services"
-    CCSRole = "Infrastructure"
+    Name           = "CCSDEV Services"
+    CCSRole        = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
 }
@@ -38,8 +38,8 @@ resource "aws_subnet" "CCSDEV-AZ-a-Management" {
   map_public_ip_on_launch = false
 
   tags {
-    Name = "CCSDEV-AZ-a-Management"
-    CCSRole = "Infrastructure"
+    Name           = "CCSDEV-AZ-a-Management"
+    CCSRole        = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
 }
@@ -51,8 +51,8 @@ resource "aws_subnet" "CCSDEV-AZ-b-Management" {
   map_public_ip_on_launch = false
 
   tags {
-    Name = "CCSDEV-AZ-b-Management"
-    CCSRole = "Infrastructure"
+    Name           = "CCSDEV-AZ-b-Management"
+    CCSRole        = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
 }
@@ -64,8 +64,8 @@ resource "aws_subnet" "CCSDEV-AZ-c-Management" {
   map_public_ip_on_launch = false
 
   tags {
-    Name = "CCSDEV-AZ-c-Management"
-    CCSRole = "Infrastructure"
+    Name           = "CCSDEV-AZ-c-Management"
+    CCSRole        = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
 }
@@ -81,8 +81,8 @@ resource "aws_subnet" "CCSDEV-AZ-a-Public-1" {
   map_public_ip_on_launch = false
 
   tags {
-    Name = "CCSDEV-AZ-a-Public-1"
-    CCSRole = "Infrastructure"
+    Name           = "CCSDEV-AZ-a-Public-1"
+    CCSRole        = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
 }
@@ -94,8 +94,8 @@ resource "aws_subnet" "CCSDEV-AZ-b-Public-1" {
   map_public_ip_on_launch = false
 
   tags {
-    Name = "CCSDEV-AZ-b-Public-1"
-    CCSRole = "Infrastructure"
+    Name           = "CCSDEV-AZ-b-Public-1"
+    CCSRole        = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
 }
@@ -107,8 +107,8 @@ resource "aws_subnet" "CCSDEV-AZ-c-Public-1" {
   map_public_ip_on_launch = false
 
   tags {
-    Name = "CCSDEV-AZ-c-Public-1"
-    CCSRole = "Infrastructure"
+    Name           = "CCSDEV-AZ-c-Public-1"
+    CCSRole        = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
 }
@@ -124,8 +124,8 @@ resource "aws_subnet" "CCSDEV-AZ-a-Private-1" {
   map_public_ip_on_launch = false
 
   tags {
-    Name = "CCSDEV-AZ-a-Private-1"
-    CCSRole = "Infrastructure"
+    Name           = "CCSDEV-AZ-a-Private-1"
+    CCSRole        = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
 }
@@ -137,8 +137,8 @@ resource "aws_subnet" "CCSDEV-AZ-b-Private-1" {
   map_public_ip_on_launch = false
 
   tags {
-    Name = "CCSDEV-AZ-b-Private-1"
-    CCSRole = "Infrastructure"
+    Name           = "CCSDEV-AZ-b-Private-1"
+    CCSRole        = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
 }
@@ -150,8 +150,8 @@ resource "aws_subnet" "CCSDEV-AZ-c-Private-1" {
   map_public_ip_on_launch = false
 
   tags {
-    Name = "CCSDEV-AZ-c-Private-1"
-    CCSRole = "Infrastructure"
+    Name           = "CCSDEV-AZ-c-Private-1"
+    CCSRole        = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
 }
@@ -165,8 +165,8 @@ resource "aws_network_acl" "acl-0a4ad1624819281ff" {
   subnet_ids = ["${aws_subnet.CCSDEV-AZ-a-Management.id}", "${aws_subnet.CCSDEV-AZ-b-Management.id}", "${aws_subnet.CCSDEV-AZ-c-Management.id}", "${aws_subnet.CCSDEV-AZ-a-Public-1.id}", "${aws_subnet.CCSDEV-AZ-b-Public-1.id}", "${aws_subnet.CCSDEV-AZ-c-Public-1.id}", "${aws_subnet.CCSDEV-AZ-a-Private-1.id}", "${aws_subnet.CCSDEV-AZ-b-Private-1.id}", "${aws_subnet.CCSDEV-AZ-c-Private-1.id}"]
 
   tags {
-    Name = "CCSDEV VPC Access Control List"
-    CCSRole = "Infrastructure"
+    Name           = "CCSDEV VPC Access Control List"
+    CCSRole        = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
 }
@@ -301,8 +301,8 @@ resource "aws_internet_gateway" "CCSDEV-Internet-Gateway" {
   vpc_id = "${aws_vpc.CCSDEV-Services.id}"
 
   tags {
-    Name = "CCSDEV Internet Gateway"
-    CCSRole = "Infrastructure"
+    Name           = "CCSDEV Internet Gateway"
+    CCSRole        = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
 }
@@ -315,8 +315,8 @@ resource "aws_eip" "CCSDEV-NAT-a-EIP" {
   vpc = true
 
   tags {
-    Name = "CCSDEV-NAT-a-EIP"
-    CCSRole = "Infrastructure"
+    Name           = "CCSDEV-NAT-a-EIP"
+    CCSRole        = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
 }
@@ -331,8 +331,8 @@ resource "aws_nat_gateway" "CCSDEV-NAT-a-Gateway" {
   subnet_id     = "${aws_subnet.CCSDEV-AZ-a-Public-1.id}"
 
   tags {
-    Name = "CCSDEV-NAT-a-Gateway"
-    CCSRole = "Infrastructure"
+    Name           = "CCSDEV-NAT-a-Gateway"
+    CCSRole        = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
 }
@@ -345,8 +345,8 @@ resource "aws_route_table" "CCSDEV-Main-Route-Table" {
   vpc_id = "${aws_vpc.CCSDEV-Services.id}"
 
   tags {
-    Name = "CCSDEV Main Route Table"
-    CCSRole = "Infrastructure"
+    Name           = "CCSDEV Main Route Table"
+    CCSRole        = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
 }
@@ -365,8 +365,8 @@ resource "aws_route_table" "CCSDEV-IG-Route-Table" {
   }
 
   tags {
-    Name = "CCSDEV IG Route Table"
-    CCSRole = "Infrastructure"
+    Name           = "CCSDEV IG Route Table"
+    CCSRole        = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
 }
@@ -380,8 +380,8 @@ resource "aws_route_table" "CCSDEV-NAT-a-Route-Table" {
   }
 
   tags {
-    Name = "CCSDEV NAT a Route Table"
-    CCSRole = "Infrastructure"
+    Name           = "CCSDEV NAT a Route Table"
+    CCSRole        = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
 }
@@ -454,30 +454,31 @@ data "aws_route53_zone" "public_cluster_https_domain" {
 }
 
 resource "aws_route53_zone" "ccsdev-internal-org-private" {
-  name       = "${var.domain_internal_prefix}.${var.domain_name}"
-  comment    = "Internal DNS for CCSDEV VPC"
+  name    = "${var.domain_internal_prefix}.${var.domain_name}"
+  comment = "Internal DNS for CCSDEV VPC"
+
   vpc {
     vpc_id     = "${aws_vpc.CCSDEV-Services.id}"
     vpc_region = "eu-west-2"
   }
 
   tags {
-    Name = "Internal DNS for CCSDEV VPC"
-    CCSRole = "Infrastructure"
+    Name           = "Internal DNS for CCSDEV VPC"
+    CCSRole        = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
 }
 
 resource "aws_route53_zone" "ccsdev-internal-org-public" {
-  count      = "${var.enable_https}"
-  name       = "${var.domain_internal_prefix}.${var.domain_name}"
-  comment    = "Public DNS for CCSDEV VPC"
+  count   = "${var.enable_https}"
+  name    = "${var.domain_internal_prefix}.${var.domain_name}"
+  comment = "Public DNS for CCSDEV VPC"
 
   tags {
-    Name = "Public DNS for CCSDEV VPC"
-    CCSRole = "Infrastructure"
+    Name           = "Public DNS for CCSDEV VPC"
+    CCSRole        = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
- }
+  }
 }
 
 resource "aws_route53_record" "ccsdev-internal-org-public-ns" {
