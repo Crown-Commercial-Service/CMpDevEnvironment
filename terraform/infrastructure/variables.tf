@@ -379,3 +379,18 @@ variable "CCSDEV_clamv_subnet_id" {
   type    = "string"
   default = "subnet-0c33ace378704ef2c"
 }
+
+####################################
+# ASG scheduled scaling variable(s)
+####################################
+variable "scale_up_cron" {
+  type        = "string"
+  description = "The time when the recurring scale up action start.Cron format"
+  default     = "00 07 * * *"
+}
+
+variable "scale_down_cron" {
+  type        = "string"
+  description = "The time when the recurring scale down action start.Cron format"
+  default     = "00 17 * * *"
+}
