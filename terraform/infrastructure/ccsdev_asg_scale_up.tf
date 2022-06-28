@@ -7,7 +7,7 @@ module "ccsdev_scale_up_asg" {
   scale_up_cron    = "${var.scale_up_cron}"
 }
 
-module "dfp-modules_app_scale_up_asg" {
+module "ccsdev_app_scale_up_asg" {
   source           = "ccs-terraform/dfp-modules/aws//modules/app_scale_up_asg"
   version          = "1.0.0"
   min_size         = 3
