@@ -1,4 +1,4 @@
-module "dfp-modules_scale_up_asg" {
+module "ccsdev_scale_up_asg" {
   source           = "ccs-terraform/dfp-modules/aws//modules/scale_up_asg"
   version          = "1.0.0"
   min_size         = 1
