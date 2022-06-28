@@ -23,7 +23,7 @@
 #
 ##############################################################
 locals {
-    region = "eu-west-2"
+  region = "eu-west-2"
 }
 
 ##############################################################
@@ -31,9 +31,7 @@ locals {
 # Note Random guid for external id
 ##############################################################
 
-resource "random_uuid" "CCSDEV_userpool_role_external_id" {
-
-}
+resource "random_uuid" "CCSDEV_userpool_role_external_id" {}
 
 resource "aws_iam_role" "CCSDEV_userpool_role" {
   name               = "CCSDEV-cognito-userpool-role"
@@ -52,9 +50,9 @@ data "aws_iam_policy_document" "CCSDEV_userpool_role_trust_policy" {
     }
 
     condition {
-      test        = "StringEquals"
-      variable    = "sts:ExternalId"
-      values      = ["${random_uuid.CCSDEV_userpool_role_external_id.result}"]
+      test     = "StringEquals"
+      variable = "sts:ExternalId"
+      values   = ["${random_uuid.CCSDEV_userpool_role_external_id.result}"]
     }
   }
 }
@@ -71,66 +69,64 @@ resource "aws_iam_policy" "CCSDEV_userpool_role_policy" {
 }
 
 data "aws_iam_policy_document" "CCSDEV_userpool_role_policy_document" {
-
   statement {
-
     actions = [
-      "sns:publish"
+      "sns:publish",
     ]
 
     resources = [
-		"*"
+      "*",
     ]
   }
-
 }
-
 
 ##############################################################
 # Basic user pool using email verification. THe user name
 # must be an email address.
 ##############################################################
 resource "aws_cognito_user_pool" "ccs_user_pool" {
-    name = "ccs_user_pool"
-    username_attributes = ["email"]
-    auto_verified_attributes = ["email"]
-    email_verification_subject = "Crown Commercial Service Verification Code"
-    email_verification_message = "<p>Hello,</p><p>Your Crown Commercial Service verification code is: <strong>{####}</strong></p><p>You must use this code within 24 hours of receiving this email.</p><p>Kind regards,<br>Customer Services Team<br>Crown Commercial Service</p>"
+  name                       = "ccs_user_pool"
+  username_attributes        = ["email"]
+  auto_verified_attributes   = ["email"]
+  email_verification_subject = "Crown Commercial Service Verification Code"
+  email_verification_message = "<p>Hello,</p><p>Your Crown Commercial Service verification code is: <strong>{####}</strong></p><p>You must use this code within 24 hours of receiving this email.</p><p>Kind regards,<br>Customer Services Team<br>Crown Commercial Service</p>"
 
-    # Support optional MFA via SMS
-    mfa_configuration = "OPTIONAL"
-    sms_configuration {
-       external_id = "${random_uuid.CCSDEV_userpool_role_external_id.result}" 
-       sns_caller_arn = "${aws_iam_role.CCSDEV_userpool_role.arn}" 
-    }
+  # Support optional MFA via SMS
+  mfa_configuration = "OPTIONAL"
 
-    # User self-registration enabled, set to true to prevent self-registration.
-    admin_create_user_config {
-      allow_admin_create_user_only = false
-      invite_message_template {
-        email_subject = "Crown Marketplace - Your temporary password"
-        email_message = "<p>Welcome to the Crown Marketplace.</p><p>Your username is {username} and temporary password is {####}</p><p><strong>NOTE.</strong>Your username is case-sensitive.</p><p>Access the site at https://cmp.cmpdev.crowncommercial.gov.uk/.</p>"
-        sms_message = "Welcome to the Crown Marketplace. Your username is {username} and temporary password is {####}"
-      }
-    }
+  sms_configuration {
+    external_id    = "${random_uuid.CCSDEV_userpool_role_external_id.result}"
+    sns_caller_arn = "${aws_iam_role.CCSDEV_userpool_role.arn}"
+  }
 
-    # Set basic password restrictions
-    password_policy {
-        minimum_length    = 8
-        require_lowercase = true
-        require_numbers   = true
-        require_symbols   = true
-        require_uppercase = true
-    }
+  # User self-registration enabled, set to true to prevent self-registration.
+  admin_create_user_config {
+    allow_admin_create_user_only = false
 
-    lambda_config {
-        pre_sign_up = "${aws_lambda_function.ccsdev-pre-sign-up-function.arn}"
+    invite_message_template {
+      email_subject = "Crown Marketplace - Your temporary password"
+      email_message = "<p>Welcome to the Crown Marketplace.</p><p>Your username is {username} and temporary password is {####}</p><p><strong>NOTE.</strong>Your username is case-sensitive.</p><p>Access the site at https://cmp.cmpdev.crowncommercial.gov.uk/.</p>"
+      sms_message   = "Welcome to the Crown Marketplace. Your username is {username} and temporary password is {####}"
     }
+  }
 
-    tags {
-        Name = "CCSDEV Services"
-        CCSRole = "Infrastructure"
-    }
+  # Set basic password restrictions
+  password_policy {
+    minimum_length    = 8
+    require_lowercase = true
+    require_numbers   = true
+    require_symbols   = true
+    require_uppercase = true
+  }
+
+  lambda_config {
+    pre_sign_up = "${aws_lambda_function.ccsdev-pre-sign-up-function.arn}"
+  }
+
+  tags {
+    Name    = "CCSDEV Services"
+    CCSRole = "Infrastructure"
+  }
 }
 
 ##############################################################
@@ -148,7 +144,7 @@ resource "aws_cognito_user_group" "ccs_user_pool_groups" {
 # Domain using the current AWS account ID
 ##############################################################
 resource "aws_cognito_user_pool_domain" "ccs_cmp_domain" {
-  domain = "${data.aws_caller_identity.current.account_id}"
+  domain       = "${data.aws_caller_identity.current.account_id}"
   user_pool_id = "${aws_cognito_user_pool.ccs_user_pool.id}"
 }
 
@@ -157,37 +153,37 @@ resource "aws_cognito_user_pool_domain" "ccs_cmp_domain" {
 # environment variables.
 ##############################################################
 resource "aws_ssm_parameter" "cognito_aws_region" {
-  name  = "/Environment/global/COGNITO_AWS_REGION"
-  description  = "Infrastructure configured AWS Region for Cognito"
-  type  = "SecureString"
-  value = "${local.region}"
+  name        = "/Environment/global/COGNITO_AWS_REGION"
+  description = "Infrastructure configured AWS Region for Cognito"
+  type        = "SecureString"
+  value       = "${local.region}"
 
   tags {
-    Name = "Parameter Store: Infrastructure configured AWS Region for Cognito"
+    Name    = "Parameter Store: Infrastructure configured AWS Region for Cognito"
     CCSRole = "Infrastructure"
   }
 }
 
 resource "aws_ssm_parameter" "cognito_user_pool_id" {
-  name  = "/Environment/global/COGNITO_USER_POOL_ID"
-  description  = "Infrastructure configured AWS Cognito User Pool ID"
-  type  = "SecureString"
-  value = "${aws_cognito_user_pool.ccs_user_pool.id}"
+  name        = "/Environment/global/COGNITO_USER_POOL_ID"
+  description = "Infrastructure configured AWS Cognito User Pool ID"
+  type        = "SecureString"
+  value       = "${aws_cognito_user_pool.ccs_user_pool.id}"
 
   tags {
-    Name = "Parameter Store: Infrastructure configured AWS Cognito User Pool ID"
+    Name    = "Parameter Store: Infrastructure configured AWS Cognito User Pool ID"
     CCSRole = "Infrastructure"
   }
 }
 
 resource "aws_ssm_parameter" "cognito_user_pool_site" {
-  name  = "/Environment/global/COGNITO_USER_POOL_SITE"
-  description  = "Infrastructure configured AWS Cognito Pool site"
-  type  = "SecureString"
-  value = "https://${aws_cognito_user_pool_domain.ccs_cmp_domain.domain}.auth.${local.region}.amazoncognito.com"
+  name        = "/Environment/global/COGNITO_USER_POOL_SITE"
+  description = "Infrastructure configured AWS Cognito Pool site"
+  type        = "SecureString"
+  value       = "https://${aws_cognito_user_pool_domain.ccs_cmp_domain.domain}.auth.${local.region}.amazoncognito.com"
 
   tags {
-    Name = "Parameter Store: Infrastructure configured AWS Cognito Pool site"
+    Name    = "Parameter Store: Infrastructure configured AWS Cognito Pool site"
     CCSRole = "Infrastructure"
   }
 }
@@ -203,7 +199,6 @@ resource "aws_ssm_parameter" "cognito_user_pool_site" {
 resource "aws_iam_group_policy_attachment" "cognito_api-access" {
   group      = "CCS_Developer_API_Access"
   policy_arn = "arn:aws:iam::aws:policy/AmazonCognitoPowerUser"
-
 }
 
 resource "aws_iam_role_policy_attachment" "CCSDEV_task_role_attachment_cognito_api" {
