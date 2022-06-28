@@ -49,13 +49,13 @@ EOF
 }
 
 resource "aws_lambda_function" "ccsdev-pre-sign-up-function" {
-  filename = "${data.archive_file.presignup-lambda.output_path}"
-  function_name = "ccsdev-pre-sign-up-function"
-  role = "${aws_iam_role.ccsdev-lambda-exec.arn}"
-  handler = "presignup.handler"
-  runtime = "nodejs10.x"
+  filename         = "${data.archive_file.presignup-lambda.output_path}"
+  function_name    = "ccsdev-pre-sign-up-function"
+  role             = "${aws_iam_role.ccsdev-lambda-exec.arn}"
+  handler          = "presignup.handler"
+  runtime          = "nodejs10.x"
   source_code_hash = "${base64sha256(file("${data.archive_file.presignup-lambda.output_path}"))}"
-  publish = true
+  publish          = true
 }
 
 # Ensure the The Cognito user pool is allowed to invoke the function
@@ -65,5 +65,5 @@ resource "aws_lambda_permission" "ccsdev-pre-sign-up-permission" {
   function_name = "${aws_lambda_function.ccsdev-pre-sign-up-function.function_name}"
   principal     = "cognito-idp.amazonaws.com"
 
-  source_arn    = "${aws_cognito_user_pool.ccs_user_pool.arn}"
+  source_arn = "${aws_cognito_user_pool.ccs_user_pool.arn}"
 }
