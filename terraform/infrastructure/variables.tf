@@ -67,7 +67,7 @@ variable "bastion_min_instance_count" {
 
 variable "bastion_ssh_ciphers" {
   type    = "string"
-  default = ""
+  default = "aes128-ctr,aes192-ctr,aes256-ctr,arcfour256,arcfour128,aes128-gcm@openssh.com,aes256-gcm@openssh.com,chacha20-poly1305@openssh.com,arcfour"
 }
 
 variable "bastion_storage" {
