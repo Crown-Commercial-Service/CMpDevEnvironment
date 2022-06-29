@@ -26,12 +26,13 @@ data "template_file" "CCSDEV_bastion_cluster_user_data" {
 }
 
 resource "aws_autoscaling_group" "CCSDEV_bastion_cluster_autoscaling_group" {
-  desired_capacity = "${var.bastion_desired_instance_count}"
-  max_size         = "${var.bastion_max_instance_count}"
-  min_size         = "${var.bastion_min_instance_count}"
+  desired_capacity     = "${var.bastion_desired_instance_count}"
+  max_size             = "${var.bastion_max_instance_count}"
+  min_size             = "${var.bastion_min_instance_count}"
+  termination_policies = ["OldestInstance"]
 
   name                  = "CCSDEV_bastion_cluster_scaling"
-  protect_from_scale_in = true
+  protect_from_scale_in = false
   vpc_zone_identifier   = ["${aws_subnet.CCSDEV-AZ-a-Management.id}"]
 
   launch_template {
