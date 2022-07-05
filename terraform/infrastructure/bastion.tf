@@ -13,6 +13,32 @@ data "aws_iam_policy_document" "CCSDEV_bastion_cluster_instance_policy" {
   }
 }
 
+data "aws_iam_policy_document" "CCSDEV_bastion_elastic_ip_policy_document" {
+  version = "2012-10-17"
+
+  statement {
+    actions = [
+      "ec2:DisassociateAddress",
+      "ec2:AssignPrivateIpAddresses",
+      "ec2:AssociateAddress",
+      "ec2:DescribeAddresses",
+    ]
+
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_policy" "CCSDEV_bastion_elastic_ip_policy" {
+  name   = "elastic_ip_policy"
+  path   = "/"
+  policy = "${data.aws_iam_policy_document.CCSDEV_bastion_elastic_ip_policy_document.json}"
+}
+
+resource "aws_iam_role_policy_attachment" "CCSDEV_bastion_elastic_ip_policy_attachment" {
+  role       = "${aws_iam_role.CCSDEV_app_cluster_instance_role.name}"
+  policy_arn = "${aws_iam_policy.CCSDEV_bastion_elastic_ip_policy.arn}"
+}
+
 data "aws_security_group" "CCSDEV_external_ssh" {
   name = "CCSDEV-external-ssh"
 }
