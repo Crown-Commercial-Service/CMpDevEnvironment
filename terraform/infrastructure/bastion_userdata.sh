@@ -1,7 +1,7 @@
 #!/bin/sh
 
-# Update yum packages & Install jq
-yum update -y && yum install jq -y
+# Install jq
+yum install jq -y
 
 # Update ssh ciphers and restart ssh service
 echo Ciphers ${ssh_ciphers} | sudo tee -a /etc/ssh/sshd_config
