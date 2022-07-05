@@ -80,7 +80,7 @@ variable "bastion_storage" {
 
 variable domain_name {
   type    = "string"
-  default = ""
+  default = "cmp-sandbox.crowncommercial.gov.uk"
 }
 
 variable domain_internal_prefix {
