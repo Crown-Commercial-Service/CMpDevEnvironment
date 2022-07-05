@@ -6,7 +6,7 @@ systemctl restart sshd
 
 # Associate elastic ip to instance
 instance_id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
-allocation_id=eipalloc-0baf119ca82747098
+allocation_id=$(aws ssm get-parameter --name /eip/allocation-id)
 region=eu-west-2
 
 aws ec2 associate-address --instance-id $instance_id --allocation-id $allocation_id --allow-reassociation --region $region
