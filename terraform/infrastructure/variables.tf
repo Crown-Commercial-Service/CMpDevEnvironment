@@ -386,11 +386,11 @@ variable "CCSDEV_clamv_subnet_id" {
 variable "scale_up_cron" {
   type        = "string"
   description = "The time when the recurring scale up action start.Cron format"
-  default     = "00 07 * * *"
+  default     = "00 08 * * MON-FRI"
 }
 
 variable "scale_down_cron" {
   type        = "string"
   description = "The time when the recurring scale down action start.Cron format"
-  default     = "00 17 * * *"
+  default     = "00 18 * * MON-FRI"
 }
