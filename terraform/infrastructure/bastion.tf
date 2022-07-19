@@ -25,6 +25,33 @@ data "template_file" "CCSDEV_bastion_cluster_user_data" {
   }
 }
 
+data "aws_iam_policy_document" "CCSDEV_bastion_elastic_ip_policy_document" {
+  version = "2012-10-17"
+
+  statement {
+    actions = [
+      "ec2:DisassociateAddress",
+      "ec2:AssignPrivateIpAddresses",
+      "ec2:AssociateAddress",
+      "ec2:DescribeAddresses",
+    ]
+
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_policy" "CCSDEV_bastion_elastic_ip_policy" {
+  name   = "elastic_ip_policy"
+  path   = "/"
+  policy = "${data.aws_iam_policy_document.CCSDEV_bastion_elastic_ip_policy_document.json}"
+}
+
+resource "aws_iam_role_policy_attachment" "CCSDEV_bastion_elastic_ip_policy_attachment" {
+  role       = "${aws_iam_role.CCSDEV_app_cluster_instance_role.name}"
+  policy_arn = "${aws_iam_policy.CCSDEV_bastion_elastic_ip_policy.arn}"
+}
+
+
 resource "aws_autoscaling_group" "CCSDEV_bastion_cluster_autoscaling_group" {
   desired_capacity = "${var.bastion_desired_instance_count}"
   max_size         = "${var.bastion_max_instance_count}"
