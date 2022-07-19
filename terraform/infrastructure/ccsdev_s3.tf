@@ -31,8 +31,8 @@ resource "aws_s3_bucket" "build-artifacts" {
   }
 
   tags {
-    Name = "CCSDEV Build Artifacts bucket"
-    CCSRole = "Infrastructure"
+    Name           = "CCSDEV Build Artifacts bucket"
+    CCSRole        = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
 
@@ -47,7 +47,7 @@ data "aws_iam_policy_document" "build_artifacts_policy" {
 
     principals {
       identifiers = ["*"]
-      type = "*"
+      type        = "*"
     }
 
     actions = [
@@ -80,9 +80,8 @@ resource "aws_s3_bucket_policy" "attach_secure_transport_policy_to_build_artifac
 ##############################################################
 data "aws_iam_policy_document" "log_policy_document" {
   statement {
-
     principals = {
-      type = "AWS"
+      type        = "AWS"
       identifiers = ["652711504416"] # eu-west-2 ALB ID
     }
 
@@ -98,7 +97,7 @@ data "aws_iam_policy_document" "log_policy_document" {
 
     principals {
       identifiers = ["*"]
-      type = "*"
+      type        = "*"
     }
 
     actions = [
@@ -133,7 +132,7 @@ resource "aws_s3_bucket" "logs" {
 
   lifecycle_rule {
     enabled = true
-    prefix = "alb/" # Shorter rule for ALB logs
+    prefix  = "alb/" # Shorter rule for ALB logs
 
     expiration {
       days = 1
@@ -156,8 +155,8 @@ resource "aws_s3_bucket" "logs" {
   policy = "${data.aws_iam_policy_document.log_policy_document.json}"
 
   tags {
-    Name = "CCSDEV Logs bucket"
-    CCSRole = "Infrastructure"
+    Name           = "CCSDEV Logs bucket"
+    CCSRole        = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
 }
@@ -183,8 +182,8 @@ resource "aws_s3_bucket" "app-api-data-bucket" {
   }
 
   tags {
-    Name = "CCSDEV Application/API data bucket"
-    CCSRole = "Infrastructure"
+    Name           = "CCSDEV Application/API data bucket"
+    CCSRole        = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
 
@@ -199,7 +198,7 @@ data "aws_iam_policy_document" "app_api_data_policy" {
 
     principals {
       identifiers = ["*"]
-      type = "*"
+      type        = "*"
     }
 
     actions = [
@@ -247,33 +246,36 @@ resource "aws_iam_role_policy_attachment" "task-role-assets-bucket-policy-attach
 }
 
 data "aws_iam_policy_document" "CCSDEV_assets_bucket_policy_doc" {
-
   statement {
-    effect = "Allow",
+    effect = "Allow"
+
     actions = [
       "s3:ListBucket",
     ]
+
     resources = [
-      "${aws_s3_bucket.assets-bucket.arn}"
+      "${aws_s3_bucket.assets-bucket.arn}",
     ]
   }
 
   statement {
-    effect = "Allow",
+    effect = "Allow"
+
     actions = [
       "s3:PutObject*",
     ]
+
     resources = [
-      "${aws_s3_bucket.assets-bucket.arn}/*"
+      "${aws_s3_bucket.assets-bucket.arn}/*",
     ]
   }
-
 }
 
 resource "aws_s3_bucket" "assets-bucket" {
   bucket = "${local.assets_bucket_name}"
-  
-  acl    = "public-read"
+
+  acl = "public-read"
+
   #grant {
   #  type        = "Group"
   #  uri         = "http://acs.amazonaws.com/groups/global/AllUsers"
@@ -284,7 +286,6 @@ resource "aws_s3_bucket" "assets-bucket" {
     target_bucket = "${data.aws_s3_bucket.s3_logging_bucket.id}"
     target_prefix = "Logs/"
   }
-
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {
@@ -292,13 +293,11 @@ resource "aws_s3_bucket" "assets-bucket" {
       }
     }
   }
-
   tags {
-    Name = "CCSDEV Application/assets bucket"
-    CCSRole = "Infrastructure"
+    Name           = "CCSDEV Application/assets bucket"
+    CCSRole        = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
-
   versioning {
     enabled = true
   }
@@ -310,7 +309,7 @@ data "aws_iam_policy_document" "assets_bucket_policy" {
 
     principals {
       identifiers = ["*"]
-      type = "*"
+      type        = "*"
     }
 
     actions = [
@@ -338,7 +337,6 @@ resource "aws_s3_bucket_policy" "attach_secure_transport_policy_to_assets_bucket
   policy = "${data.aws_iam_policy_document.assets_bucket_policy.json}"
 }
 
-
 ##############################################################
 # Add custom policy to CCS_Developer_API_Access group and
 # the container task role to
@@ -362,20 +360,18 @@ resource "aws_iam_policy" "CCSDEV_app_api_data_bucket_policy" {
 }
 
 data "aws_iam_policy_document" "CCSDEV_app_api_data_bucket_policy_doc" {
-
   statement {
+    effect = "Allow"
 
-    effect = "Allow",
     actions = [
-                "s3:*",
+      "s3:*",
     ]
 
     resources = [
-                "${aws_s3_bucket.app-api-data-bucket.arn}",
-                "${aws_s3_bucket.app-api-data-bucket.arn}/*"
+      "${aws_s3_bucket.app-api-data-bucket.arn}",
+      "${aws_s3_bucket.app-api-data-bucket.arn}/*",
     ]
   }
-
 }
 
 resource "aws_iam_group_policy_attachment" "postcode-data-bucket-access" {
@@ -395,20 +391,16 @@ resource "aws_iam_policy" "CCSDEV_postcode_data_bucket_policy" {
 }
 
 data "aws_iam_policy_document" "CCSDEV_postcode_data_bucket_policy_doc" {
-
   statement {
+    effect = "Allow"
 
-    effect = "Allow",
     actions = [
-                "s3:*",
+      "s3:*",
     ]
 
     resources = [
-                "${var.shared_postcode_data_bucket}",
-                "${var.shared_postcode_data_bucket}/*"
+      "${var.shared_postcode_data_bucket}",
+      "${var.shared_postcode_data_bucket}/*",
     ]
   }
-
 }
-
-
