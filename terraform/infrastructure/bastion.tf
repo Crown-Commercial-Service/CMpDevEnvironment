@@ -51,14 +51,13 @@ resource "aws_iam_role_policy_attachment" "CCSDEV_bastion_elastic_ip_policy_atta
   policy_arn = "${aws_iam_policy.CCSDEV_bastion_elastic_ip_policy.arn}"
 }
 
-
 resource "aws_autoscaling_group" "CCSDEV_bastion_cluster_autoscaling_group" {
   desired_capacity = "${var.bastion_desired_instance_count}"
   max_size         = "${var.bastion_max_instance_count}"
   min_size         = "${var.bastion_min_instance_count}"
 
   name                  = "CCSDEV_bastion_cluster_scaling"
-  protect_from_scale_in = true
+  protect_from_scale_in = false
   vpc_zone_identifier   = ["${aws_subnet.CCSDEV-AZ-a-Management.id}"]
 
   launch_template {
