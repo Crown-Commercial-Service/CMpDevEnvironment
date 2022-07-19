@@ -392,5 +392,5 @@ variable "scale_up_cron" {
 variable "scale_down_cron" {
   type        = "string"
   description = "The time when the recurring scale down action start.Cron format"
-  default     = "00 13 * * MON-SAT"
+  default     = "00 18 * * MON-THU"
 }
