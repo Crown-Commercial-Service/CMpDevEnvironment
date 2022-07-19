@@ -5,7 +5,6 @@
 ##############################################################
 
 resource "aws_cloudwatch_dashboard" "CCSDEV-Dashboard" {
-
   dashboard_name = "CCS-CMp-${var.environment_name}"
 
   dashboard_body = <<EOF
