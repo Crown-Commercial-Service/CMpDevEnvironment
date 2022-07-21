@@ -70,6 +70,11 @@ variable "bastion_ssh_ciphers" {
   default = "aes128-ctr,aes192-ctr,aes256-ctr,aes128-gcm@openssh.com,aes256-gcm@openssh.com,chacha20-poly1305@openssh.com"
 }
 
+variable "bastion_ssh_keyexchange_algorithms" {
+  type    = "string"
+  default = "curve25519-sha256@libssh.org,ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256,diffie-hellman-group-exchange-sha256"
+}
+
 variable "bastion_storage" {
   default = 8
 }
