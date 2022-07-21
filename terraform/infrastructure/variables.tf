@@ -67,7 +67,17 @@ variable "bastion_min_instance_count" {
 
 variable "bastion_ssh_ciphers" {
   type    = "string"
-  default = "aes128-ctr,aes192-ctr,aes256-ctr,arcfour256,arcfour128,aes128-gcm@openssh.com,aes256-gcm@openssh.com,chacha20-poly1305@openssh.com,arcfour"
+  default = "aes128-ctr,aes192-ctr,aes256-ctr,aes128-gcm@openssh.com,aes256-gcm@openssh.com,chacha20-poly1305@openssh.com"
+}
+
+variable "bastion_ssh_keyexchange_algorithms" {
+  type    = "string"
+  default = "curve25519-sha256@libssh.org,ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256,diffie-hellman-group-exchange-sha256"
+}
+
+variable "bastion_ssh_mac_algorithms" {
+  type    = "string"
+  default = "hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com"
 }
 
 variable "bastion_storage" {
