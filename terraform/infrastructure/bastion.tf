@@ -21,7 +21,9 @@ data "template_file" "CCSDEV_bastion_cluster_user_data" {
   template = "${file("./bastion_userdata.sh")}"
 
   vars = {
-    ssh_ciphers = "${var.bastion_ssh_ciphers}"
+    ssh_ciphers                = "${var.bastion_ssh_ciphers}"
+    ssh_keyexchange_algorithms = "${var.bastion_ssh_keyexchange_algorithms}"
+    ssh_mac_algorithms         = "${var.bastion_ssh_mac_algorithms}"
   }
 }
 
