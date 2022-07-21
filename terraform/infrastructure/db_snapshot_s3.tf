@@ -51,9 +51,9 @@ data "aws_iam_policy_document" "db_snapshot_s3" {
 resource "aws_s3_bucket_public_access_block" "db_snapshot_public_access_block" {
   bucket = "${aws_s3_bucket.db_snapshot_s3.id}"
 
-  block_public_acls = true
-  block_public_policy = true
-  ignore_public_acls = true
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
   restrict_public_buckets = true
 }
 
