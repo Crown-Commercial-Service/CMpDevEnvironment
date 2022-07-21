@@ -75,6 +75,11 @@ variable "bastion_ssh_keyexchange_algorithms" {
   default = "curve25519-sha256@libssh.org,ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256,diffie-hellman-group-exchange-sha256"
 }
 
+variable "bastion_ssh_mac_algorithms" {
+  type    = "string"
+  default = "hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com"
+}
+
 variable "bastion_storage" {
   default = 8
 }
