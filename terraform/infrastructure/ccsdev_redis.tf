@@ -12,13 +12,12 @@ resource "aws_elasticache_subnet_group" "ccsdev_elasticache_redis_subnets" {
 
   name        = "ccsdev-elasticache-redis-subnets"
   description = "Access to CCSDEV ElasticCache Redis from public, private and management subnets"
-  subnet_ids  = ["${aws_subnet.CCSDEV-AZ-a-Public-1.id}","${aws_subnet.CCSDEV-AZ-b-Public-1.id}","${aws_subnet.CCSDEV-AZ-c-Public-1.id}","${aws_subnet.CCSDEV-AZ-a-Private-1.id}", "${aws_subnet.CCSDEV-AZ-b-Private-1.id}", "${aws_subnet.CCSDEV-AZ-c-Private-1.id}", "${aws_subnet.CCSDEV-AZ-a-Management.id}", "${aws_subnet.CCSDEV-AZ-b-Management.id}", "${aws_subnet.CCSDEV-AZ-c-Management.id}"]
+  subnet_ids  = ["${aws_subnet.CCSDEV-AZ-a-Public-1.id}", "${aws_subnet.CCSDEV-AZ-b-Public-1.id}", "${aws_subnet.CCSDEV-AZ-c-Public-1.id}", "${aws_subnet.CCSDEV-AZ-a-Private-1.id}", "${aws_subnet.CCSDEV-AZ-b-Private-1.id}", "${aws_subnet.CCSDEV-AZ-c-Private-1.id}", "${aws_subnet.CCSDEV-AZ-a-Management.id}", "${aws_subnet.CCSDEV-AZ-b-Management.id}", "${aws_subnet.CCSDEV-AZ-c-Management.id}"]
 }
 
 resource "aws_elasticache_parameter_group" "ccsdev_elasticache_redis_parameters" {
   name   = "ccsdev-elasticache-redis-parameters"
   family = "redis5.0"
-
 }
 
 resource "aws_elasticache_cluster" "ccsdev_elasticache_redis" {
@@ -34,12 +33,12 @@ resource "aws_elasticache_cluster" "ccsdev_elasticache_redis" {
   port                 = "${var.redis_port}"
   maintenance_window   = "sat:04:03-sat:05:03"
 
-  subnet_group_name      = "${aws_elasticache_subnet_group.ccsdev_elasticache_redis_subnets.id}"
-  security_group_ids    = ["${aws_security_group.vpc-CCSDEV-internal-EC-REDIS.id}"]
+  subnet_group_name  = "${aws_elasticache_subnet_group.ccsdev_elasticache_redis_subnets.id}"
+  security_group_ids = ["${aws_security_group.vpc-CCSDEV-internal-EC-REDIS.id}"]
 
   tags {
-    Name = "CCSDEV ElasticCache Redis instance"
-    CCSRole = "Infrastructure"
+    Name           = "CCSDEV ElasticCache Redis instance"
+    CCSRole        = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
 }

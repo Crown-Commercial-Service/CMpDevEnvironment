@@ -28,8 +28,8 @@ resource "aws_alb" "CCSDEV_api_cluster_alb" {
   }
 
   tags {
-    Name = "CCSDEV_api_cluster_alb"
-    CCSRole = "API"
+    Name           = "CCSDEV_api_cluster_alb"
+    CCSRole        = "API"
     CCSEnvironment = "${var.environment_name}"
   }
 }
@@ -73,11 +73,12 @@ resource "aws_route53_record" "private_cluster_wildcard_certificate_validation_d
 }
 
 resource "aws_acm_certificate_validation" "private_cluster_wildcard_certificate_validation" {
-  count                   = "${var.enable_https}"
-  certificate_arn         = "${aws_acm_certificate.private_cluster_wildcard_certificate.arn}"
+  count           = "${var.enable_https}"
+  certificate_arn = "${aws_acm_certificate.private_cluster_wildcard_certificate.arn}"
+
   validation_record_fqdns = [
-    "${aws_route53_record.private_cluster_wildcard_certificate_validation_dns.fqdn}"
-    ]
+    "${aws_route53_record.private_cluster_wildcard_certificate_validation_dns.fqdn}",
+  ]
 }
 
 resource "aws_alb_listener" "CCSDEV_api_cluster_alb_listener_https" {
@@ -89,12 +90,11 @@ resource "aws_alb_listener" "CCSDEV_api_cluster_alb_listener_https" {
   certificate_arn   = "${aws_acm_certificate.private_cluster_wildcard_certificate.arn}"
 
   default_action {
-
     type = "fixed-response"
 
     fixed_response {
       content_type = "text/plain"
-      status_code = "404"
+      status_code  = "404"
     }
   }
 }
@@ -124,8 +124,8 @@ resource "aws_alb_target_group" "CCSDEV_api_cluster_alb_def_tg" {
   }
 
   tags {
-    Name = "CCSDEV_api_cl_alb_def-tg"
-    CCSRole = "API"
+    Name           = "CCSDEV_api_cl_alb_def-tg"
+    CCSRole        = "API"
     CCSEnvironment = "${var.environment_name}"
   }
 }
@@ -183,7 +183,6 @@ resource "aws_launch_configuration" "CCSDEV_api_cluster_launch_config" {
   lifecycle {
     create_before_destroy = true
   }
-
 }
 
 data "template_file" "CCSDEV_api_cluster_user_data" {
