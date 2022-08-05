@@ -257,17 +257,6 @@ resource "aws_security_group" "vpc-CCSDEV-external-app-alb" {
   }
 }
 
-resource "aws_security_group_rule" "vpc-CCSDEV-external-app-alb-ingress-http" {
-  count             = "${length(keys(var.app_access_cidrs))}"
-  description       = "HTTP Access for ${element(keys(var.app_access_cidrs), count.index)}"
-  type              = "ingress"
-  from_port         = "${var.http_port}"
-  to_port           = "${var.http_port}"
-  protocol          = "tcp"
-  cidr_blocks       = ["${element(values(var.app_access_cidrs), count.index)}"]
-  security_group_id = "${aws_security_group.vpc-CCSDEV-external-app-alb.id}"
-}
-
 resource "aws_security_group_rule" "vpc-CCSDEV-external-app-alb-ingress-https" {
   count             = "${length(keys(var.app_access_cidrs))}"
   description       = "HTTPS Access for ${element(keys(var.app_access_cidrs), count.index)}"
@@ -351,13 +340,6 @@ resource "aws_security_group" "vpc-CCSDEV-internal-api-alb" {
   name        = "CCSDEV-internal-api-alb"
   description = "Api access internal via alb"
   vpc_id      = "${aws_vpc.CCSDEV-Services.id}"
-
-  ingress {
-    from_port   = "${var.http_port}"
-    to_port     = "${var.http_port}"
-    protocol    = "tcp"
-    cidr_blocks = ["${aws_vpc.CCSDEV-Services.cidr_block}"]
-  }
 
   ingress {
     from_port   = "${var.https_port}"
