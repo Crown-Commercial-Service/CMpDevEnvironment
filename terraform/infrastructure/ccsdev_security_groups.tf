@@ -235,14 +235,6 @@ resource "aws_security_group" "vpc-CCSDEV-external-app-alb" {
   }
 
   egress {
-    description = "Outbound HTTP"
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
     description = "Any TCP within VPC"
     from_port   = 0
     to_port     = 65535
@@ -263,17 +255,6 @@ resource "aws_security_group" "vpc-CCSDEV-external-app-alb" {
     CCSRole        = "Infrastructure"
     CCSEnvironment = "${var.environment_name}"
   }
-}
-
-resource "aws_security_group_rule" "vpc-CCSDEV-external-app-alb-ingress-http" {
-  count             = "${length(keys(var.app_access_cidrs))}"
-  description       = "HTTP Access for ${element(keys(var.app_access_cidrs), count.index)}"
-  type              = "ingress"
-  from_port         = "${var.http_port}"
-  to_port           = "${var.http_port}"
-  protocol          = "tcp"
-  cidr_blocks       = ["${element(values(var.app_access_cidrs), count.index)}"]
-  security_group_id = "${aws_security_group.vpc-CCSDEV-external-app-alb.id}"
 }
 
 resource "aws_security_group_rule" "vpc-CCSDEV-external-app-alb-ingress-https" {
@@ -361,13 +342,6 @@ resource "aws_security_group" "vpc-CCSDEV-internal-api-alb" {
   vpc_id      = "${aws_vpc.CCSDEV-Services.id}"
 
   ingress {
-    from_port   = "${var.http_port}"
-    to_port     = "${var.http_port}"
-    protocol    = "tcp"
-    cidr_blocks = ["${aws_vpc.CCSDEV-Services.cidr_block}"]
-  }
-
-  ingress {
     from_port   = "${var.https_port}"
     to_port     = "${var.https_port}"
     protocol    = "tcp"
@@ -378,14 +352,6 @@ resource "aws_security_group" "vpc-CCSDEV-internal-api-alb" {
     description = "Outbound HTTPS"
     from_port   = 443
     to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    description = "Outbound HTTP"
-    from_port   = 80
-    to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
