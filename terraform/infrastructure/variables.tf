@@ -26,14 +26,15 @@ variable ccs_cognito_groups {
   type = "map"
 
   default = {
-    "at_access"    = "Apprenticeships user access"
-    "buyer"        = "Buyer user access"
-    "supplier"     = "Supplier user access"
-    "ccs_employee" = "CCS Employee user access"
-    "fm_access"    = "Facilities Management user access"
-    "ls_access"    = "Legal Services user access"
-    "mc_access"    = "Management Consultancy user access"
-    "st_access"    = "Supply Teachers user access"
+    "at_access"      = "Apprenticeships user access"
+    "buyer"          = "Buyer user access"
+    "supplier"       = "Supplier user access"
+    "ccs_employee"   = "CCS Employee user access"
+    "fm_access"      = "Facilities Management user access"
+    "ls_access"      = "Legal Services user access"
+    "mc_access"      = "Management Consultancy user access"
+    "st_access"      = "Supply Teachers user access"
+    "ccs_user_admin" = "Able to create and manage some admin users"
   }
 }
 
