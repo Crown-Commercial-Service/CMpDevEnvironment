@@ -16,8 +16,8 @@ resource "aws_elasticache_subnet_group" "ccsdev_elasticache_redis_subnets" {
 }
 
 resource "aws_elasticache_parameter_group" "ccsdev_elasticache_redis_parameters" {
-  name   = "ccsdev-elasticache-redis-parameters"
-  family = "redis5.0"
+  name   = "ccsdev-elasticache-redis-parameters-7"
+  family = "redis7"
 }
 
 resource "aws_elasticache_cluster" "ccsdev_elasticache_redis" {
@@ -28,7 +28,7 @@ resource "aws_elasticache_cluster" "ccsdev_elasticache_redis" {
   engine               = "redis"
   node_type            = "${var.elasticache_instance_class}"
   num_cache_nodes      = 1
-  engine_version       = "5.0.3"
+  engine_version       = "7.0.5"
   parameter_group_name = "${aws_elasticache_parameter_group.ccsdev_elasticache_redis_parameters.id}"
   port                 = "${var.redis_port}"
   maintenance_window   = "sat:04:03-sat:05:03"
