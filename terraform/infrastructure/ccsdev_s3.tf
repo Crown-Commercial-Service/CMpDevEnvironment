@@ -333,6 +333,36 @@ data "aws_iam_policy_document" "assets_bucket_policy" {
       "${aws_s3_bucket.assets-bucket.arn}/*",
     ]
   }
+
+  statement {
+    sid = "EnforceTLSv12orHigher"
+
+    effect = "Deny"
+
+    principals {
+      identifiers = ["AWS"]
+      type        = "*"
+    }
+
+    actions = [
+      "s3:*",
+    ]
+
+    condition {
+      test = "NumericLessThan"
+
+      values = [
+        "1.2",
+      ]
+
+      variable = "s3:TlsVersion"
+    }
+
+    resources = [
+      "${aws_s3_bucket.assets-bucket.arn}/*",
+      "${aws_s3_bucket.assets-bucket.arn}",
+    ]
+  }
 }
 
 resource "aws_s3_bucket_policy" "attach_secure_transport_policy_to_assets_bucket_s3" {
