@@ -53,7 +53,7 @@ resource "aws_route53_record" "CCSDEV-internal-redis-CNAME" {
   count = "${var.create_elasticache_redis}"
 
   zone_id = "${aws_route53_zone.ccsdev-internal-org-private.zone_id}"
-  name    = "redis"
+  name    = "redis.internal.${var.domain_name}"
   type    = "CNAME"
   records = ["${aws_elasticache_cluster.ccsdev_elasticache_redis.cache_nodes.0.address}"]
   ttl     = "300"
